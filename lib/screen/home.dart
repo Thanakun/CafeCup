@@ -5,8 +5,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
-
+  final formkey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +23,8 @@ class HomeScreen extends StatelessWidget {
         titleSpacing: 0,
       ),
       body: Column(
-        children: [
+        children: 
+          [
           SizedBox(
             height: 150,
             width: double.infinity,

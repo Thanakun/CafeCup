@@ -1,7 +1,10 @@
 import "package:flutter/material.dart";
+import 'package:firebase_core/firebase_core.dart'; 
 import 'screen/home.dart';
 
-void main() {
+
+
+Future<void> main() async {
   var app = new MyApp();
   runApp(app);
 }
