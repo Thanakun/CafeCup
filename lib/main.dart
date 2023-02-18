@@ -5,13 +5,20 @@ import 'screen/home.dart';
 
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   var app = new MyApp();
+
   runApp(app);
 }
 
 
+
+
 //สร้าง widget
 class MyApp extends StatelessWidget{
+  const MyApp({Key ? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context){
     return MaterialApp(

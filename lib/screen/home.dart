@@ -1,8 +1,15 @@
 import 'dart:ffi';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_application_1/screen/login_password.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:flutter_application_1/screen/register.dart';
+
+// Future main() async(){
+//   WidgetFlutterBinding.ensureInitialized();
+//   await Firebase.initializeApp();
+// }
 
 class HomeScreen extends StatelessWidget {
   final formkey = GlobalKey<FormState>();
@@ -23,8 +30,7 @@ class HomeScreen extends StatelessWidget {
         titleSpacing: 0,
       ),
       body: Column(
-        children: 
-          [
+        children: [
           SizedBox(
             height: 150,
             width: double.infinity,
@@ -42,10 +48,14 @@ class HomeScreen extends StatelessWidget {
             height: 10,
           ),
           input_password(onSubmitted: onPasswordSubmitted),
-            SizedBox(
+          SizedBox(
             height: 10,
           ),
           SubmitLogin(onPressed: (handleLoginPressed)),
+          SizedBox(
+            height: 10,
+          ),
+          ToRegister(),
         ],
       ),
     );
@@ -54,8 +64,6 @@ class HomeScreen extends StatelessWidget {
 
 class Home_Text extends StatelessWidget {
   const Home_Text({super.key});
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +80,10 @@ class Home_Text extends StatelessWidget {
 class input_password extends StatefulWidget {
   final ValueChanged<String> onSubmitted;
 
-  const input_password({Key? key, required this.onSubmitted,}) : super(key: key);
+  const input_password({
+    Key? key,
+    required this.onSubmitted,
+  }) : super(key: key);
 
   @override
   State<input_password> createState() => _input_passwordState();
@@ -102,7 +113,10 @@ class _input_passwordState extends State<input_password> {
 
 class Input_username extends StatefulWidget {
   final ValueChanged<String> onSubmitted;
-  const Input_username({Key ? key ,required this.onSubmitted,}) :super(key: key);
+  const Input_username({
+    Key? key,
+    required this.onSubmitted,
+  }) : super(key: key);
 
   @override
   State<Input_username> createState() => _Input_usernameState();
@@ -132,7 +146,7 @@ class _Input_usernameState extends State<Input_username> {
 
 class SubmitLogin extends StatelessWidget {
   final VoidCallback onPressed;
-  
+
   const SubmitLogin({
     Key? key,
     required this.onPressed,
@@ -152,3 +166,23 @@ class SubmitLogin extends StatelessWidget {
   }
 }
 
+class ToRegister extends StatelessWidget {
+  const ToRegister({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 100,
+      height: 50,
+      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+      child: ElevatedButton(
+        child: const Text('Login'),
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return RegisterPage();
+          }));
+        },
+      ),
+    );
+  }
+}
