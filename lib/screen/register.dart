@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -16,10 +19,6 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
-
-  void _registerUser(String email,String username,String password){
-
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -115,6 +114,20 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       ),
     );
+  }
+  
+  Future<void> _registerUser(String email,String username,String password) async {
+    final docUser = FirebaseFirestore.instance.collection('users').doc('my-id');
+
+
+
+    final json = {
+      'email': _emailController.text,
+      'username': _usernameController.text,
+      'password': _passwordController.text
+    };
+
+    await docUser.set(json);
   }
 }
 
