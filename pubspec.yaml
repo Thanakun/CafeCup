@@ -28,33 +28,28 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  material_design_icons_flutter: ^4.0.5955
+  cloud_firestore: ^4.4.2
+  cupertino_icons: ^1.0.2
+  firebase_auth: ^4.2.8
+  firebase_crashlytics: ^3.0.14
+  firebase_database: ^10.0.13
   flutter:
     sdk: flutter
-
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
-  flutter_launcher_icons: ^0.11.0
-  firebase_crashlytics: ^3.0.14
-  cloud_firestore: ^4.4.2
-  firebase_auth: ^4.2.8
-  firebase_database: ^10.0.13
-
-
+  flutter_launcher_icons: ^0.13.1
+  flutter_native_splash: ^2.2.19
+  fluttertoast: ^8.2.1
+  http: ^0.13.5
+  material_design_icons_flutter: ^4.0.5955
+  mysql1: ^0.19.0
+  shared_preferences: ^2.1.0
+  simple_animations: ^5.0.0+3
+  uri: ^1.0.0
 
 flutter_icons:
   android: true
-  image_path: "image/shinji.jpg"
-
-
-
+  image_path: "assets/images/shinji.jpg"
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
-
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -62,74 +57,68 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+  flutter_test:
+    sdk: flutter
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
-
 # The following section is specific to Flutter packages.
 flutter:
-
 
   uses-material-design: true
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
   fonts:
-  - family: LucidaBright
-    fonts:
-      - asset: fonts/LucidaBrightDemiBold.ttf
-        weight: 700
-      - asset: fonts/LucidaBrightDemiItalic.ttf
-        style: italic
-      - asset: fonts/LucidaBrightItalic.ttf
-        style: italic
-      - asset: fonts/LucidaBrightRegular.ttf
-        style: normal
-  - family: LucidSans
-    fonts:
-      - asset: fonts/LucidaSansDemiBold.ttf
-        weight: 700
-      - asset: fonts/LucidaSansRegular.ttf
-        style: normal
-  - family: LucidaTypewriter
-    fonts:
-      - asset: fonts/LucidaTypewriterBold.ttf
-        weight: 700
-      - asset: fonts/LucidaTypewriterRegular.ttf
-        style: normal
-  - family: THSarabun
-    fonts:
-      - asset: fonts/THSarabun Bold Italic.ttf
-        weight: 700
-        style: italic
-      - asset: fonts/THSarabun Bold.ttf
-        weight: 700
-      - asset: fonts/THSarabun Italic.ttf
-        style: italic
-      - asset: fonts/THSarabun.ttf
-        style: normal
-  - family: Kanit
-    fonts:
-     - asset: fonts/Kanit-Regular.ttf
-     - asset: fonts/Kanit-Italic.ttf
-       style: italic
-     - asset: fonts/Kanit-Bold.ttf
-       weight: 700
-
-uses-material-design: true
-  
-
-  # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
+    - family: LucidaBright
+      fonts:
+        - asset: fonts/LucidaBrightDemiBold.ttf
+          weight: 700
+        - asset: fonts/LucidaBrightDemiItalic.ttf
+          style: italic
+        - asset: fonts/LucidaBrightItalic.ttf
+          style: italic
+        - asset: fonts/LucidaBrightRegular.ttf
+          style: normal
+    - family: LucidSans
+      fonts:
+        - asset: fonts/LucidaSansDemiBold.ttf
+          weight: 700
+        - asset: fonts/LucidaSansRegular.ttf
+          style: normal
+    - family: LucidaTypewriter
+      fonts:
+        - asset: fonts/LucidaTypewriterBold.ttf
+          weight: 700
+        - asset: fonts/LucidaTypewriterRegular.ttf
+          style: normal
+    - family: THSarabun
+      fonts:
+        - asset: fonts/THSarabun Bold Italic.ttf
+          weight: 700
+          style: italic
+        - asset: fonts/THSarabun Bold.ttf
+          weight: 700
+        - asset: fonts/THSarabun Italic.ttf
+          style: italic
+        - asset: fonts/THSarabun.ttf
+          style: normal
+    - family: Kanit
+      fonts:
+        - asset: fonts/Kanit-Regular.ttf
+        - asset: fonts/Kanit-Italic.ttf
+          style: italic
+        - asset: fonts/Kanit-Bold.ttf
+          weight: 700
+    # uses-material-design: true
+    # To add assets to your application, add an assets section, like this:
+  assets:
+    - assets/images/
   #   - images/a_dot_ham.jpeg
-
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
-
   # For details regarding adding assets from package dependencies, see
   # https://flutter.dev/assets-and-images/#from-packages
-
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a
@@ -149,4 +138,3 @@ uses-material-design: true
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
-  

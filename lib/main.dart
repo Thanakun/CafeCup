@@ -1,6 +1,9 @@
 import "package:flutter/material.dart";
-import 'package:firebase_core/firebase_core.dart'; 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_application_1/screen/Splashscreen.dart';
+// import 'package:flutter_application_1/model/check_login.dart'; 
 import 'screen/home.dart';
+import 'screen/login.dart';
 
 
 
@@ -23,9 +26,9 @@ class MyApp extends StatelessWidget{
   Widget build(BuildContext context){
     return MaterialApp(
       title: 'Flutter Demo',theme: ThemeData(
-        primarySwatch: Colors.purple
+        // primarySwatch: Colors.pink
       ),
-      home:HomeScreen()
+      home: SplashScreen(),
     );
 
   }

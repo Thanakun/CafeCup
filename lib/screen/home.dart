@@ -1,19 +1,30 @@
 import 'dart:ffi';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_application_1/screen/login_password.dart';
+import 'package:flutter_application_1/screen/login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_application_1/screen/register.dart';
+import 'package:flutter_application_1/model/users.dart';
+import 'package:path/path.dart' as Path;
+import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:flutter_application_1/model/check_login.dart';
 
 // Future main() async(){
 //   WidgetFlutterBinding.ensureInitialized();
 //   await Firebase.initializeApp();
 // }
-
+  
 class HomeScreen extends StatelessWidget {
+
+
   final formkey = GlobalKey<FormState>();
   @override
+  Future<void> log_out(BuildContext context) async {
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => login()));
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -29,34 +40,15 @@ class HomeScreen extends StatelessWidget {
         elevation: 20,
         titleSpacing: 0,
       ),
-      body: Column(
-        children: [
-          SizedBox(
-            height: 150,
-            width: double.infinity,
-          ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(0, 0, 100, 10),
-            child: Text(
-              'Food Recommedation  ',
-              style: TextStyle(fontSize: 35, fontFamily: 'THSarabun'),
-            ),
-          ),
-          Home_Text(),
-          Input_username(onSubmitted: onUsernameSubmitted),
-          SizedBox(
-            height: 10,
-          ),
-          input_password(onSubmitted: onPasswordSubmitted),
-          SizedBox(
-            height: 10,
-          ),
-          SubmitLogin(onPressed: (handleLoginPressed)),
-          SizedBox(
-            height: 10,
-          ),
-          ToRegister(),
-        ],
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () async {
+            final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+            sharedPreferences.remove('username');
+            await log_out(context); // pass context parameter
+          },
+          child: Text('Logout'),
+        ),
       ),
     );
   }
@@ -176,10 +168,31 @@ class ToRegister extends StatelessWidget {
       height: 50,
       padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
       child: ElevatedButton(
-        child: const Text('Login'),
+        child: const Text('Register'),
         onPressed: () {
           Navigator.push(context, MaterialPageRoute(builder: (context) {
             return RegisterPage();
+          }));
+        },
+      ),
+    );
+  }
+}
+
+class ToLogin extends StatelessWidget {
+  const ToLogin({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 100,
+      height: 50,
+      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+      child: ElevatedButton(
+        child: const Text('Login'),
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return login();
           }));
         },
       ),
