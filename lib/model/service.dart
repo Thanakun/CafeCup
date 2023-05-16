@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart'
     as http; // add the http plugin in pubspec.yaml file.
-import 'users.dart';
+import 'user.dart';
 import 'package:uri/uri.dart';
 
 class Services {
@@ -31,14 +31,14 @@ class Services {
     }
   }
 
-  static Future<List<users>> getusers() async {
+  static Future<List<Users>> getusers() async {
     try {
       var map = Map<String, dynamic>();
       map['action'] = _GET_ALL_ACTION;
       final response = await http.post(Uri.parse(ROOT), body: map);
       print('getusers Response: ${response.body}');
       if (200 == response.statusCode) {
-        List<users> list = parseResponse(response.body);
+        List<Users> list = parseResponse(response.body);
         return list;
       } else {
         throw Exception('Failed to load users');
@@ -48,9 +48,9 @@ class Services {
     }
   }
 
-  static List<users> parseResponse(String responseBody) {
+  static List<Users> parseResponse(String responseBody) {
     final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
-    return parsed.map<users>((json) => users.fromJSon(json)).toList();
+    return parsed.map<Users>((json) => Users.fromJSon(json)).toList();
   }
 
   // Method to add employee to the database...

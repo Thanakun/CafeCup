@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class users {
+class Users {
   // static Future <bool?> get_signin() async{
   //   SharedPreferences pref = await SharedPreferences.getInstance();
   //   return pref.getBool("Sign-in");
@@ -18,29 +18,31 @@ class users {
   String email;
   String gender;
   String age;
-  int user_point;
-  String users_role;
+  int userPoint;
+  String userRole;
+  List favoriteList;
 
-  users(
+  Users(
       {required this.id,
       required this.username,
       required this.password,
       required this.email,
       required this.gender,
       required this.age,
-      required this.user_point,
-      required this.users_role});
+      required this.userPoint,
+      required this.userRole,
+      required this.favoriteList});
 
-  factory users.fromJSon(Map<String, dynamic> json) {
-    return users(
-      id: json['id'] as int,
-      username: json['username'] as String,
-      password: json['_password'] as String,
-      email: json['email'] as String,
-      gender: json['gender'] as String,
-      age: json['age'] as String,
-      user_point: json['user_point'] as int,
-      users_role: json['user_role'] as String,
-    );
+  factory Users.fromJSon(Map<String, dynamic> json) {
+    return Users(
+        id: json['id'] as int,
+        username: json['username'] as String,
+        password: json['_password'] as String,
+        email: json['email'] as String,
+        gender: json['gender'] as String,
+        age: json['age'] as String,
+        userPoint: json['userPoint'] as int,
+        userRole: json['userRole'] as String,
+        favoriteList: json['favoriteList'] as List<Object>);
   }
 }

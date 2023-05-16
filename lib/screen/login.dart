@@ -4,7 +4,7 @@ import 'package:flutter_application_1/screen/register.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:flutter_application_1/model/users.dart';
+import 'package:flutter_application_1/model/user.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

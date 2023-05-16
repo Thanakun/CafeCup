@@ -17,7 +17,7 @@ import 'package:flutter_application_1/utility/my_constant.dart';
 import 'package:pixel_perfect/pixel_perfect.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_application_1/screen/my_component/select_month_week_provider.dart';
-import 'package:flutter_application_1/viewmodel/users_home_viewmodel.dart';
+import 'package:flutter_application_1/viewmodel/UserHomePageViewModel.dart';
 
 const mockupHeight = 844;
 const mockupWidth = 390;
@@ -33,7 +33,7 @@ class HomeUserState extends State<home_users> {
   @override
   Widget build(BuildContext context) {
     // String _selectedOption = "month";
-    final UserHomePageViewModel viewModel = UserHomePageViewModel();
+    final UserShopHomePageViewModel viewModel = UserShopHomePageViewModel();
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     final scale = mockupWidth / width;
@@ -66,7 +66,7 @@ class HomeUserState extends State<home_users> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              Search_bar(),
+              SearchBar(),
               _sectionBufferHeight(),
               headSliderMenuBar(),
               _sectionBufferHeight(),
@@ -75,14 +75,16 @@ class HomeUserState extends State<home_users> {
               _sectionBufferHeight(bufferSection: 30),
               SelectableBestOfWeekMonthSection(
                 viewModel: viewModel,
-                onMonthWeekChanged: viewModel.onMonthWeekChanged(),
+                // onMonthWeekChanged: viewModel.onMonthWeekChanged(),
               ),
 
               _sectionBufferHeight(),
               _sectionBufferHeight(bufferSection: 30),
               _favoriteShop("ร้านประจำ"),
               dividerLine(),
-              SelectFrequencyFavoriteSection()
+              SelectFrequencyFavoriteSection(
+                viewModel: viewModel,
+              )
             ],
           ),
         ),
@@ -95,12 +97,12 @@ class HomeUserState extends State<home_users> {
 class SelectableBestOfWeekMonthSection extends StatefulWidget {
   const SelectableBestOfWeekMonthSection({
     required this.viewModel,
-    required this.onMonthWeekChanged,
+    // required this.onMonthWeekChanged,
     Key? key,
   }) : super(key: key);
 
-  final UserHomePageViewModel viewModel;
-  final List onMonthWeekChanged;
+  final UserShopHomePageViewModel viewModel;
+  // final List onMonthWeekChanged;
 
   @override
   State<SelectableBestOfWeekMonthSection> createState() =>
@@ -110,24 +112,19 @@ class SelectableBestOfWeekMonthSection extends StatefulWidget {
 class SelectableBestOfWeekMonthSectionState
     extends State<SelectableBestOfWeekMonthSection> {
   String selectedMonthWeek = "month";
-  String selectedCategory = "เมนูเส้น";
+  late String selectedCategory = "เมนูเส้น";
   late List categoryEatMonth;
   late List categoryEatWeek;
   // late List interestingEat;
 
   @override
   void initState() {
-    selectedMonthWeek = widget.viewModel.getSelectedMonthWeek();
-    categoryEatMonth = widget.viewModel.myProductsMonth
-        .where(
-          (item) => item['type'] == selectedCategory,
-        )
-        .toList();
-    categoryEatWeek = widget.viewModel.myProductsWeek
-        .where(
-          (item) => item['type'] == selectedCategory,
-        )
-        .toList();
+    // selectedMonthWeek = widget.viewModel.getSelectedMonthWeek();
+    categoryEatMonth = widget.viewModel.filterProductsByType(
+        widget.viewModel.myProductsMonth, selectedCategory);
+    categoryEatWeek = widget.viewModel.filterProductsByType(
+        widget.viewModel.myProductsWeek, selectedCategory);
+
     super.initState();
     // print(categoryfood);
     // print(selectedCategory);
@@ -145,8 +142,11 @@ class SelectableBestOfWeekMonthSectionState
               isSelected: selectedMonthWeek == "month",
               onTap: () {
                 setState(() {
+                  print("print");
+                  // selectedMonthWeek = "month";
                   selectedMonthWeek = "month";
-                  widget.viewModel.updateSelectedMonthWeek("month");
+                  categoryEatMonth = widget.viewModel.filterProductsByType(
+                      widget.viewModel.myProductsMonth, selectedCategory);
                 });
               },
             ),
@@ -155,9 +155,12 @@ class SelectableBestOfWeekMonthSectionState
               viral: "ยอดฮิตสัปดาห์นี้",
               isSelected: selectedMonthWeek == "week",
               onTap: () {
+                print("Hello");
                 setState(() {
+                  // widget.viewModel.updateSelectedMonthWeek() = "week";
                   selectedMonthWeek = "week";
-                  widget.viewModel.updateSelectedMonthWeek("week");
+                  categoryEatWeek = widget.viewModel.filterProductsByType(
+                      widget.viewModel.myProductsWeek, selectedCategory);
                 });
               },
             ),
@@ -200,9 +203,10 @@ class SelectableBestOfWeekMonthSectionState
                   ? categoryEatMonth.length
                   : categoryEatWeek.length,
               itemBuilder: (context, index) {
-                int item = selectedMonthWeek == "month"
-                    ? categoryEatMonth.length
-                    : categoryEatWeek.length;
+                List selectedList = selectedMonthWeek == "month"
+                    ? categoryEatMonth
+                    : categoryEatWeek;
+                // print(widget.viewModel.getItemCount());
                 return Container(
                   decoration: BoxDecoration(
                     color: Colors.red,
@@ -210,32 +214,15 @@ class SelectableBestOfWeekMonthSectionState
                   child: Column(
                     children: [
                       Text(
-                        selectedMonthWeek == "month"
-                            ? categoryEatMonth[index]["name"]
-                            : categoryEatWeek[index]["name"],
+                        selectedList[index]["name"],
                         style: TextStyle(color: Colors.white, fontSize: 20),
                       ),
                       Text(
-                        selectedMonthWeek == "month"
-                            ? categoryEatMonth[index]["type"]
-                            : categoryEatWeek[index]["type"],
+                        selectedList[index]["type"],
                         style: kfontH3Inter(),
                       ),
                     ],
                   ),
-                  // child: Column(
-                  //   children: [
-                  //     Text(
-                  //       item['name'].toString(),
-                  //       style: TextStyle(color: Colors.white, fontSize: 20),
-                  //     ),
-                  //     Text(
-                  //       widget.viewModel.getCategoryType(
-                  //           item["name"].toString(), selectedCategory),
-                  //       style: kfontH3Inter(),
-                  //     ),
-                  //   ],
-                  // ),
                 );
               },
             ),
@@ -265,17 +252,13 @@ class SelectableBestOfWeekMonthSectionState
       ),
       onTap: () {
         setState(() {
+          print("kuy");
           selectedCategory = categoryMenu;
-          categoryEatMonth = widget.viewModel.myProductsMonth
-              .where(
-                (item) => item['type'] == selectedCategory,
-              )
-              .toList();
-          categoryEatWeek = widget.viewModel.myProductsWeek
-              .where(
-                (item) => item['type'] == selectedCategory,
-              )
-              .toList();
+          categoryEatMonth = widget.viewModel.filterProductsByType(
+              widget.viewModel.myProductsMonth, selectedCategory);
+          categoryEatWeek = widget.viewModel.filterProductsByType(
+              widget.viewModel.myProductsWeek, selectedCategory);
+
           // print(categoryfood);
         });
       },
@@ -308,7 +291,9 @@ class SelectableBestOfWeekMonthSectionState
 }
 
 class SelectFrequencyFavoriteSection extends StatefulWidget {
-  const SelectFrequencyFavoriteSection({super.key});
+  const SelectFrequencyFavoriteSection({Key? key, required this.viewModel})
+      : super(key: key);
+  final UserShopHomePageViewModel viewModel;
 
   @override
   State<SelectFrequencyFavoriteSection> createState() =>
@@ -322,82 +307,73 @@ class _SelectFrequencyFavoriteSectionState
 
   @override
   void initState() {
-    // frequentlyEat = widget.viewModel.myProductsMonth
-    //     .where(
-    //       (item) => item['type'] == selectedCategory,
-    //     )
-    //     .toList();
+    frequentlyEat = widget.viewModel.filterFavoriteItems(
+      widget.viewModel.myFavoriteShopUserTwoItems,
+      true,
+      _selectedFavoriteFrequncy,
+    );
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 30,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        // scrollDirection: Axis.horizontal,
-        children: [
-          _sectionBufferWidth(bufferSection: 10),
-          _selectedFavoriteFrequncyMenu("บ่อยสุด"),
-          _sectionBufferWidth(bufferSection: 10),
-          _selectedFavoriteFrequncyMenu("ล่าสุด"),
-          _sectionBufferWidth(bufferSection: 10),
-          _selectedFavoriteFrequncyMenu("นานสุด"),
-          _sectionBufferWidth(bufferSection: 10),
-          _sectionBufferHeight(bufferSection: 10),
-          SizedBox(
-            height: 400,
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 21, vertical: 13),
-              child: GridView.builder(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 221,
-                  childAspectRatio: 160 / 123,
-                  crossAxisSpacing: 21,
-                  mainAxisSpacing: 13,
-                ),
-                itemCount: frequentlyEat.length,
-                itemBuilder: (context, index) {
-                  int item = frequentlyEat.length;
-                  return Container(
-                    decoration: BoxDecoration(
-                      color: Colors.red,
-                    ),
-                    child: Column(
-                      children: [
-                        Text(
-                          frequentlyEat[index]["name"],
-                          style: TextStyle(color: Colors.white, fontSize: 20),
-                        ),
-                        Text(
-                          frequentlyEat[index]["type"],
-                          style: kfontH3Inter(),
-                        ),
-                      ],
-                    ),
-                    // child: Column(
-                    //   children: [
-                    //     Text(
-                    //       item['name'].toString(),
-                    //       style: TextStyle(color: Colors.white, fontSize: 20),
-                    //     ),
-                    //     Text(
-                    //       widget.viewModel.getCategoryType(
-                    //           item["name"].toString(), selectedCategory),
-                    //       style: kfontH3Inter(),
-                    //     ),
-                    //   ],
-                    // ),
-                  );
-                },
+    return Column(
+      children: [
+        SizedBox(
+          height: 30,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            // scrollDirection: Axis.horizontal,
+            children: [
+              _sectionBufferWidth(bufferSection: 10),
+              _selectedFavoriteFrequncyMenu("บ่อยสุด"),
+              _sectionBufferWidth(bufferSection: 10),
+              _selectedFavoriteFrequncyMenu("ล่าสุด"),
+              _sectionBufferWidth(bufferSection: 10),
+              _selectedFavoriteFrequncyMenu("นานสุด"),
+              _sectionBufferWidth(bufferSection: 10),
+              _sectionBufferHeight(bufferSection: 10),
+            ],
+          ),
+        ),
+        SizedBox(
+          height: 400,
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 21, vertical: 13),
+            child: GridView.builder(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 221,
+                childAspectRatio: 160 / 123,
+                crossAxisSpacing: 21,
+                mainAxisSpacing: 13,
               ),
+              itemCount: frequentlyEat.length,
+              itemBuilder: (context, index) {
+                int item = frequentlyEat.length;
+                return Container(
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                  ),
+                  child: Column(
+                    children: [
+                      Text(
+                        frequentlyEat[index]["name"],
+                        style: TextStyle(color: Colors.white, fontSize: 20),
+                      ),
+                      Text(
+                        frequentlyEat[index]["type"],
+                        style: kfontH3Inter(),
+                      ),
+                    ],
+                  ),
+                );
+              },
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -419,9 +395,15 @@ class _SelectFrequencyFavoriteSectionState
         ),
       ),
       onTap: () {
+        // favoriteFrequncyMenu = _selectedFavoriteFrequncy;
+        _selectedFavoriteFrequncy = favoriteFrequncyMenu;
+
         setState(() {
-          print(_selectedFavoriteFrequncy);
-          _selectedFavoriteFrequncy = favoriteFrequncyMenu;
+          frequentlyEat = widget.viewModel.filterFavoriteItems(
+            widget.viewModel.myFavoriteShopUserTwoItems,
+            true,
+            _selectedFavoriteFrequncy,
+          );
         });
       },
     );
@@ -476,9 +458,14 @@ SizedBox _sectionBufferWidth({double bufferSection = 8}) {
   );
 }
 
-class Search_bar extends StatelessWidget {
-  const Search_bar({super.key});
+class SearchBar extends StatefulWidget {
+  const SearchBar({Key? key}) : super(key: key);
 
+  @override
+  _SearchBarState createState() => _SearchBarState();
+}
+
+class _SearchBarState extends State<SearchBar> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -486,37 +473,35 @@ class Search_bar extends StatelessWidget {
         Center(
           child: TextButton(
             child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                width: 345,
-                height: 30,
-                decoration: BoxDecoration(
-                  // boxShadow: [BoxShadow(color: Colors.black)],
-                  border: Border.all(
-                    color: Colors.black,
-                  ),
-                  borderRadius: BorderRadius.circular(15),
-                  // color: Colors.white70,
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              width: 345,
+              height: 30,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.black,
                 ),
-                child: TextFormField(
-                  // textAlign: TextAlign.center,
-
-                  decoration: InputDecoration(
-                      // TODO : IMPLEMENT MICROPHONE
-                      contentPadding: EdgeInsets.all(10),
-                      suffixIcon: IconButton(
-                          padding: EdgeInsets.all(2),
-                          key: Key("microphone"),
-                          onPressed: () {
-                            print("Clicking mic icon");
-                          },
-                          icon: Icon(Icons.mic)),
-                      prefixIcon: Icon(Icons.search),
-                      border: InputBorder.none,
-                      hintText: 'Search for . . . ',
-                      hintStyle: TextStyle(color: Colors.grey.shade400)),
-                )),
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: TextFormField(
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.all(10),
+                  suffixIcon: IconButton(
+                    padding: EdgeInsets.all(2),
+                    key: Key("microphone"),
+                    onPressed: () {
+                      // print("Clicking mic icon");
+                    },
+                    icon: Icon(Icons.mic),
+                  ),
+                  prefixIcon: Icon(Icons.search),
+                  border: InputBorder.none,
+                  hintText: 'Search for...',
+                  hintStyle: TextStyle(color: Colors.grey.shade400),
+                ),
+              ),
+            ),
             onPressed: () {
-              print("click search bar container");
+              // print("Clicking search bar container");
             },
           ),
         ),

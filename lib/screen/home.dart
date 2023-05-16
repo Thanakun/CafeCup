@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_application_1/screen/register.dart';
-import 'package:flutter_application_1/model/users.dart';
+import 'package:flutter_application_1/model/user.dart';
 import 'package:path/path.dart' as Path;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_application_1/utility/my_constant.dart';

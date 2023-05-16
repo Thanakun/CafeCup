@@ -10,7 +10,7 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:uri/uri.dart';
-import 'package:flutter_application_1/model/users.dart';
+import 'package:flutter_application_1/model/user.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);

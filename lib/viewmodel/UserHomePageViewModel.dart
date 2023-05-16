@@ -1,8 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'dart:math';
 
-class UserHomePageViewModel {
-  final List<String> types = ['เมนูเส้น','เมนูตามสั่ง','เมนูของทอด','เมนูของหวาน'];
+class UserShopHomePageViewModel {
+  final List<String> types = [
+    'เมนูเส้น',
+    'เมนูตามสั่ง',
+    'เมนูของทอด',
+    'เมนูของหวาน'
+  ];
+  final List<String> favoriteType = ['บ่อยสุด', 'ล่าสุด', 'นานสุด'];
 
   final Random random = Random(1);
 
@@ -11,7 +17,7 @@ class UserHomePageViewModel {
   late List<Map<String, dynamic>> myProductsMonth;
   late List<Map<String, dynamic>> myProductsWeek;
 
-  UserHomePageViewModel() {
+  UserShopHomePageViewModel() {
     myFavoriteShopUserTwoItems = _generateFavoriteShopItems(2);
     myProductsWeekItems = _generateProductWeekItems(4);
     myProductsMonth = _generateProductMonthItems(100);
@@ -25,7 +31,9 @@ class UserHomePageViewModel {
         "id": index,
         "name": "TwoItemsFavorite $index",
         "type": _getRandomType(),
-        "date": DateTime.now(),
+        "isFavorite": true,
+        "favoriteType": _getRandomFavoriteType(),
+        // "date": DateTime.now(),
       });
     }
     return items;
@@ -55,7 +63,6 @@ class UserHomePageViewModel {
     return items;
   }
 
-
   String getCategoryType(String type, String selectedCategory) {
     switch (selectedCategory) {
       case "เมนูเส้น":
@@ -71,51 +78,32 @@ class UserHomePageViewModel {
     }
   }
 
+  List<Map<String, dynamic>> filterProductsByType(
+    List<Map<String, dynamic>> products,
+    String selectedType,
+  ) {
+    // print(products);
+    print(selectedType);
+    return products.where((item) => item['type'] == selectedType).toList();
+  }
+
+  List<Map<String, dynamic>> filterFavoriteItems(
+    List<Map<String, dynamic>> favoriteItems,
+    bool isFavorite,
+    String favoriteType,
+  ) {
+    return favoriteItems
+        .where((item) =>
+            item['isFavorite'] == isFavorite &&
+            item['favoriteType'] == favoriteType)
+        .toList();
+  }
+
   String _getRandomType() {
     return types[random.nextInt(types.length)];
   }
 
-  // UserHomePageViewModel(required this.myFavoriteShopUserTwoItems,);
-  String _selectedMonthWeek = "month";
-
-  String getSelectedMonthWeek() {
-    print(_selectedMonthWeek);
-    return _selectedMonthWeek;
-  }
-
-  void updateSelectedMonthWeek(String selected) {
-    if (_selectedMonthWeek != selected) {
-      _selectedMonthWeek = selected;
-      // print("$_selectedMonthWeek Hello");
-      // onMonthWeekChanged();
-    }
-  }
-
-  void updateSelectedFrequencyEat(String selected) {
-    if (_selectedMonthWeek != selected) {
-      _selectedMonthWeek = selected;
-      // print("$_selectedMonthWeek Hello");
-      // onMonthWeekChanged();
-    }
-  }
-
-  List onMonthWeekChanged() {
-    if (_selectedMonthWeek == "month") {
-      // update myProductsMonth
-      return myProductsMonth;
-    } else {
-      // update myProductsWeek
-      return myProductsWeek;
-    }
+  String _getRandomFavoriteType() {
+    return favoriteType[random.nextInt(favoriteType.length)];
   }
 }
-  // List Category
-  
-  // String isselectedMonthWeek(){
-    
-  // };
-
-  // String setSelectedMonthWeek(String select){
-  //   _selectedMonthWeek = select;
-  //   return 
-  // };
