@@ -34,7 +34,8 @@ class _SplashScreenState extends State<SplashScreen> {
         await SharedPreferences.getInstance();
     var obtained_username = sharedPreferences.getString('username');
     setState(() {
-      final_username = obtained_username!;
+      final_username = obtained_username;
+      print(final_username);
     });
     print(final_username);
   }

@@ -38,3 +38,6 @@ Doing : Connect with firebase database cloud
 
 23/4/2565
 Done : Connecting the backend and frontend with phpmyadmin
+
+16/5/2565
+Inprogress : FE1: UserHomeViewPage Change the Project Structure from spaghetti to MVVM
