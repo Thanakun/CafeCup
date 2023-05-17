@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
-class MonthWeekProvider extends ChangeNotifier {
-  String _selectedMonthWeek = "month"; // default value is month
+import 'package:flutter_application_1/viewmodel/user_home_page.dart';
 
-  String get selectedMonthWeek => _selectedMonthWeek;
-
-  void updateSelectedMonthWeek(String newMonthWeek) {
-    _selectedMonthWeek = newMonthWeek;
-    notifyListeners();
-  }
+class UserHomePageViewModelProvider extends ChangeNotifier {
+  UserShopHomePageViewModel _viewModel = UserShopHomePageViewModel();
 }

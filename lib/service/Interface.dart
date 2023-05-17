@@ -1,0 +1,3 @@
+// abstract MockServiceInterface {
+//   void
+// }

@@ -1,5 +1,4 @@
 import 'dart:ffi';
-
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,8 +11,8 @@ class Shop {
   double shopScore;
   String shopDescription;
   String shopFoodType;
-  String shopPromotionId;
-  int shopMissionId;
+  List shopPromotionId;
+  List shopMissionId;
   bool shopStatusMembership;
 
   Shop(
@@ -37,8 +36,8 @@ class Shop {
       shopImage: json['shopImage'] as String,
       shopDescription: json['shopDescription'] as String,
       shopFoodType: json['shopFoodType'] as String,
-      shopPromotionId: json['shopPromotionId'] as String,
-      shopMissionId: json['shopMissionId'] as int,
+      shopPromotionId: json['shopPromotionId'] as List,
+      shopMissionId: json['shopMissionId'] as List,
       shopStatusMembership: json['shopStatusMembership'] as bool,
       shopMenuId: json['shopMenuId'] as String,
       shopScore: json['shopScore'] as double,

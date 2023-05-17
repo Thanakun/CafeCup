@@ -17,7 +17,7 @@ import 'package:flutter_application_1/utility/my_constant.dart';
 import 'package:pixel_perfect/pixel_perfect.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_application_1/screen/my_component/select_month_week_provider.dart';
-import 'package:flutter_application_1/viewmodel/UserHomePageViewModel.dart';
+import 'package:flutter_application_1/viewmodel/user_home_page.dart';
 
 const mockupHeight = 844;
 const mockupWidth = 390;
@@ -111,19 +111,19 @@ class SelectableBestOfWeekMonthSection extends StatefulWidget {
 
 class SelectableBestOfWeekMonthSectionState
     extends State<SelectableBestOfWeekMonthSection> {
-  String selectedMonthWeek = "month";
-  late String selectedCategory = "เมนูเส้น";
-  late List categoryEatMonth;
-  late List categoryEatWeek;
+  // String selectedMonthWeek = "month";
+  // late String selectedCategory = "เมนูเส้น";
+  // late List categoryEatMonth;
+  // late List categoryEatWeek;
   // late List interestingEat;
 
   @override
   void initState() {
     // selectedMonthWeek = widget.viewModel.getSelectedMonthWeek();
-    categoryEatMonth = widget.viewModel.filterProductsByType(
-        widget.viewModel.myProductsMonth, selectedCategory);
-    categoryEatWeek = widget.viewModel.filterProductsByType(
-        widget.viewModel.myProductsWeek, selectedCategory);
+    widget.viewModel.categoryEatMonth = widget.viewModel.filterProductsByType(
+        widget.viewModel.myProductsMonth, widget.viewModel.selectedCategory);
+    widget.viewModel.categoryEatWeek = widget.viewModel.filterProductsByType(
+        widget.viewModel.myProductsWeek, widget.viewModel.selectedCategory);
 
     super.initState();
     // print(categoryfood);
@@ -139,28 +139,28 @@ class SelectableBestOfWeekMonthSectionState
           children: [
             _selectableBestOfWeekMonth(
               viral: "ยอดฮิตเดือนนี้",
-              isSelected: selectedMonthWeek == "month",
+              isSelected: widget.viewModel.selectedMonthWeek == "month",
               onTap: () {
                 setState(() {
                   print("print");
                   // selectedMonthWeek = "month";
-                  selectedMonthWeek = "month";
-                  categoryEatMonth = widget.viewModel.filterProductsByType(
-                      widget.viewModel.myProductsMonth, selectedCategory);
+                  widget.viewModel.selectedMonthWeek = "month";
+                  widget.viewModel.categoryEatMonth = widget.viewModel.filterProductsByType(
+                      widget.viewModel.myProductsMonth, widget.viewModel.selectedCategory);
                 });
               },
             ),
             const SizedBox(width: 20),
             _selectableBestOfWeekMonth(
               viral: "ยอดฮิตสัปดาห์นี้",
-              isSelected: selectedMonthWeek == "week",
+              isSelected: widget.viewModel.selectedMonthWeek == "week",
               onTap: () {
                 print("Hello");
                 setState(() {
                   // widget.viewModel.updateSelectedMonthWeek() = "week";
-                  selectedMonthWeek = "week";
-                  categoryEatWeek = widget.viewModel.filterProductsByType(
-                      widget.viewModel.myProductsWeek, selectedCategory);
+                  widget.viewModel.selectedMonthWeek = "week";
+                  widget.viewModel.categoryEatWeek = widget.viewModel.filterProductsByType(
+                      widget.viewModel.myProductsWeek, widget.viewModel.selectedCategory);
                 });
               },
             ),
@@ -199,13 +199,13 @@ class SelectableBestOfWeekMonthSectionState
                 crossAxisSpacing: 21,
                 mainAxisSpacing: 13,
               ),
-              itemCount: selectedMonthWeek == "month"
-                  ? categoryEatMonth.length
-                  : categoryEatWeek.length,
+              itemCount: widget.viewModel.selectedMonthWeek == "month"
+                  ? widget.viewModel.categoryEatMonth.length
+                  : widget.viewModel.categoryEatWeek.length,
               itemBuilder: (context, index) {
-                List selectedList = selectedMonthWeek == "month"
-                    ? categoryEatMonth
-                    : categoryEatWeek;
+                List selectedList = widget.viewModel.selectedMonthWeek == "month"
+                    ? widget.viewModel.categoryEatMonth
+                    : widget.viewModel.categoryEatWeek;
                 // print(widget.viewModel.getItemCount());
                 return Container(
                   decoration: BoxDecoration(
@@ -234,7 +234,7 @@ class SelectableBestOfWeekMonthSectionState
 
   Widget _selectedCategoryMenu(String categoryMenu) {
     // widget.viewModel.getCategoryType(categoryConvertToEnglish, categoryMenu);
-    final isSelected = categoryMenu == selectedCategory;
+    final isSelected = categoryMenu == widget.viewModel.selectedCategory;
 
     return GestureDetector(
       child: Container(
@@ -253,11 +253,11 @@ class SelectableBestOfWeekMonthSectionState
       onTap: () {
         setState(() {
           print("kuy");
-          selectedCategory = categoryMenu;
-          categoryEatMonth = widget.viewModel.filterProductsByType(
-              widget.viewModel.myProductsMonth, selectedCategory);
-          categoryEatWeek = widget.viewModel.filterProductsByType(
-              widget.viewModel.myProductsWeek, selectedCategory);
+          widget.viewModel.selectedCategory = categoryMenu;
+          widget.viewModel.categoryEatMonth = widget.viewModel.filterProductsByType(
+              widget.viewModel.myProductsMonth, widget.viewModel.selectedCategory);
+          widget.viewModel.categoryEatWeek = widget.viewModel.filterProductsByType(
+              widget.viewModel.myProductsWeek, widget.viewModel.selectedCategory);
 
           // print(categoryfood);
         });
@@ -302,15 +302,15 @@ class SelectFrequencyFavoriteSection extends StatefulWidget {
 
 class _SelectFrequencyFavoriteSectionState
     extends State<SelectFrequencyFavoriteSection> {
-  String _selectedFavoriteFrequncy = "บ่อยสุด";
-  late List frequentlyEat;
+  // String _selectedFavoriteFrequncy = "บ่อยสุด";
+  // late List frequentlyEat;
 
   @override
   void initState() {
-    frequentlyEat = widget.viewModel.filterFavoriteItems(
+    widget.viewModel.frequentlyEat = widget.viewModel.filterFavoriteItems(
       widget.viewModel.myFavoriteShopUserTwoItems,
       true,
-      _selectedFavoriteFrequncy,
+      widget.viewModel.selectedFavoriteFrequncy,
     );
     super.initState();
   }
@@ -349,9 +349,9 @@ class _SelectFrequencyFavoriteSectionState
                 crossAxisSpacing: 21,
                 mainAxisSpacing: 13,
               ),
-              itemCount: frequentlyEat.length,
+              itemCount: widget.viewModel.frequentlyEat.length,
               itemBuilder: (context, index) {
-                int item = frequentlyEat.length;
+                int item = widget.viewModel.frequentlyEat.length;
                 return Container(
                   decoration: BoxDecoration(
                     color: Colors.red,
@@ -359,11 +359,11 @@ class _SelectFrequencyFavoriteSectionState
                   child: Column(
                     children: [
                       Text(
-                        frequentlyEat[index]["name"],
+                        widget.viewModel.frequentlyEat[index]["name"],
                         style: TextStyle(color: Colors.white, fontSize: 20),
                       ),
                       Text(
-                        frequentlyEat[index]["type"],
+                        widget.viewModel.frequentlyEat[index]["type"],
                         style: kfontH3Inter(),
                       ),
                     ],
@@ -378,7 +378,7 @@ class _SelectFrequencyFavoriteSectionState
   }
 
   Widget _selectedFavoriteFrequncyMenu(String favoriteFrequncyMenu) {
-    final isSelected = favoriteFrequncyMenu == _selectedFavoriteFrequncy;
+    final isSelected = favoriteFrequncyMenu == widget.viewModel.selectedFavoriteFrequncy;
 
     return GestureDetector(
       child: Container(
@@ -396,13 +396,13 @@ class _SelectFrequencyFavoriteSectionState
       ),
       onTap: () {
         // favoriteFrequncyMenu = _selectedFavoriteFrequncy;
-        _selectedFavoriteFrequncy = favoriteFrequncyMenu;
+        widget.viewModel.selectedFavoriteFrequncy = favoriteFrequncyMenu;
 
         setState(() {
-          frequentlyEat = widget.viewModel.filterFavoriteItems(
+          widget.viewModel.frequentlyEat = widget.viewModel.filterFavoriteItems(
             widget.viewModel.myFavoriteShopUserTwoItems,
             true,
-            _selectedFavoriteFrequncy,
+            widget.viewModel.selectedFavoriteFrequncy,
           );
         });
       },

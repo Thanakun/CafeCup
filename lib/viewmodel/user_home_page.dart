@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'dart:math';
 
 class UserShopHomePageViewModel {
@@ -8,16 +7,36 @@ class UserShopHomePageViewModel {
     'เมนูของทอด',
     'เมนูของหวาน'
   ];
+
   final List<String> favoriteType = ['บ่อยสุด', 'ล่าสุด', 'นานสุด'];
 
   final Random random = Random(1);
 
+  // late Future<List<Map<String,dynamic>>> myInterestedListUser;
+  // late Future<List<Map<String, dynamic>>> myFavoriteShopUserTwoItems;
+  // late Future<List<Map<String, dynamic>>> myProductsWeekItems;
+  // late Future<List<Map<String, dynamic>>> myProductsMonth;
+  // late Future<List<Map<String, dynamic>>> myProductsWeek;
+  late List<Map<String, dynamic>> myInterestedListUser;
   late List<Map<String, dynamic>> myFavoriteShopUserTwoItems;
   late List<Map<String, dynamic>> myProductsWeekItems;
   late List<Map<String, dynamic>> myProductsMonth;
   late List<Map<String, dynamic>> myProductsWeek;
 
+
+  List frequentlyEat = [];
+  List categoryEatMonth = [];
+  List categoryEatWeek = [];
+  List filterProductsByTypeMonth = [];
+  List filterProductsByTypeWeek = [];
+  late String selectedMonthWeek;
+  late String selectedCategory;
+  late String selectedFavoriteFrequncy;
+
   UserShopHomePageViewModel() {
+    selectedMonthWeek = "month";
+    selectedCategory = "เมนูเส้น";
+    selectedFavoriteFrequncy = "บ่อยสุด";
     myFavoriteShopUserTwoItems = _generateFavoriteShopItems(2);
     myProductsWeekItems = _generateProductWeekItems(4);
     myProductsMonth = _generateProductMonthItems(100);
@@ -33,7 +52,6 @@ class UserShopHomePageViewModel {
         "type": _getRandomType(),
         "isFavorite": true,
         "favoriteType": _getRandomFavoriteType(),
-        // "date": DateTime.now(),
       });
     }
     return items;
@@ -82,8 +100,6 @@ class UserShopHomePageViewModel {
     List<Map<String, dynamic>> products,
     String selectedType,
   ) {
-    // print(products);
-    print(selectedType);
     return products.where((item) => item['type'] == selectedType).toList();
   }
 
@@ -92,7 +108,7 @@ class UserShopHomePageViewModel {
     bool isFavorite,
     String favoriteType,
   ) {
-    return favoriteItems
+    return  favoriteItems
         .where((item) =>
             item['isFavorite'] == isFavorite &&
             item['favoriteType'] == favoriteType)
