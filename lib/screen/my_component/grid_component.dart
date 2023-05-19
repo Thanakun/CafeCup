@@ -22,15 +22,18 @@ class _BuildGridViewState extends State<BuildGridView> {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 21, vertical: 13),
         child: GridView.builder(
-          scrollDirection: Axis.vertical,
+          physics: BouncingScrollPhysics(),
+          scrollDirection: Axis.horizontal,
           shrinkWrap: true,
           gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 221,
-            childAspectRatio: 160 / 123,
+            maxCrossAxisExtent: 300,
+            childAspectRatio: 2.5 / 2.4,
             crossAxisSpacing: 21,
             mainAxisSpacing: 13,
           ),
-          itemCount: widget.selectedList.length,
+          itemCount: widget.selectedList.isEmpty
+              ? throw("${widget.selectedList} is empty")
+              : widget.selectedList.length,
           itemBuilder: (context, index) {
             return GestureDetector(
               onTap: () {
@@ -45,12 +48,18 @@ class _BuildGridViewState extends State<BuildGridView> {
                 ),
                 child: Column(
                   children: [
-                    Text(
-                      widget.selectedList[index]["name"],
-                      style: TextStyle(color: Colors.white, fontSize: 20),
+                    SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      scrollDirection: Axis.horizontal,
+                      child: Container(
+                        child: Text(
+                          widget.selectedList[index]["name"],
+                          style: TextStyle(color: Colors.white, fontSize: 20),
+                        ),
+                      ),
                     ),
                     Text(
-                      widget.selectedList[index]["type"],
+                      widget.selectedList[index]["shoptype"],
                       style: kfontH3Inter(),
                     ),
                     Text(

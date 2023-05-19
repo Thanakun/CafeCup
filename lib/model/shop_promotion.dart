@@ -25,4 +25,9 @@ class ShopPromotion {
       shopPromotionExpiredDate: json['shop_promotion_expired_date'] as int,
     );
   }
+
+   Map<String, dynamic> toJson() => {
+        "shopId": shopId,
+        "shopPromotionId" : shopPromotionId
+    };
 }

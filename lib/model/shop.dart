@@ -8,25 +8,27 @@ class Shop {
   String shopMenuId;
   String shopName;
   String shopImage;
-  double shopScore;
   String shopDescription;
   String shopFoodType;
+  double shopScore;
   List shopPromotionId;
   List shopMissionId;
   bool shopStatusMembership;
 
   Shop(
-      {required this.shopId,
+      {
+      required this.shopId,
       required this.shopLocation,
+      required this.shopMenuId,
       required this.shopName,
       required this.shopImage,
       required this.shopDescription,
       required this.shopFoodType,
+      required this.shopScore,
       required this.shopPromotionId,
       required this.shopMissionId,
       required this.shopStatusMembership,
-      required this.shopMenuId,
-      required this.shopScore});
+      });
 
   factory Shop.fromJson(Map<String, dynamic> json) {
     return Shop(

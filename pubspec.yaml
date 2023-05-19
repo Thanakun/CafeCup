@@ -48,6 +48,7 @@ dependencies:
   shared_preferences: ^2.1.0
   simple_animations: ^5.0.0+3
   uri: ^1.0.0
+  animated_text_kit: ^4.2.2
   # provider:
 
 flutter_icons:
