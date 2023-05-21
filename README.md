@@ -16,7 +16,7 @@ For help getting started with Flutter development, view the
 samples, guidance on mobile development, and a full API reference.
 
 
-## How do using the application
+## How to running the application and starting the app
 
 1. you need to go to the Connection file and create the database in phpmyadmin using the xampp
 
