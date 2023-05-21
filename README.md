@@ -16,7 +16,7 @@ For help getting started with Flutter development, view the
 samples, guidance on mobile development, and a full API reference.
 
 
-## How do using the application
+## How to running the application and starting the app
 
 1. you need to go to the Connection file and create the database in phpmyadmin using the xampp
 
@@ -40,4 +40,7 @@ Doing : Connect with firebase database cloud
 Done : Connecting the backend and frontend with phpmyadmin
 
 16/5/2565
-Inprogress : FE1: UserHomeViewPage Change the Project Structure from spaghetti to MVVM
+Inprogress : FE: UserHomeViewPage Change the Project Structure from spaghetti to MVVM
+
+21/5/2565
+DONE : FE: Make the MVVM Project Structure to the current implement to connecting the database service 
