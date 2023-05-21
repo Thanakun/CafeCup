@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:flutter_application_1/model/review_record.dart';
 import 'package:flutter_application_1/model/shop.dart';
 import 'package:flutter_application_1/service/search_service/search_shop_interface.dart';
 
@@ -10,6 +11,11 @@ class SearchShopMockService implements SearchShopServiceInterface {
     'เมนูของทอด',
     'เมนูของหวาน'
   ];
+
+  int _getRandomStarRating() {
+    final random = Random();
+    return random.nextInt(5) + 1;
+  }
 
   DateTime _getRandomOpenTime() {
     int hour = random.nextInt(2) + 8; // Random hour between 8 and 9
@@ -33,11 +39,15 @@ class SearchShopMockService implements SearchShopServiceInterface {
   // }
 
   @override
-  Future<List<Shop>> fetchItemByKeyword() async {
+  Future<List<Shop>> fetchAllShopList() async {
     int count = 10;
     List<Shop> items = [];
     DateTime currentDate = DateTime.now();
     int currentMonth = currentDate.month;
+
+    int totalFoodScore = 0;
+    int totalServiceScore = 0;
+    int totalPlaceScore = 0;
 
     int currentYear = currentDate.year;
     for (int index = 0; index < count; index++) {
@@ -47,6 +57,15 @@ class SearchShopMockService implements SearchShopServiceInterface {
       DateTime monthStartDate = DateTime(year, month);
       DateTime openTime = _getRandomOpenTime();
       DateTime closeTime = _getRandomCloseTime(openTime);
+
+      double foodScore = _getRandomStarRating().toDouble();
+      double serviceScore = _getRandomStarRating().toDouble();
+      double placeScore = _getRandomStarRating().toDouble();
+
+      totalFoodScore += foodScore.toInt();
+      totalServiceScore += serviceScore.toInt();
+      totalPlaceScore += placeScore.toInt();
+
       items.add(Shop(
         shopId: index + 1,
         shopName: "Product $index ",
@@ -58,12 +77,72 @@ class SearchShopMockService implements SearchShopServiceInterface {
         shopCloseTime: closeTime,
         shopOpenTime: openTime,
         shopFoodCategory: _getRandomType(),
-        shopImagePath:"Mock Shop Image URL",
+        shopImagePath: "Mock Shop Image URL",
         shopLocationCoordination: '',
         shopLocationText: '',
+        shopScorePoint: foodScore,
+        shopScoreService: serviceScore,
+        shopScorePlace: placeScore,
       ));
+    }
+
+    double averageFoodScore = totalFoodScore / count;
+    double averageServiceScore = totalServiceScore / count;
+    double averagePlaceScore = totalPlaceScore / count;
+
+    for (int index = 0; index < count; index++) {
+      items[index].shopScorePoint = averageFoodScore;
+      items[index].shopScoreService = averageServiceScore;
+      items[index].shopScorePlace = averagePlaceScore;
     }
     // items.sort((a, b) => b['unitSale'].compareTo(a['unitSale']));
     return items;
+  }
+
+  @override
+  Future<List<ReviewRecord>> fetchReviewRecordAllShop() async {
+    List<ReviewRecord> itemReviewRecord = [];
+    List<int> userIds = List.generate(100, (index) => index + 1);
+    List<int> shopIds = List.generate(10, (index) => index + 1);
+    List<double> starPoints = [1.0, 2.0, 3.0, 4.0, 5.0];
+
+    // Generate 100 reviews for 10 shops from different user IDs
+    for (int i = 0; i < 100; i++) {
+      if (userIds.isEmpty) {
+        break; // Break the loop if the user IDs are exhausted
+      }
+
+      int randomUserIdIndex = random.nextInt(userIds.length);
+      int randomShopIdIndex = random.nextInt(shopIds.length);
+      int userId = userIds[randomUserIdIndex];
+      int shopId = shopIds[randomShopIdIndex];
+      double randomStarPointPoint =
+          starPoints[random.nextInt(starPoints.length)];
+      double randomStarPointService =
+          starPoints[random.nextInt(starPoints.length)];
+      double randomStarPointPlace =
+          starPoints[random.nextInt(starPoints.length)];
+
+      itemReviewRecord.add(
+        ReviewRecord(
+          reviewId: i + 1,
+          userId: userId,
+          shopId: shopId,
+          shopImagePath: "Mock Shop Image URL",
+          starPointPoint: randomStarPointPoint,
+          starPointService: randomStarPointService,
+          starPointPlace: randomStarPointPlace,
+          comment: "Mock Comment $i",
+          foodImagePath: "Mock Food Image URL",
+          checkInTime: DateTime.now(),
+        ),
+      );
+
+      // Remove the used user ID to ensure uniqueness
+      userIds.removeAt(randomUserIdIndex);
+    }
+    print(itemReviewRecord.length);
+
+    return itemReviewRecord;
   }
 }

@@ -6,6 +6,7 @@ import 'package:pixel_perfect/pixel_perfect.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 import 'package:flutter_application_1/utility/my_constant.dart';
 import 'package:intl/intl.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 
 const mockupHeight = 844;
 const mockupWidth = 390;
@@ -24,6 +25,7 @@ class _UserSearchPageState extends State<UserSearchPage> {
 
   // For decoration
 
+  bool isDropDownClicked = false;
   bool startAnimation = false;
 
   @override
@@ -44,6 +46,7 @@ class _UserSearchPageState extends State<UserSearchPage> {
 
   Future<void> initializeData() async {
     await _searchViewModel.fetchAllShopItem();
+    await _searchViewModel.fetchAllReviewRecordItem();
   }
 
   @override
@@ -190,21 +193,95 @@ class _UserSearchPageState extends State<UserSearchPage> {
                     _sectionBufferWidth(bufferSection: 10),
                     Expanded(
                       flex: 5,
-                      child: GestureDetector(
-                        child: Container(
-                          alignment: Alignment.center,
-                          width: 100,
-                          height: 30,
-                          decoration: BoxDecoration(
-                              color: kRedButton,
-                              borderRadius: BorderRadius.circular(5)),
-                          child: Text(
-                            "Filter",
-                            style: kfontH1InterWhiteColor(),
+
+                      //TODO  to be implement the filter order by . . .
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton2(
+                          isExpanded: true,
+                          hint: Row(
+                            children: const [
+                              Icon(
+                                Icons.list,
+                                size: 16,
+                                color: Colors.orange,
+                              ),
+                              SizedBox(
+                                width: 4,
+                              ),
+                              Expanded(
+                                child: Text(
+                                  'Select Item',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.orange,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                          items: _searchViewModel.itemsFilterOrder
+                              .map((item) => DropdownMenuItem<String>(
+                                    value: item,
+                                    child: Text(
+                                      item,
+                                      style: kfontH2InterWhiteColor(),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ))
+                              .toList(),
+                          value: _searchViewModel.searchFilterOrder,
+                          onChanged: (value) {
+                            setState(() {
+                              _searchViewModel.searchFilterOrder =
+                                  value as String;
+                                  // _searchViewModel.listAllFilterShop = ;
+                            });
+                          },
+                          buttonStyleData: ButtonStyleData(
+                            height: 35,
+                            width: 270,
+                            padding: const EdgeInsets.only(left: 14, right: 14),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(
+                                  color: Colors.black26,
+                                ),
+                                color: kRedButton),
+                            elevation: 2,
+                          ),
+                          iconStyleData: const IconStyleData(
+                            icon: Icon(
+                              Icons.arrow_forward_ios_outlined,
+                            ),
+                            iconSize: 16,
+                            iconEnabledColor: Colors.black,
+                            iconDisabledColor: Colors.yellow,
+                          ),
+                          dropdownStyleData: DropdownStyleData(
+                              maxHeight: 200,
+                              width: 270,
+                              // padding: null,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(14),
+                                color: kRedButton,
+                              ),
+                              elevation: 8,
+                              // offset: const Offset(-20, 0),
+                              scrollbarTheme: ScrollbarThemeData(
+                                radius: const Radius.circular(8),
+                                // thickness: MaterialStateProperty.all(6),
+                                thumbVisibility:
+                                    MaterialStateProperty.all(true),
+                              )),
+                          menuItemStyleData: const MenuItemStyleData(
+                            height: 40,
+                            padding: EdgeInsets.only(left: 14, right: 14),
                           ),
                         ),
                       ),
-                    ),
+                    )
                   ],
                 ),
               ),
@@ -220,9 +297,9 @@ class _UserSearchPageState extends State<UserSearchPage> {
 
   Widget _buildShopList(
       {required double cardHight, required double cardWidth}) {
-    if (_searchViewModel.listFilterShopFuture == null) {
+    if (_searchViewModel.listAllFilterShop == null) {
       return Center(child: CircularProgressIndicator());
-    } else if (_searchViewModel.listFilterShopFuture!.isEmpty) {
+    } else if (_searchViewModel.listAllFilterShop!.isEmpty) {
       return Center(child: Text('No shops found.'));
     } else {
       return Expanded(
@@ -230,7 +307,7 @@ class _UserSearchPageState extends State<UserSearchPage> {
           physics: BouncingScrollPhysics(),
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
-          itemCount: _searchViewModel.listFilterShopFuture!.length,
+          itemCount: _searchViewModel.listAllFilterShop!.length,
           itemBuilder: (context, index) {
             return AnimatedContainer(
               curve: Curves.easeInOut,
@@ -238,10 +315,10 @@ class _UserSearchPageState extends State<UserSearchPage> {
               transform: Matrix4.translationValues(
                   startAnimation ? 0 : MediaQuery.of(context).size.width, 0, 0),
               margin: EdgeInsets.symmetric(vertical: 7, horizontal: 10),
-              child: _searchViewModel.listFilterShopFuture![index].shopOpenTime
+              child: _searchViewModel.listAllFilterShop![index].shopOpenTime
                           .isBefore(_searchViewModel.isOpenCurrentTime) &&
                       _searchViewModel
-                          .listFilterShopFuture![index].shopCloseTime
+                          .listAllFilterShop![index].shopCloseTime
                           .isAfter(_searchViewModel.isOpenCurrentTime)
                   ? shopOpenListCard(cardHight, cardWidth, index)
                   : shopCloseListCard(cardHight, cardWidth, index),
@@ -281,7 +358,7 @@ class _UserSearchPageState extends State<UserSearchPage> {
                   width: 200,
                   margin: EdgeInsets.fromLTRB(20, 0, 0, 0),
                   child: Text(
-                    _searchViewModel.listFilterShopFuture![index].shopName
+                    _searchViewModel.listAllFilterShop![index].shopName
                         .toString(),
                     style: kfontH2InterBlackColor(),
                     overflow: TextOverflow.ellipsis,
@@ -303,15 +380,15 @@ class _UserSearchPageState extends State<UserSearchPage> {
                   //TODO : Need to see how many people score for this shop
                   TextSpan(
                       text:
-                          "${_searchViewModel.listFilterShopFuture![index].shopScore.toString()} (69) | 555km"),
+                          "${_searchViewModel.listAllFilterShop![index].shopScore.toString()} (69) | 555km"),
                 ], style: kfontH3InterBlackColor()),
               ),
               _sectionBufferHeight(bufferSection: 5),
               _sectionBufferHeight(bufferSection: 13),
               Text(
-                "OPEN: ${DateFormat('HH:mm ').format(_searchViewModel.listFilterShopFuture![index].shopOpenTime)} " +
+                "OPEN: ${DateFormat('HH:mm ').format(_searchViewModel.listAllFilterShop![index].shopOpenTime)} " +
                     "| " +
-                    "CLOSE: ${DateFormat('HH:mm ').format(_searchViewModel.listFilterShopFuture![index].shopCloseTime)} ",
+                    "CLOSE: ${DateFormat('HH:mm ').format(_searchViewModel.listAllFilterShop![index].shopCloseTime)} ",
                 style: kfontH4InterBlackColor(),
               ),
               // Text(
@@ -330,9 +407,10 @@ class _UserSearchPageState extends State<UserSearchPage> {
       // width: MediaQuery.of(context).size.width - cardWidth - 20,
       height: cardHight,
       decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(3),
-          border: Border.all(width: 1,color: Colors.black.withOpacity(0.5)),),
+        color: Colors.black.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(3),
+        border: Border.all(width: 1, color: Colors.black.withOpacity(0.5)),
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -356,7 +434,7 @@ class _UserSearchPageState extends State<UserSearchPage> {
                   width: 200,
                   margin: EdgeInsets.fromLTRB(20, 0, 0, 0),
                   child: Text(
-                    _searchViewModel.listFilterShopFuture![index].shopName
+                    _searchViewModel.listAllFilterShop![index].shopName
                         .toString(),
                     style: kfontH2InterBlackColorHalfOpacity(),
                     overflow: TextOverflow.ellipsis,
@@ -378,15 +456,15 @@ class _UserSearchPageState extends State<UserSearchPage> {
                   //TODO : Need to see how many people score for this shop
                   TextSpan(
                       text:
-                          "${_searchViewModel.listFilterShopFuture![index].shopScore.toString()} (69) | 555km"),
+                          "${_searchViewModel.listAllFilterShop![index].shopScore.toString()} (69) | 555km"),
                 ], style: kfontH3InterBlackColorHalfOpacity()),
               ),
               _sectionBufferHeight(bufferSection: 5),
               _sectionBufferHeight(bufferSection: 13),
               Text(
-                "OPEN: ${DateFormat('HH:mm ').format(_searchViewModel.listFilterShopFuture![index].shopOpenTime)} " +
+                "OPEN: ${DateFormat('HH:mm ').format(_searchViewModel.listAllFilterShop![index].shopOpenTime)} " +
                     "| " +
-                    "CLOSE: ${DateFormat('HH:mm ').format(_searchViewModel.listFilterShopFuture![index].shopCloseTime)} ",
+                    "CLOSE: ${DateFormat('HH:mm ').format(_searchViewModel.listAllFilterShop![index].shopCloseTime)} ",
                 style: kfontH4InterBlackColorHalfOpacity(),
               ),
               // Text(
@@ -436,4 +514,3 @@ SizedBox _sectionBufferWidth({double bufferSection = 8}) {
 //                   Text(_searchViewModel.listFilterShopFuture![index].shopName),
 //                 ],
 //               ),
-            

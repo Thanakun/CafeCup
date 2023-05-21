@@ -13,6 +13,9 @@ class Shop {
   // String shopAvailibleTime;
   String shopFoodCategory;
   double shopScore;
+  double shopScorePoint;
+  double shopScorePlace;
+  double shopScoreService;
   int shopMissionId;
   bool shopStatusMembership;
   List shopPromotionId;
@@ -29,6 +32,9 @@ class Shop {
     // required this.shopAvailibleTime,
     required this.shopFoodCategory,
     required this.shopScore,
+    required this.shopScorePoint,
+    required this.shopScorePlace,
+    required this.shopScoreService,
     required this.shopMissionId,
     required this.shopStatusMembership,
     required this.shopOpenTime,
@@ -46,12 +52,30 @@ class Shop {
       shopDescription: json['shop_description'] as String,
       // shopAvailibleTime: json['shop_availible_time'] as String,
       shopFoodCategory: json['shop_food_category'] as String,
-      shopScore: json['shop_score'] as double,
       shopMissionId: json['shop_mission_id'] as int,
       shopStatusMembership: json['shop_status_membership'] as bool,
       shopOpenTime: DateTime.parse(json['shop_open_time'] as String),
       shopCloseTime: DateTime.parse(json['shop_close_time'] as String),
       shopPromotionId: (json['pmt_id'] as List<dynamic>).toList(),
+      shopScore: json['shop_score'] as double,
+      shopScorePlace: json['shop_place'] as double,
+      shopScoreService: json['shop_service'] as double,
+      shopScorePoint: json['shop_point'] as double,
     );
   }
+  // double? get averageFoodScore {
+  //   if (shopScorePoint == null) return null;
+  //   return shopScorePoint / 5.0;
+  // }
+
+  // double? get averageServiceScore {
+  //   print(shopScoreService);
+  //   if (shopScoreService == null) return null;
+  //   return shopScoreService / 5.0;
+  // }
+
+  // double? get averagePlaceScore {
+  //   if (shopScorePlace == null) return null;
+  //   return shopScorePlace / 5.0;
+  // }
 }

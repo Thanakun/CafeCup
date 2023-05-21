@@ -127,11 +127,13 @@ class HomeUserState extends State<HomeUsers> {
         Center(
           child: ZoomTapAnimation(
             child: GestureDetector(
-              onTap: () => Navigator.of(context).push(
-                CustomPageRoute(
-                  child: UserSearchPage(),
-                ),
-              ),
+              // onTap: () => Navigator.of(context).push(
+              //   CustomPageRoute(
+              //     child: UserSearchPage(),
+              //   ),
+              // ),
+              onTap: () => Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => UserSearchPage())),
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 10),
                 width: 345,
@@ -380,8 +382,6 @@ SizedBox _sectionBufferWidth({double bufferSection = 8}) {
     width: bufferSection,
   );
 }
-
-
 
 class ItemCategoryHomeUserSlider extends StatefulWidget {
   const ItemCategoryHomeUserSlider({super.key});
