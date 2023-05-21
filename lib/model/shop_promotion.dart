@@ -1,33 +1,28 @@
 class ShopPromotion {
+  final int promotionId;
+  final String promotionName;
+  final String promtionImagePath;
+  final String promotionCategory;
+  final int promotionPrice;
   final int shopId;
-  final int shopPromotionId;
-  final int shopPromotionPointRequired;
-  final String shopPromotionDescription;
-  final int shopPromotionPrice;
-  final int shopPromotionExpiredDate;
 
   ShopPromotion({
+    required this.promotionId,
+    required this.promotionName,
+    required this.promtionImagePath,
+    required this.promotionCategory,
+    required this.promotionPrice,
     required this.shopId,
-    required this.shopPromotionId,
-    required this.shopPromotionPointRequired,
-    required this.shopPromotionDescription,
-    required this.shopPromotionPrice,
-    required this.shopPromotionExpiredDate,
   });
 
   factory ShopPromotion.fromJson(Map<String, dynamic> json) {
     return ShopPromotion(
+      promotionId: json['pmt_id'] as int,
+      promotionName: json['pmt_name'] as String,
+      promtionImagePath: json['pmt_img'] as String,
+      promotionCategory: json['pmt_category'] as String,
+      promotionPrice: json['pmt_price'] as int,
       shopId: json['shop_id'] as int,
-      shopPromotionId: json['shop_promotion_id'] as int,
-      shopPromotionPointRequired: json['shop_promotion_point_required'] as int,
-      shopPromotionDescription: json['shop_promotion_description'] as String,
-      shopPromotionPrice: json['shop_promotion_price'] as int,
-      shopPromotionExpiredDate: json['shop_promotion_expired_date'] as int,
     );
   }
-
-   Map<String, dynamic> toJson() => {
-        "shopId": shopId,
-        "shopPromotionId" : shopPromotionId
-    };
 }

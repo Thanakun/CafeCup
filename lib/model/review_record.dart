@@ -1,36 +1,39 @@
 class ReviewRecord {
+  final int reviewId;
   final int userId;
-  final double starPoint;
   final int shopId;
-  final String shopName;
-  final String menuId;
-  final String menuName;
+  final String shopImagePath;
+  final double starPointPoint;
+  final double starPointService;
+  final double starPointPlace;
   final String comment;
-  final String foodImage;
+  final String foodImagePath;
   final DateTime checkInTime;
 
   ReviewRecord({
+    required this.reviewId,
     required this.userId,
-    required this.starPoint,
     required this.shopId,
-    required this.shopName,
-    required this.menuId,
-    required this.menuName,
+    required this.shopImagePath,
+    required this.starPointPoint,
+    required this.starPointService,
+    required this.starPointPlace,
     required this.comment,
-    required this.foodImage,
+    required this.foodImagePath,
     required this.checkInTime,
   });
 
   factory ReviewRecord.fromJson(Map<String, dynamic> json) {
     return ReviewRecord(
+      reviewId: json['review_id'] as int,
       userId: json['user_id'] as int,
-      starPoint: json['star_point'] as double,
       shopId: json['shop_id'] as int,
-      shopName: json['shop_name'] as String,
-      menuId: json['menu_id'] as String,
-      menuName: json['menu_name'] as String,
+      shopImagePath: json['shop_image'] as String,
+      starPointPoint: json['star_point_food'] as double,
+      starPointService: json['star_point_service'] as double,
+      starPointPlace: json['star_point_place'] as double,
       comment: json['comment'] as String,
-      foodImage: json['food_image'] as String,
+      foodImagePath: json['food_image'] as String,
       checkInTime: DateTime.parse(json['check_in_time'] as String),
     );
   }

@@ -7,16 +7,16 @@
 // import 'package:flutter_application_1/screen/register.dart';
 // import 'package:flutter_application_1/model/users.dart';
 // import 'package:path/path.dart' as Path;
-import 'dart:ffi';
+// import 'dart:ffi';
 import 'package:animated_text_kit/animated_text_kit.dart';
-
+// import 'package:flutter_application_1/utility/';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/screen/my_component/custompageroute.dart';
 import 'package:flutter_application_1/screen/my_component/grid_component.dart';
 import 'package:flutter_application_1/screen/search_page.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
-import 'my_component/buttom_navigationbar.dart';
+import 'my_component/buttom_navigationbar_user.dart';
 import 'package:flutter_application_1/utility/my_constant.dart';
 import 'package:pixel_perfect/pixel_perfect.dart';
 import 'package:provider/provider.dart';
@@ -26,14 +26,14 @@ import 'package:flutter_application_1/viewmodel/user_home_page.dart';
 const mockupHeight = 844;
 const mockupWidth = 390;
 
-class home_users extends StatefulWidget {
-  const home_users({super.key});
+class HomeUsers extends StatefulWidget {
+  const HomeUsers({super.key});
 
   @override
-  State<home_users> createState() => HomeUserState();
+  State<HomeUsers> createState() => HomeUserState();
 }
 
-class HomeUserState extends State<home_users> {
+class HomeUserState extends State<HomeUsers> {
   final UserShopHomePageViewModel viewModel = UserShopHomePageViewModel();
 
   @override
@@ -59,62 +59,64 @@ class HomeUserState extends State<home_users> {
     return PixelPerfect(
       scale: scale,
       assetPath: "assets/images/Homepage.png",
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(
-              Icons.menu,
-              color: Colors.black,
+      child: SafeArea(
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          appBar: AppBar(
+            leading: IconButton(
+              icon: Icon(
+                Icons.menu,
+                color: Colors.black,
+              ),
+              onPressed: () {},
             ),
-            onPressed: () {},
+            centerTitle: true,
+            title: Text(
+              "Home",
+              style: TextStyle(
+                color: Colors.black,
+              ),
+            ),
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            actions: [],
           ),
-          centerTitle: true,
-          title: Text(
-            "Home",
-            style: TextStyle(
-              color: Colors.black,
+          body: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Column(
+              children: [
+                searchBar(),
+                _sectionBufferHeight(),
+                headSliderMenuBar(),
+                _sectionBufferHeight(),
+                const ItemCategoryHomeUserSlider(),
+                _sectionBufferHeight(bufferSection: 30),
+                selectableBestOfWeekMonthSection(),
+                BuildGridView(
+                    selectedList: viewModel.selectedMonthWeek == "month"
+                        ? viewModel.categoryEatMonth
+                        : viewModel.categoryEatWeek,
+                    sectionHeightList: 250),
+                _sectionBufferHeight(),
+                _sectionBufferHeight(bufferSection: 30),
+                _headerFavoriteShop("ร้านประจำ"),
+                dividerLine(),
+                selectFrequencyFavoriteSection(),
+                _headerFavoriteShop("ร้านที่คุณอาจสนใจ"),
+                dividerLine(),
+                BuildGridView(
+                    selectedList: viewModel.myListThatMightLike,
+                    sectionHeightList: 250),
+                _headerFavoriteShop("ร้านที่มีโปรโมชัน"),
+                dividerLine(),
+                BuildGridView(
+                    selectedList: viewModel.myListShopHasPromotion,
+                    sectionHeightList: 250)
+              ],
             ),
           ),
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          actions: [],
+          bottomNavigationBar: userBottomNavigationBar(context),
         ),
-        body: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: Column(
-            children: [
-              searchBar(),
-              _sectionBufferHeight(),
-              headSliderMenuBar(),
-              _sectionBufferHeight(),
-              const ItemCategoryHomeUserSlider(),
-              _sectionBufferHeight(bufferSection: 30),
-              selectableBestOfWeekMonthSection(),
-              BuildGridView(
-                  selectedList: viewModel.selectedMonthWeek == "month"
-                      ? viewModel.categoryEatMonth
-                      : viewModel.categoryEatWeek,
-                  sectionHeightList: 250),
-              _sectionBufferHeight(),
-              _sectionBufferHeight(bufferSection: 30),
-              _headerFavoriteShop("ร้านประจำ"),
-              dividerLine(),
-              selectFrequencyFavoriteSection(),
-              _headerFavoriteShop("ร้านที่คุณอาจสนใจ"),
-              dividerLine(),
-              BuildGridView(
-                  selectedList: viewModel.myListThatMightLike,
-                  sectionHeightList: 250),
-              _headerFavoriteShop("ร้านที่มีโปรโมชัน"),
-              dividerLine(),
-              BuildGridView(
-                  selectedList: viewModel.myListShopHasPromotion,
-                  sectionHeightList: 250)
-            ],
-          ),
-        ),
-        bottomNavigationBar: navigationBar(context),
       ),
     );
   }
@@ -205,7 +207,7 @@ class HomeUserState extends State<home_users> {
         ),
         child: Text(
           favoriteFrequncyMenu,
-          style: kfontH4Inter(),
+          style: kfontH4InterBlackColor(),
         ),
       ),
       onTap: () {
@@ -297,7 +299,7 @@ class HomeUserState extends State<home_users> {
         ),
         child: Text(
           categoryMenu,
-          style: kfontH4Inter(),
+          style: kfontH4InterBlackColor(),
         ),
       ),
       onTap: () {
@@ -333,7 +335,7 @@ class HomeUserState extends State<home_users> {
         ),
         child: Text(
           viral,
-          style: kfontH3Inter(),
+          style: kfontH3InterBlackColor(),
         ),
       ),
     );
@@ -351,7 +353,7 @@ Widget _headerFavoriteShop(String favoriteShop) {
     ),
     child: Text(
       favoriteShop,
-      style: kfontH3Inter(),
+      style: kfontH3InterBlackColor(),
     ),
   );
 }
@@ -379,6 +381,8 @@ SizedBox _sectionBufferWidth({double bufferSection = 8}) {
   );
 }
 
+
+
 class ItemCategoryHomeUserSlider extends StatefulWidget {
   const ItemCategoryHomeUserSlider({super.key});
 
@@ -390,7 +394,7 @@ class ItemCategoryHomeUserSlider extends StatefulWidget {
 Text headSliderMenuBar() {
   return Text(
     "ร้านค้าแนะนำ",
-    style: kfontH1Inter(),
+    style: kfontH1InterBlackColor(),
   );
 }
 
@@ -446,7 +450,7 @@ class RecommendShopHeader extends StatelessWidget {
           ),
           Text(
             iconText,
-            style: kfontH2Inter(),
+            style: kfontH2InterBlackColor(),
           )
         ],
       ),

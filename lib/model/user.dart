@@ -2,15 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Users {
-  // static Future <bool?> get_signin() async{
-  //   SharedPreferences pref = await SharedPreferences.getInstance();
-  //   return pref.getBool("Sign-in");
-  // }
-  // static Future set_signin(bool sign_in) async {
-  //   SharedPreferences pref = await SharedPreferences.getInstance();
-  //   await pref.setString("id", users.fromJSon());
-
-  // }
 
   int id;
   String username;
@@ -41,8 +32,8 @@ class Users {
         email: json['email'] as String,
         gender: json['gender'] as String,
         age: json['age'] as String,
-        userPoint: json['userPoint'] as int,
-        userRole: json['userRole'] as String,
+        userPoint: json['user_point'] as int,
+        userRole: json['user_role'] as String,
         favoriteList: json['favoriteList'] as List<Object>);
   }
 }

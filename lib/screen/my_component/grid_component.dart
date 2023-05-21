@@ -51,20 +51,18 @@ class _BuildGridViewState extends State<BuildGridView> {
                     SingleChildScrollView(
                       physics: const BouncingScrollPhysics(),
                       scrollDirection: Axis.horizontal,
-                      child: Container(
-                        child: Text(
-                          widget.selectedList[index]["name"],
-                          style: TextStyle(color: Colors.white, fontSize: 20),
-                        ),
+                      child: Text(
+                        widget.selectedList[index]["name"],
+                        style: kfontH2InterWhiteColor(),
                       ),
                     ),
                     Text(
                       widget.selectedList[index]["shoptype"],
-                      style: kfontH3Inter(),
+                      style: kfontH3InterBlackColor(),
                     ),
                     Text(
                       name,
-                      style: kfontH3Inter(),
+                      style: kfontH3InterBlackColor(),
                     ),
                   ],
                 ),
