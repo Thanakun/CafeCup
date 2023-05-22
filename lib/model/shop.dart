@@ -12,10 +12,10 @@ class Shop {
   String shopDescription;
   // String shopAvailibleTime;
   String shopFoodCategory;
-  double shopScore;
-  double shopScorePoint;
-  double shopScorePlace;
-  double shopScoreService;
+  double shopAverageAllScore;
+  double shopAverageScorePoint;
+  double shopAverageScorePlace;
+  double shopAverageScoreService;
   int shopMissionId;
   bool shopStatusMembership;
   List shopPromotionId;
@@ -31,10 +31,10 @@ class Shop {
     required this.shopDescription,
     // required this.shopAvailibleTime,
     required this.shopFoodCategory,
-    required this.shopScore,
-    required this.shopScorePoint,
-    required this.shopScorePlace,
-    required this.shopScoreService,
+    required this.shopAverageAllScore,
+    required this.shopAverageScorePoint,
+    required this.shopAverageScorePlace,
+    required this.shopAverageScoreService,
     required this.shopMissionId,
     required this.shopStatusMembership,
     required this.shopOpenTime,
@@ -57,25 +57,26 @@ class Shop {
       shopOpenTime: DateTime.parse(json['shop_open_time'] as String),
       shopCloseTime: DateTime.parse(json['shop_close_time'] as String),
       shopPromotionId: (json['pmt_id'] as List<dynamic>).toList(),
-      shopScore: json['shop_score'] as double,
-      shopScorePlace: json['shop_place'] as double,
-      shopScoreService: json['shop_service'] as double,
-      shopScorePoint: json['shop_point'] as double,
+      shopAverageAllScore: json['shop_score'] as double,
+      shopAverageScorePlace: json['shop_place'] as double,
+      shopAverageScoreService: json['shop_service'] as double,
+      shopAverageScorePoint: json['shop_point'] as double,
     );
   }
-  // double? get averageFoodScore {
-  //   if (shopScorePoint == null) return null;
-  //   return shopScorePoint / 5.0;
-  // }
+  
+  void updateAverageScoreById(int shopId, double newScorePoint,
+      double newScorePlace, double newScoreService) {
+    if (this.shopId == shopId) {
+      // Update the average scores based on the new values
+      shopAverageScorePoint = newScorePoint;
+      shopAverageScorePlace = newScorePlace;
+      shopAverageScoreService = newScoreService;
 
-  // double? get averageServiceScore {
-  //   print(shopScoreService);
-  //   if (shopScoreService == null) return null;
-  //   return shopScoreService / 5.0;
-  // }
-
-  // double? get averagePlaceScore {
-  //   if (shopScorePlace == null) return null;
-  //   return shopScorePlace / 5.0;
-  // }
+      // Recalculate the overall average score
+      shopAverageAllScore = (shopAverageScorePoint +
+              shopAverageScorePlace +
+              shopAverageScoreService) /
+          3.0;
+    }
+  }
 }

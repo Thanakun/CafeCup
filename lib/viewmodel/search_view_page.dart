@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_application_1/model/shop.dart';
 import 'package:flutter_application_1/service/search_service/search_shop_interface.dart';
 import 'package:flutter_application_1/service/search_service/search_shop_mock_service.dart';
@@ -12,7 +13,7 @@ class SearchViewModel {
     "ระยะทาง"
   ];
 
-  String searchFilterOrder = "คะแนนรวม";
+  String? searchFilterOrder;
   bool isCheckedTheFilterTime = false;
   DateTime isOpenCurrentTime = DateTime.now();
   Future<List<Shop>>? listAllShopFuture;
@@ -30,15 +31,47 @@ class SearchViewModel {
 
     // Calculate shop averages
     if (listShopReviewRecord != null) {
-      List<ShopReview> shopAverages =
-          ShopStatistics.calculateShopAverages(listShopReviewRecord!);
+      Map<int, List<double>> shopStarPoints = {};
+
+      // Calculate sum of star points for each shop
+      for (ReviewRecord review in listShopReviewRecord!) {
+        int shopId = review.shopId;
+        double point = review.starPointPoint.toDouble();
+        double service = review.starPointService.toDouble();
+        double place = review.starPointPlace.toDouble();
+
+        if (shopStarPoints.containsKey(shopId)) {
+          shopStarPoints[shopId]![0] += point;
+          shopStarPoints[shopId]![1] += service;
+          shopStarPoints[shopId]![2] += place;
+          shopStarPoints[shopId]![3] += 1; // count
+        } else {
+          shopStarPoints[shopId] = [point, service, place, 1];
+        }
+      }
+
+      // Calculate average star points for each shop and update the Shop model
+      listAllFilterShop?.forEach((shop) {
+        int shopId = shop.shopId;
+        if (shopStarPoints.containsKey(shopId)) {
+          double count = shopStarPoints[shopId]![3];
+          double averagePoint = shopStarPoints[shopId]![0] / count;
+          double averageService = shopStarPoints[shopId]![1] / count;
+          double averagePlace = shopStarPoints[shopId]![2] / count;
+
+          shop.shopAverageScorePoint = averagePoint;
+          shop.shopAverageScoreService = averageService;
+          shop.shopAverageScorePlace = averagePlace;
+        }
+      });
 
       // Print shop ID and average star points
-      for (ShopReview shopReview in shopAverages) {
-        print('Shop ID: ${shopReview.shopId}');
-        print('Average Point: ${shopReview.averageFood}');
-        print('Average Service: ${shopReview.averageService}');
-        print('Average Place: ${shopReview.averagePlace}');
+      for (Shop shop in listAllFilterShop!) {
+        print('Shop ID: ${shop.shopId}');
+        print('Average All Point: ${shop.shopAverageAllScore}');
+        print('Average Point: ${shop.shopAverageScorePoint}');
+        print('Average Service: ${shop.shopAverageScoreService}');
+        print('Average Place: ${shop.shopAverageScorePlace}');
         print('----------------------------');
       }
     }
@@ -68,16 +101,17 @@ class SearchViewModel {
 
         // Apply the selected filter order
         if (searchFilterOrder == "คะแนนรวม") {
-          listAllFilterShop?.sort((a, b) => b.shopScore.compareTo(a.shopScore));
-        } else if (searchFilterOrder == "คะแนนอาหาร") {
-          listAllFilterShop
-              ?.sort((a, b) => b.shopScorePoint.compareTo(a.shopScorePoint));
-        } else if (searchFilterOrder == "คะแนนบริการ") {
           listAllFilterShop?.sort(
-              (a, b) => b.shopScoreService.compareTo(a.shopScoreService));
+              (a, b) => b.shopAverageAllScore.compareTo(a.shopAverageAllScore));
+        } else if (searchFilterOrder == "คะแนนอาหาร") {
+          listAllFilterShop?.sort((a, b) =>
+              b.shopAverageScorePoint.compareTo(a.shopAverageScorePoint));
+        } else if (searchFilterOrder == "คะแนนบริการ") {
+          listAllFilterShop?.sort((a, b) =>
+              b.shopAverageScoreService.compareTo(a.shopAverageScoreService));
         } else if (searchFilterOrder == "คะแนนสถานที่") {
-          listAllFilterShop
-              ?.sort((a, b) => b.shopScorePlace.compareTo(a.shopScorePlace));
+          listAllFilterShop?.sort((a, b) =>
+              b.shopAverageScorePlace.compareTo(a.shopAverageScorePlace));
         } else if (searchFilterOrder == "ระยะทาง") {
           // Implement the sorting based on distance here
         }
@@ -89,65 +123,17 @@ class SearchViewModel {
     listAllShopFuture = service.fetchAllShopList();
     List<Shop>? result = await listAllShopFuture;
     listAllFilterShop = result;
-    print(listAllFilterShop?.length);
+    print("${listAllFilterShop?.length} Hello");
   }
-}
 
-class ShopReview {
-  final int shopId;
-  final double averageFood;
-  final double averageService;
-  final double averagePlace;
-
-  ShopReview({
-    required this.shopId,
-    required this.averageFood,
-    required this.averageService,
-    required this.averagePlace,
-  });
-}
-
-class ShopStatistics {
-  static List<ShopReview> calculateShopAverages(
-      List<ReviewRecord> reviewRecords) {
-    Map<int, List<double>> shopStarPoints = {};
-
-    // Calculate sum of star points for each shop
-    print(reviewRecords);
-    for (ReviewRecord review in reviewRecords) {
-      int shopId = review.shopId;
-      double point = review.starPointPoint.toDouble();
-      double service = review.starPointService.toDouble();
-      double place = review.starPointPlace.toDouble();
-
-      if (shopStarPoints.containsKey(shopId)) {
-        shopStarPoints[shopId]![0] += point;
-        shopStarPoints[shopId]![1] += service;
-        shopStarPoints[shopId]![2] += place;
-        shopStarPoints[shopId]![3] += 1; // count
-      } else {
-        shopStarPoints[shopId] = [point, service, place, 1];
-      }
+  Shop? getShopById(int id) {
+    try {
+      Shop? shop = listAllFilterShop?[id];
+      // Do something with the shop
+      return shop;
+    } catch (e) {
+      // Shop not found or error occurred
+      return null;
     }
-
-    
-
-    // Calculate average star points for each shop
-    List<ShopReview> shopAverages = [];
-    shopStarPoints.forEach((shopId, starPoints) {
-      double count = starPoints[3];
-      double averagePoint = starPoints[0] / count;
-      double averageService = starPoints[1] / count;
-      double averagePlace = starPoints[2] / count;
-
-      shopAverages.add(ShopReview(
-        shopId: shopId,
-        averageFood: averagePoint,
-        averageService: averageService,
-        averagePlace: averagePlace,
-      ));
-    });
-
-    return shopAverages;
   }
 }

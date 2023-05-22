@@ -68,9 +68,9 @@ class SearchShopMockService implements SearchShopServiceInterface {
 
       items.add(Shop(
         shopId: index + 1,
-        shopName: "Product $index ",
+        shopName: "Product ${index + 1}",
         shopDescription: "Mock Shop Description",
-        shopScore: 4.5,
+        shopAverageAllScore: (foodScore + serviceScore + placeScore) / 3,
         shopPromotionId: ["Mock Promotion ID 1", "Mock Promotion ID 2"],
         shopMissionId: 1,
         shopStatusMembership: true,
@@ -80,9 +80,9 @@ class SearchShopMockService implements SearchShopServiceInterface {
         shopImagePath: "Mock Shop Image URL",
         shopLocationCoordination: '',
         shopLocationText: '',
-        shopScorePoint: foodScore,
-        shopScoreService: serviceScore,
-        shopScorePlace: placeScore,
+        shopAverageScorePoint: foodScore,
+        shopAverageScoreService: serviceScore,
+        shopAverageScorePlace: placeScore,
       ));
     }
 
@@ -91,9 +91,9 @@ class SearchShopMockService implements SearchShopServiceInterface {
     double averagePlaceScore = totalPlaceScore / count;
 
     for (int index = 0; index < count; index++) {
-      items[index].shopScorePoint = averageFoodScore;
-      items[index].shopScoreService = averageServiceScore;
-      items[index].shopScorePlace = averagePlaceScore;
+      items[index].shopAverageScorePoint = averageFoodScore;
+      items[index].shopAverageScoreService = averageServiceScore;
+      items[index].shopAverageScorePlace = averagePlaceScore;
     }
     // items.sort((a, b) => b['unitSale'].compareTo(a['unitSale']));
     return items;
@@ -102,12 +102,12 @@ class SearchShopMockService implements SearchShopServiceInterface {
   @override
   Future<List<ReviewRecord>> fetchReviewRecordAllShop() async {
     List<ReviewRecord> itemReviewRecord = [];
-    List<int> userIds = List.generate(100, (index) => index + 1);
+    List<int> userIds = List.generate(10000, (index) => index + 1);
     List<int> shopIds = List.generate(10, (index) => index + 1);
     List<double> starPoints = [1.0, 2.0, 3.0, 4.0, 5.0];
 
     // Generate 100 reviews for 10 shops from different user IDs
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 10000; i++) {
       if (userIds.isEmpty) {
         break; // Break the loop if the user IDs are exhausted
       }

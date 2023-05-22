@@ -133,7 +133,7 @@ class HomeUserState extends State<HomeUsers> {
               //   ),
               // ),
               onTap: () => Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => UserSearchPage())),
+                  MaterialPageRoute(builder: (context) => const UserSearchPage())),
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 10),
                 width: 345,

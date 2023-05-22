@@ -44,3 +44,7 @@ Inprogress : FE: UserHomeViewPage Change the Project Structure from spaghetti to
 
 21/5/2565
 DONE : FE: Make the MVVM Project Structure to the current implement to connecting the database service 
+
+22/5/2565
+DONE : FE: Finish The Search Page excluding the refactoring for the performance ,
+INPROGRESSING : FE IMPLEMENTING THE SHOP PAGE
