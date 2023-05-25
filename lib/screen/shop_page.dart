@@ -15,7 +15,24 @@ class _ShopPageState extends State<ShopPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Text(widget.shop!.shopId.toString()),
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            elevation: 0,
+            pinned: true,
+            centerTitle: false,
+            expandedHeight: 300,
+            flexibleSpace: const FlexibleSpaceBar(
+              background: Image(
+                //TODO Image That Shop have
+                image: AssetImage("assets/images/shop-wallpaper.jpg"),
+                fit: BoxFit.cover,
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 }

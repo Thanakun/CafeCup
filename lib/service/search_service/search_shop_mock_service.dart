@@ -102,12 +102,12 @@ class SearchShopMockService implements SearchShopServiceInterface {
   @override
   Future<List<ReviewRecord>> fetchReviewRecordAllShop() async {
     List<ReviewRecord> itemReviewRecord = [];
-    List<int> userIds = List.generate(10000, (index) => index + 1);
+    List<int> userIds = List.generate(500, (index) => index + 1);
     List<int> shopIds = List.generate(10, (index) => index + 1);
     List<double> starPoints = [1.0, 2.0, 3.0, 4.0, 5.0];
 
     // Generate 100 reviews for 10 shops from different user IDs
-    for (int i = 0; i < 10000; i++) {
+    for (int i = 0; i < 500; i++) {
       if (userIds.isEmpty) {
         break; // Break the loop if the user IDs are exhausted
       }

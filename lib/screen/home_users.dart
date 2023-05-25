@@ -56,67 +56,63 @@ class HomeUserState extends State<HomeUsers> {
     final height = MediaQuery.of(context).size.height;
     final scale = mockupWidth / width;
 
-    return PixelPerfect(
-      scale: scale,
-      assetPath: "assets/images/Homepage.png",
-      child: SafeArea(
-        child: Scaffold(
-          backgroundColor: Colors.white,
-          appBar: AppBar(
-            leading: IconButton(
-              icon: Icon(
-                Icons.menu,
-                color: Colors.black,
-              ),
-              onPressed: () {},
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(
+              Icons.menu,
+              color: Colors.black,
             ),
-            centerTitle: true,
-            title: Text(
-              "Home",
-              style: TextStyle(
-                color: Colors.black,
-              ),
-            ),
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            actions: [],
+            onPressed: () {},
           ),
-          body: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            child: Column(
-              children: [
-                searchBar(),
-                _sectionBufferHeight(),
-                headSliderMenuBar(),
-                _sectionBufferHeight(),
-                const ItemCategoryHomeUserSlider(),
-                _sectionBufferHeight(bufferSection: 30),
-                selectableBestOfWeekMonthSection(),
-                BuildGridView(
-                    selectedList: viewModel.selectedMonthWeek == "month"
-                        ? viewModel.categoryEatMonth
-                        : viewModel.categoryEatWeek,
-                    sectionHeightList: 250),
-                _sectionBufferHeight(),
-                _sectionBufferHeight(bufferSection: 30),
-                _headerFavoriteShop("ร้านประจำ"),
-                dividerLine(),
-                selectFrequencyFavoriteSection(),
-                _headerFavoriteShop("ร้านที่คุณอาจสนใจ"),
-                dividerLine(),
-                BuildGridView(
-                    selectedList: viewModel.myListThatMightLike,
-                    sectionHeightList: 250),
-                _headerFavoriteShop("ร้านที่มีโปรโมชัน"),
-                dividerLine(),
-                BuildGridView(
-                    selectedList: viewModel.myListShopHasPromotion,
-                    sectionHeightList: 250)
-              ],
+          centerTitle: true,
+          title: Text(
+            "Home",
+            style: TextStyle(
+              color: Colors.black,
             ),
           ),
-          bottomNavigationBar: userBottomNavigationBar(context),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          actions: [],
         ),
+        body: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          child: Column(
+            children: [
+              searchBar(),
+              _sectionBufferHeight(),
+              headSliderMenuBar(),
+              _sectionBufferHeight(),
+              const ItemCategoryHomeUserSlider(),
+              _sectionBufferHeight(bufferSection: 30),
+              selectableBestOfWeekMonthSection(),
+              BuildGridView(
+                  selectedList: viewModel.selectedMonthWeek == "month"
+                      ? viewModel.categoryEatMonth
+                      : viewModel.categoryEatWeek,
+                  sectionHeightList: 250),
+              _sectionBufferHeight(),
+              _sectionBufferHeight(bufferSection: 30),
+              _headerFavoriteShop("ร้านประจำ"),
+              dividerLine(),
+              selectFrequencyFavoriteSection(),
+              _headerFavoriteShop("ร้านที่คุณอาจสนใจ"),
+              dividerLine(),
+              BuildGridView(
+                  selectedList: viewModel.myListThatMightLike,
+                  sectionHeightList: 250),
+              _headerFavoriteShop("ร้านที่มีโปรโมชัน"),
+              dividerLine(),
+              BuildGridView(
+                  selectedList: viewModel.myListShopHasPromotion,
+                  sectionHeightList: 250)
+            ],
+          ),
+        ),
+        bottomNavigationBar: userBottomNavigationBar(context),
       ),
     );
   }

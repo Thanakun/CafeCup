@@ -50,40 +50,36 @@ class _UserSearchPageState extends State<UserSearchPage> {
     final height = MediaQuery.of(context).size.height;
     final scale = mockupWidth / width;
 
-    return PixelPerfect(
-      scale: scale,
-      assetPath: "assets/images/Searchpage.png",
-      child: SafeArea(
-        child: Scaffold(
-          backgroundColor: Colors.white,
-          appBar: AppBar(
-            iconTheme: const IconThemeData(
-              color: Colors.black, //change your color here
-            ),
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            actions: [
-              ZoomTapAnimation(
-                child: IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.notifications,
-                    size: 35,
-                  ),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          iconTheme: const IconThemeData(
+            color: Colors.black, //change your color here
+          ),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          actions: [
+            ZoomTapAnimation(
+              child: IconButton(
+                onPressed: () {},
+                icon: const Icon(
+                  Icons.notifications,
+                  size: 35,
                 ),
-              )
-            ],
-          ),
-          body: Column(
-            children: [
-              searchBar(),
-              filterAndOrderSection(),
-              _buildShopList(
-                  cardHeight: height * 0.15, cardWidth: width * 0.2564),
-            ],
-          ),
-          bottomNavigationBar: userBottomNavigationBar(context),
+              ),
+            )
+          ],
         ),
+        body: Column(
+          children: [
+            searchBar(),
+            filterAndOrderSection(),
+            _buildShopList(
+                cardHeight: height * 0.15, cardWidth: width * 0.2564),
+          ],
+        ),
+        bottomNavigationBar: userBottomNavigationBar(context),
       ),
     );
   }

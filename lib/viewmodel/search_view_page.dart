@@ -126,7 +126,7 @@ class SearchViewModel {
     print("${listAllFilterShop?.length} Hello");
   }
 
-  Shop? getShopById(int id) {
+  Shop? getShopById(int id)  {
     try {
       Shop? shop = listAllFilterShop?[id];
       // Do something with the shop
