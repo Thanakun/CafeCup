@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_application_1/model/shop.dart';
+import 'package:flutter_application_1/utility/my_constant.dart';
+
 
 class ShopPage extends StatefulWidget {
   const ShopPage({Key? key, required this.shop}) : super(key: key);
@@ -18,7 +20,7 @@ class _ShopPageState extends State<ShopPage> {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            backgroundColor: kPinkInactiveColor,
             elevation: 0,
             pinned: true,
             centerTitle: false,
@@ -27,9 +29,14 @@ class _ShopPageState extends State<ShopPage> {
               background: Image(
                 //TODO Image That Shop have
                 image: AssetImage("assets/images/shop-wallpaper.jpg"),
+                width: double.maxFinite,
                 fit: BoxFit.cover,
               ),
             ),
+          )
+          ,
+          SliverToBoxAdapter(
+            child: Text("Shop Description Shop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop DescriptionShop Descriptionv"),
           )
         ],
       ),

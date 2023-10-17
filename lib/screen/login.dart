@@ -30,7 +30,7 @@ class _loginState extends State<login> {
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   static const ROOT_Login =
-      'http://192.168.1.103/flutter_application_1/lib/xamppfiles/Login.php';
+      'http://10.20.30.216/flutter_application_1/lib/xamppfiles/Login.php';
 
   Future sign_in() async {
     final response = await http.post(Uri.parse(ROOT_Login), body: {
@@ -41,7 +41,6 @@ class _loginState extends State<login> {
     var data = await json.decode(response.body);
     // print(response.body);
     if (data.toString() == "Success") {
-      // print("kuy");
       Fluttertoast.showToast(
           msg: 'Login Successful',
           backgroundColor: Colors.green,

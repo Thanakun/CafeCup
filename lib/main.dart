@@ -1,15 +1,26 @@
 import "package:flutter/material.dart";
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_application_1/screen/Splashscreen.dart';
-// import 'package:flutter_application_1/screen/my_component/select_month_week_provider.dart';
-// import 'package:provider/provider.dart';
-// import 'package:flutter_application_1/model/check_login.dart';
-// import 'screen/home.dart';
-// import 'screen/login.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  // WidgetsFlutterBinding.ensureInitialized();
+  // await Firebase.initializeApp();
+
+  // // Provide your Firebase configuration options
+  // FirebaseOptions firebaseOptions = FirebaseOptions(
+  //   apiKey: "YOUR_API_KEY",
+  //   authDomain: "YOUR_AUTH_DOMAIN",
+  //   projectId: "YOUR_PROJECT_ID",
+  //   storageBucket: "YOUR_STORAGE_BUCKET",
+  //   messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  //   appId: "YOUR_APP_ID",
+  // );
+
+  // // Initialize Firebase with the provided options
+  // await Firebase.initializeApp(
+  //   name: 'yourAppName', // Provide a unique name for your app
+  //   options: firebaseOptions,
+  // );
 
   var app = const MyApp();
 

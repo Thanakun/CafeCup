@@ -18,39 +18,36 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-    getValidationData().whenComplete(
-      () => {
-        Timer(
-            Duration(seconds: 2),
-            () => Navigator.push(context,
-                MaterialPageRoute(builder: (context) => final_username == null ? login() : HomeScreen()))),
-      },
-    );
     super.initState();
+    getValidationData().whenComplete(
+      () => 
+        Timer(
+           const Duration(seconds: 2),
+            () => Navigator.push(context,
+                MaterialPageRoute(builder: (context) => final_username == null ? const login() : HomeScreen()))),
+    );
   }
 
   Future getValidationData() async {
     final SharedPreferences sharedPreferences =
         await SharedPreferences.getInstance();
-    var obtained_username = sharedPreferences.getString('username');
+    var obtainedUsername = sharedPreferences.getString('username');
     setState(() {
-      final_username = obtained_username;
-      print(final_username);
+      final_username = obtainedUsername;
     });
-    print(final_username);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Center(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
+          children: [
             CircleAvatar(
-              child: Icon(Icons.local_dining),
               radius: 50.0,
+              child: Icon(Icons.local_dining),
             )
           ],
         ),
