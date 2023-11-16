@@ -32,7 +32,7 @@ class _RegisterPageState extends State<RegisterPage> {
   ]; //here select male and female
   final List<String> ageOption = ['3-6', '>19', '>35+'];
   static const ROOT_Register =
-      'http://10.20.30.216/flutter_application_1/lib/xamppfiles/Register.php'; // IP Change to your Computer
+      'http://10.83.226.47/flutter_application_1/lib/xamppfiles/Register.php'; // IP Change to your Computer
   List<bool> isSelected = [true, false];
   late String selectedAge = ageOption.elementAt(1);
   late String selectedGender = genderOption.first;

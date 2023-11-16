@@ -79,7 +79,7 @@ class SearchShopMockService implements SearchShopServiceInterface {
         shopFoodCategory: _getRandomType(),
         shopImagePath: "Mock Shop Image URL",
         shopLocationCoordination: '',
-        shopLocationText: '',
+        shopLocationText: 'มหาวิทยาลัยเชียงใหม่',
         shopAverageScorePoint: foodScore,
         shopAverageScoreService: serviceScore,
         shopAverageScorePlace: placeScore,

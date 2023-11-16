@@ -1,7 +1,8 @@
 // import 'dart:ffi';
 // import 'package:intl';
-import 'package:flutter/foundation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:flutter/foundation.dart';
+// import 'package:google_maps_flutter/google_maps_flutter.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
 
 class Shop {
   int shopId; // auto increment
@@ -79,4 +80,17 @@ class Shop {
           3.0;
     }
   }
+
+  // String getShopNameById(int shopId){
+  //   try {
+  //     if(this.shopId == shopId){
+  //       return shopName;
+  //     }
+  //     return;  
+  //   } catch (e) {
+      
+  //   }
+    
+    
+  // }
 }

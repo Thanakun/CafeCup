@@ -347,10 +347,12 @@ class _UserSearchPageState extends State<UserSearchPage> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => ShopPage(
-                                    shop: _searchViewModel.getShopById(
-                                        _searchViewModel
-                                            .listAllFilterShop![index]
-                                            .shopId))));
+                                    // shop: _searchViewModel.getShopById(
+                                    //     _searchViewModel
+                                    //         .listAllFilterShop![index]
+                                    //         .shopId)
+                                    shop: _searchViewModel
+                                        .listAllFilterShop![index])));
                         // print(
                         //     _searchViewModel.listAllFilterShop![index].shopId);
                       },
