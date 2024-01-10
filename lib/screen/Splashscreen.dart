@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/screen/home.dart';
 // import 'package:get/get.dart';
 import 'package:flutter_application_1/screen/login.dart';
+import 'package:flutter_application_1/screen/shop_register/shop_register_first_view.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -20,11 +21,19 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     getValidationData().whenComplete(
-      () => 
-        Timer(
-           const Duration(seconds: 2),
-            () => Navigator.push(context,
-                MaterialPageRoute(builder: (context) => final_username == null ? const login() : HomeScreen()))),
+      () => Timer(
+        const Duration(seconds: 2),
+        () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => final_username == null
+                ? const LoginPage()
+                : ShopRegisterView(
+                    id: 1,
+                  ),
+          ),
+        ),
+      ),
     );
   }
 

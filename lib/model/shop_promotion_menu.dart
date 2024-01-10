@@ -1,4 +1,4 @@
-class ShopPromotion {
+class ShopPromotionMenu {
   final int promotionId;
   final String promotionName;
   final String promtionImagePath;
@@ -6,7 +6,7 @@ class ShopPromotion {
   final int promotionPrice;
   final int shopId;
 
-  ShopPromotion({
+  ShopPromotionMenu({
     required this.promotionId,
     required this.promotionName,
     required this.promtionImagePath,
@@ -15,8 +15,8 @@ class ShopPromotion {
     required this.shopId,
   });
 
-  factory ShopPromotion.fromJson(Map<String, dynamic> json) {
-    return ShopPromotion(
+  factory ShopPromotionMenu.fromJson(Map<String, dynamic> json) {
+    return ShopPromotionMenu(
       promotionId: json['pmt_id'] as int,
       promotionName: json['pmt_name'] as String,
       promtionImagePath: json['pmt_img'] as String,

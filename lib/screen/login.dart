@@ -1,39 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/screen/home.dart';
 import 'package:flutter_application_1/screen/register.dart';
+import 'package:flutter_application_1/utility/my_constant.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:flutter_application_1/model/user.dart';
+// import 'package:flutter_application_1/model/user.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class login extends StatefulWidget {
-  const login({Key? key}) : super(key: key);
+class LoginPage extends StatefulWidget {
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
-  State<login> createState() => _loginState();
+  State<LoginPage> createState() => LoginPageState();
 }
 
 bool isPasswordVisible = false;
 
-class _loginState extends State<login> {
+class LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
   }
 
-  @override
   final formKey = GlobalKey<FormState>();
 
-  TextEditingController _usernameController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
-  static const ROOT_Login =
-      'http://10.83.226.47/flutter_application_1/lib/xamppfiles/Login.php';
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  static const rootLogin =
+      'http://10.126.160.76/flutter_application_1/lib/xamppfiles/Login.php';
 
-  Future sign_in() async {
-    final response = await http.post(Uri.parse(ROOT_Login), body: {
+  Future _signIn() async {
+    final response = await http.post(Uri.parse(rootLogin), body: {
       'username': _usernameController.text,
       'password': _passwordController.text,
     });
@@ -46,6 +47,7 @@ class _loginState extends State<login> {
           backgroundColor: Colors.green,
           textColor: Colors.white,
           toastLength: Toast.LENGTH_SHORT);
+      //https://stackoverflow.com/questions/68871880/do-not-use-buildcontexts-across-async-gaps
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => HomeScreen()));
     } else {
@@ -59,8 +61,11 @@ class _loginState extends State<login> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      // backgroundColor: Colors.white,
       body: Form(
         key: formKey,
         child: Stack(
@@ -73,49 +78,28 @@ class _loginState extends State<login> {
                       fit: BoxFit.cover)),
               child: Column(
                 children: [
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        height: 120,
-                      ),
-                      Image(
-                        image: const AssetImage('assets/images/table_icon.png'),
-                        color: Colors.black.withOpacity(0.5),
-                        width: 200,
-                        height: 200,
-                      ),
-                    ],
+                  Container(
+                    width: width,
+                    height: height,
+                    // padding: const EdgeInsets.only(right: 14, bottom: 568),
+                    clipBehavior: Clip.antiAlias,
+                    decoration: const BoxDecoration(color: Color(0xFFFFF5E9)),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        logoApplication(),
+                      ],
+                    ),
                   ),
+                  // const SizedBox(height: 10),
                 ],
               ),
             ),
             Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(
-                  height: 200,
-                ),
-                const Center(
-                  child: Text(
-                    "Wong Nok",
-                    style: TextStyle(
-                        fontFamily: "THSarabun",
-                        fontSize: 40,
-                        fontWeight: FontWeight.w900),
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                const Text(
-                  "เพราะเรื่องกินเป็นเรื่องใหญ่",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontFamily: "THSarabun",
-                      fontSize: 25,
-                      fontWeight: FontWeight.w700),
-                ),
                 Padding(
                   padding: const EdgeInsets.all(30),
                   child: Column(
@@ -123,7 +107,6 @@ class _loginState extends State<login> {
                       Container(
                         padding: const EdgeInsets.all(2),
                         decoration: BoxDecoration(
-                          color: Colors.white,
                           borderRadius: BorderRadius.circular(10),
                           boxShadow: const [
                             BoxShadow(
@@ -132,23 +115,27 @@ class _loginState extends State<login> {
                                 offset: Offset(0, 10))
                           ],
                         ),
-                        child: Column(  
+                        child: Column(
                           children: <Widget>[
                             Container(
-                              padding: EdgeInsets.all(8.0),
+                              height: 40,
+                              padding: const EdgeInsets.all(8.0),
                               decoration: BoxDecoration(
                                 color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
                                 border: Border(
                                     bottom: BorderSide(
                                         color: Colors.grey.shade100)),
                                 // borderRadius: BorderRadius.circular(10)
                               ),
                               child: TextFormField(
+                                textAlign: TextAlign.start,
                                 decoration: InputDecoration(
                                     border: InputBorder.none,
-                                    hintText: "Email or username",
-                                    hintStyle:
-                                        TextStyle(color: Colors.grey.shade400)),
+                                    hintText: "Username",
+                                    hintStyle: GoogleFonts.openSans(
+                                        color: Colors.grey.shade400,
+                                        fontWeight: FontWeight.w600)),
                                 validator: (value) {
                                   if (value!.isEmpty) {
                                     return 'Please enter a username';
@@ -158,16 +145,20 @@ class _loginState extends State<login> {
                                 controller: _usernameController,
                               ),
                             ),
+                            sectionBufferHeight(bufferSection: 20),
                             Container(
+                              height: 40,
                               padding: const EdgeInsets.all(8.0),
                               decoration: BoxDecoration(
                                 color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
                                 border: Border(
                                     bottom: BorderSide(
                                         color: Colors.grey.shade100)),
                                 // borderRadius: BorderRadius.circular(10)
                               ),
                               child: TextFormField(
+                                textAlign: TextAlign.start,
                                 obscureText: isPasswordVisible ? false : true,
                                 decoration: InputDecoration(
                                     suffixIconConstraints: const BoxConstraints(
@@ -189,8 +180,9 @@ class _loginState extends State<login> {
                                     ),
                                     border: InputBorder.none,
                                     hintText: "Password",
-                                    hintStyle:
-                                        TextStyle(color: Colors.grey.shade400)),
+                                    hintStyle: GoogleFonts.openSans(
+                                        color: Colors.grey.shade400,
+                                        fontWeight: FontWeight.w600)),
                                 validator: (value) {
                                   if (value!.isEmpty) {
                                     return 'Please enter a password';
@@ -230,14 +222,17 @@ class _loginState extends State<login> {
                               await SharedPreferences.getInstance();
                           sharedPreferences.setString(
                               'username', _usernameController.text);
-                          sign_in();
+                          _signIn();
                         },
                       ),
+                      sectionBufferHeight(bufferSection: 10),
                       TextButton(
-                        child: const Text(
+                        child: Text(
                           "Didn't have Account? Sign up now",
-                          style:
-                              TextStyle(color: Color.fromRGBO(250, 152, 4, 1)),
+                          style: GoogleFonts.openSans(
+                              color: const Color(0xFFC08261),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600),
                         ),
                         onPressed: () {
                           Navigator.push(
@@ -253,6 +248,96 @@ class _loginState extends State<login> {
             )
           ],
         ),
+      ),
+    );
+  }
+
+  SizedBox logoApplication() {
+    return SizedBox(
+      width: 524,
+      height: 360,
+      child: Stack(
+        children: [
+          Positioned(
+            left: -150,
+            top: -150,
+            child: backGroundBrownBall(),
+          ),
+          Positioned(
+            left: 100,
+            top: 50,
+            child: Opacity(
+              opacity: 0.20,
+              child: backGroundLowOpacityBall(),
+            ),
+          ),
+          Positioned(
+            left: 130,
+            top: 130,
+            child: titleTextOfApplication(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Text titleTextOfApplication() {
+    return Text('Cafe Cup',
+        textAlign: TextAlign.center,
+        style: GoogleFonts.pacifico(
+          color: const Color(0xFF352B19),
+          fontSize: 60,
+          fontWeight: FontWeight.w400,
+          height: 0,
+        )
+        // TextStyle(
+        //   color: Color(0xFF352B19),
+        //   fontSize: 40,
+        //   fontFamily: GoogleFonts(),
+        //   fontWeight: FontWeight.w400,
+        //   height: 0,
+        // ),
+        );
+  }
+
+  Container backGroundLowOpacityBall() {
+    return Container(
+      width: 200,
+      height: 200,
+      decoration: const ShapeDecoration(
+        color: Color(0xFFB99470),
+        shape: OvalBorder(),
+        shadows: [
+          BoxShadow(
+            color: Color(0x3F000000),
+            blurRadius: 4,
+            offset: Offset(0, 4),
+            spreadRadius: 0,
+          )
+        ],
+      ),
+    );
+  }
+
+  Container backGroundBrownBall() {
+    return Container(
+      width: 360,
+      height: 360,
+      decoration: const ShapeDecoration(
+        gradient: LinearGradient(
+          begin: Alignment(0.00, -1.00),
+          end: Alignment(0, 1),
+          colors: [Color(0xFF643303), Color(0xFFAF5523)],
+        ),
+        shape: OvalBorder(),
+        shadows: [
+          BoxShadow(
+            color: Color(0x3F000000),
+            blurRadius: 4,
+            offset: Offset(0, 4),
+            spreadRadius: 0,
+          )
+        ],
       ),
     );
   }

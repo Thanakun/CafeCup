@@ -11,15 +11,15 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 // import 'package:flutter_application_1/utility/';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/screen/my_component/custompageroute.dart';
+// import 'package:flutter_application_1/screen/my_component/custompageroute.dart';
 import 'package:flutter_application_1/screen/my_component/grid_component.dart';
 import 'package:flutter_application_1/screen/search_page.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 import 'my_component/buttom_navigationbar_user.dart';
 import 'package:flutter_application_1/utility/my_constant.dart';
-import 'package:pixel_perfect/pixel_perfect.dart';
-import 'package:provider/provider.dart';
+// import 'package:pixel_perfect/pixel_perfect.dart';
+// import 'package:provider/provider.dart';
 // import 'package:flutter_application_1/screen/my_component/select_month_week_provider.dart';
 import 'package:flutter_application_1/viewmodel/user_home_page.dart';
 
@@ -52,23 +52,23 @@ class HomeUserState extends State<HomeUsers> {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
-    final scale = mockupWidth / width;
+    // final width = MediaQuery.of(context).size.width;
+    // final height = MediaQuery.of(context).size.height;
+    // final scale = mockupWidth / width;
 
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
           leading: IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.menu,
               color: Colors.black,
             ),
             onPressed: () {},
           ),
           centerTitle: true,
-          title: Text(
+          title: const Text(
             "Home",
             style: TextStyle(
               color: Colors.black,
@@ -76,10 +76,10 @@ class HomeUserState extends State<HomeUsers> {
           ),
           backgroundColor: Colors.transparent,
           elevation: 0,
-          actions: [],
+          actions: const [],
         ),
         body: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
+          physics: const BouncingScrollPhysics(),
           child: Column(
             children: [
               searchBar(),
@@ -128,10 +128,10 @@ class HomeUserState extends State<HomeUsers> {
               //     child: UserSearchPage(),
               //   ),
               // ),
-              onTap: () => Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const UserSearchPage())),
+              // onTap: () => Navigator.push(context,
+              //     MaterialPageRoute(builder: (context) => const UserSearchPage())),
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
                 width: 345,
                 height: 30,
                 decoration: BoxDecoration(
@@ -302,7 +302,7 @@ class HomeUserState extends State<HomeUsers> {
       ),
       onTap: () {
         setState(() {
-          print("kuy");
+          // print("kuy");
           viewModel.selectedCategory = categoryMenu;
           viewModel.categoryEatMonth = viewModel.filterProductsByType(
               viewModel.myProductsMonth, viewModel.selectedCategory);
@@ -398,7 +398,7 @@ class _ItemCategoryHomeUserSliderState
     extends State<ItemCategoryHomeUserSlider> {
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return const Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         RecommendShopHeader(
@@ -418,7 +418,7 @@ class RecommendShopHeader extends StatelessWidget {
 
   const RecommendShopHeader({
     required this.iconImagePath,
-    required String this.iconText,
+    required this.iconText,
     super.key,
   });
 

@@ -11,6 +11,7 @@ $encrypted_pwd = md5($password);
 $sql = "SELECT * FROM users WHERE username = '" .$username. "' AND password = '" .$encrypted_pwd. "'";
 $result = mysqli_query($conn,$sql);
 $count = mysqli_num_rows($result);
+echo $count;
 
 
 if($count == 1 ){

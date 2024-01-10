@@ -1,4 +1,4 @@
-class ShopPromotion {
+class ShopRewardMenu {
   final int shopRewardMenuId;
   final String shopRewardMenuName;
   final String shopRewardMenuImagePath;
@@ -6,7 +6,7 @@ class ShopPromotion {
   final int shopRewardMenuPoint;
   final int shopId;
 
-  ShopPromotion({
+  ShopRewardMenu({
     required this.shopRewardMenuId,
     required this.shopRewardMenuName,
     required this.shopRewardMenuImagePath,
@@ -15,8 +15,8 @@ class ShopPromotion {
     required this.shopId,
   });
 
-  factory ShopPromotion.fromJson(Map<String, dynamic> json) {
-    return ShopPromotion(
+  factory ShopRewardMenu.fromJson(Map<String, dynamic> json) {
+    return ShopRewardMenu(
       shopRewardMenuId: json['spm_id'] as int,
       shopRewardMenuName: json['spm_name'] as String,
       shopRewardMenuImagePath: json['spm_img'] as String,

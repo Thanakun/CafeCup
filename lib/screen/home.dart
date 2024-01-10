@@ -1,47 +1,45 @@
-
 import 'package:flutter_application_1/screen/login.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
+// import 'package:flutter/src/widgets/framework.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_application_1/utility/my_constant.dart';
 import 'package:flutter_application_1/screen/home_users.dart';
 
-
 class HomeScreen extends StatelessWidget {
   final formkey = GlobalKey<FormState>();
 
-  @override
-  Future<void> log_out(BuildContext context) async {
+  HomeScreen({super.key});
+
+  Future<void> _logOut(BuildContext context) async {
     Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => login()));
+        context, MaterialPageRoute(builder: (context) => const LoginPage()));
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Form(
           child: Stack(
         children: <Widget>[
           // Image(image: AssetImage('assets/images/table_icon.png')),
-          Container(
-            child: Column(
-              children: [
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: 120,
-                    ),
-                    Image(
-                      image: const AssetImage('assets/images/table_icon.png'),
-                      color: Colors.black.withOpacity(0.5),
-                      width: 200,
-                      height: 200,
-                    ),
-                  ],
-                ),
-              ],
-            ),
+          Column(
+            children: [
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(
+                    height: 120,
+                  ),
+                  Image(
+                    image: const AssetImage('assets/images/table_icon.png'),
+                    color: Colors.black.withOpacity(0.5),
+                    width: 200,
+                    height: 200,
+                  ),
+                ],
+              ),
+            ],
           ),
           Column(children: [
             const SizedBox(
@@ -84,10 +82,9 @@ class HomeScreen extends StatelessWidget {
                             width: 250,
                             // color: Colors.red,
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              color: kRedButton
-                            ),
-                            child: Center(
+                                borderRadius: BorderRadius.circular(15),
+                                color: kRedButton),
+                            child: const Center(
                               child: Text(
                                 'Home',
                                 style: TextStyle(
@@ -102,7 +99,7 @@ class HomeScreen extends StatelessWidget {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => HomeUsers()));
+                                    builder: (context) => const HomeUsers()));
                           },
                         ),
                       ],
@@ -114,23 +111,22 @@ class HomeScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                          child: Center(
-                              child: Text(
-                            'Check-in',
-                            style: TextStyle(
-                              fontSize: 40,
-                              color: Colors.black,
-                                    fontFamily: "THSarabun",
-                                    fontWeight: FontWeight.bold
-                            ),
-                          )),
                           height: 100,
                           width: 250,
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            color: kYellowSelectedButton
-                            // borderRadius: BorderRadius.circular(15),
-                          ),
+                              borderRadius: BorderRadius.circular(25),
+                              color: kYellowSelectedButton
+                              // borderRadius: BorderRadius.circular(15),
+                              ),
+                          child: const Center(
+                              child: Text(
+                            'Check-in',
+                            style: TextStyle(
+                                fontSize: 40,
+                                color: Colors.black,
+                                fontFamily: "THSarabun",
+                                fontWeight: FontWeight.bold),
+                          )),
                         )
                       ],
                     ),
@@ -142,9 +138,10 @@ class HomeScreen extends StatelessWidget {
                         final SharedPreferences sharedPreferences =
                             await SharedPreferences.getInstance();
                         sharedPreferences.remove('username');
-                        await log_out(context); // pass context parameter
+                        await _logOut(context);
+                        //https://stackoverflow.com/questions/68871880/do-not-use-buildcontexts-across-async-gaps // pass context parameter
                       },
-                      child: Text('Logout'),
+                      child: const Text('Logout'),
                     ),
                   )
                 ],

@@ -1,8 +1,13 @@
 import "package:flutter/material.dart";
-import 'package:firebase_core/firebase_core.dart';
+// import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_application_1/screen/Splashscreen.dart';
+import 'package:flutter_application_1/screen/register.dart';
+import 'package:flutter_application_1/screen/shop_register/shop_register_first_view.dart';
+import 'package:flutter_application_1/screen/shop_register/shop_register_second_view.dart';
+import 'package:flutter_application_1/utility/routes/routes.dart';
+import 'package:flutter_application_1/utility/routes/routes_name.dart';
 
-Future<void> main() async {
+void main() async {
   // WidgetsFlutterBinding.ensureInitialized();
   // await Firebase.initializeApp();
 
@@ -33,12 +38,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-          // primarySwatch: Colors.pink
-          ),
-      home: const SplashScreen(),
-    );
+    return const MaterialApp(
+        title: 'Flutter Demo',
+        // color: Color.fromRGBO(0, 0, 0, 1),
+        // theme: ThemeData(
+        //     primarySwatch: Color.fromARGB(0, 0, 0, 255)),
+        // initialRoute: RoutesName.splash,
+        // onGenerateRoute: Routes.generateRoute,
+        home: ShopRegisterSecondView());
   }
 }

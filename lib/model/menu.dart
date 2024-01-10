@@ -1,28 +1,28 @@
 class Menu {
-  final int menuId;
-  final String menuName;
-  final String menuImagePath;
-  final String menuCategory;
-  final int menuPrice;
-  final int shopId;
+  int menuID;
+  String name;
+  String category;
+  String description;
+  int price;
+  String image;
 
   Menu({
-    required this.menuId,
-    required this.menuName,
-    required this.menuImagePath,
-    required this.menuCategory,
-    required this.menuPrice,
-    required this.shopId,
+    required this.menuID,
+    required this.name,
+    required this.category,
+    required this.description,
+    required this.price,
+    required this.image,
   });
 
   factory Menu.fromJson(Map<String, dynamic> json) {
     return Menu(
-      menuId: json['menu_id'] as int,
-      menuName: json['menu_name'] as String,
-      menuImagePath: json['menu_img'] as String,
-      menuCategory: json['menu_category'] as String,
-      menuPrice: json['menu_price'] as int,
-      shopId: json['shop_id'] as int,
+      menuID: json['menuID'],
+      name: json['name'],
+      category: json['category'],
+      description: json['description'],
+      price: json['price'],
+      image: json['image'],
     );
   }
 }
