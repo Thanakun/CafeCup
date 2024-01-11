@@ -7,6 +7,7 @@ import 'package:flutter_application_1/data/widget/background_logo.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_application_1/screen/home.dart';
+import 'package:flutter_application_1/screen/shop_register/shop_register_first_view.dart';
 import 'package:flutter_application_1/utility/my_constant.dart';
 // import 'package:material_design_icons_flutter/icon_map.dart';
 // import 'package:mysql1/mysql1.dart';
@@ -46,30 +47,29 @@ class _RegisterPageState extends State<RegisterPage> {
   bool isPasswordVisible = false;
 
   Future _signUp() async {
-    final response = await http.post(Uri.parse(rootRegister), body: {
-      'username': _usernameController.text,
-      'password': _passwordController.text,
-      'email': _emailController.text,
-      'gender': selectedGender.toString(),
-      'age': selectedAge,
-      'user_point': "0",
-      'user_role': selectedType.toString()
-    });
-    // print(response.body);
-    var data = await json.decode(json.encode(response.body));
-    // print(data);
-    if (data == "Error") {
-      Fluttertoast.showToast(
-          msg: 'Error',
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          toastLength: Toast.LENGTH_SHORT);
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const RegisterPage()));
-    } else {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => HomeScreen()));
-    }
+    // final response = await http.post(Uri.parse(rootRegister), body: {
+    //   'username': _usernameController.text,
+    //   'password': _passwordController.text,
+    //   'email': _emailController.text,
+    //   'gender': selectedGender.toString(),
+    //   'age': selectedAge,
+    //   'user_point': "0",
+    //   'user_role': selectedType.toString()
+    // });
+    // // print(response.body);
+    // var data = await json.decode(json.encode(response.body));
+    // // print(data);
+    // if (data == "Error") {
+    //   Fluttertoast.showToast(
+    //       msg: 'Error',
+    //       backgroundColor: Colors.red,
+    //       textColor: Colors.white,
+    //       toastLength: Toast.LENGTH_SHORT);
+    //   Navigator.push(context,
+    //       MaterialPageRoute(builder: (context) => const RegisterPage()));
+    // } else {
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => ShopRegisterView(id: 1)));
   }
 
   @override

@@ -2171,7 +2171,7 @@ class _ShopRegisterViewState extends State<ShopRegisterView> {
                           print(selectedDistrict);
                           print(selectedSubDistrict);
                           print(addressDetail.text);
-                          Navigator.pushReplacement(
+                          Navigator.push(
                               (context),
                               MaterialPageRoute(
                                 builder: (context) =>

@@ -45,6 +45,6 @@ class MyApp extends StatelessWidget {
         //     primarySwatch: Color.fromARGB(0, 0, 0, 255)),
         // initialRoute: RoutesName.splash,
         // onGenerateRoute: Routes.generateRoute,
-        home: ShopRegisterSecondView());
+        home: RegisterPage());
   }
 }

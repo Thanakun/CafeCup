@@ -24,6 +24,14 @@ class _ShopRegisterSecondViewState extends State<ShopRegisterSecondView> {
     double height = MediaQuery.of(context).size.height;
     return SafeArea(
         child: Scaffold(
+      // appBar: AppBar(
+      //   leading: IconButton(
+      //     icon: Icon(Icons.arrow_back, color: Colors.black),
+      //     onPressed: () => Navigator.of(context).pop(),
+      //   ),
+      //   backgroundColor: Colors.transparent,
+      //   centerTitle: true,
+      // ),
       backgroundColor: const Color.fromRGBO(255, 245, 233, 1),
       body: Container(
         decoration: const BoxDecoration(
@@ -316,7 +324,7 @@ class _ShopRegisterSecondViewState extends State<ShopRegisterSecondView> {
   Future _pickImageFromGallery() async {
     final returnedImage =
         await _imagePicker.pickImage(source: ImageSource.gallery);
-
+    
     setState(() {
       _selectedImage = File(returnedImage!.path);
     });
