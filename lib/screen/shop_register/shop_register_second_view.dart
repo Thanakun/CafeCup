@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/screen/my_component/shop_register_statusbar.dart';
 import 'package:flutter_application_1/screen/shop_text_field_form.dart';
@@ -78,16 +79,23 @@ class _ShopRegisterSecondViewState extends State<ShopRegisterSecondView> {
                       _pickImageFromGallery();
                     },
                     child: Container(
-                      decoration: BoxDecoration(),
+                      padding: EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                          color: main1V4,
+                          borderRadius: BorderRadius.circular(20)),
                       child: Center(
                         child: RichText(
                           text: TextSpan(
                             children: [
                               TextSpan(
-                                text: "Add",
-                                style: kfontH2InterBlackColor(),
+                                text: "camera ",
+                                style: kfontH2InterWhiteColor(),
                               ),
-                              const WidgetSpan(child: Icon(Icons.image_sharp))
+                              const WidgetSpan(
+                                  child: Icon(
+                                Icons.image_sharp,
+                                color: Colors.white,
+                              ))
                             ],
                           ),
                         ),
@@ -99,17 +107,21 @@ class _ShopRegisterSecondViewState extends State<ShopRegisterSecondView> {
                       _pickImageFromCamera();
                     },
                     child: Container(
-                      decoration: BoxDecoration(),
+                      padding: EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                          color: main1V4,
+                          borderRadius: BorderRadius.circular(20)),
                       child: Center(
                         child: RichText(
                           text: TextSpan(
                             children: [
                               TextSpan(
-                                text: "Add",
-                                style: kfontH2InterBlackColor(),
+                                text: "gallery ",
+                                style: kfontH2InterWhiteColor(),
                               ),
                               const WidgetSpan(
-                                  child: Icon(Icons.camera_alt_rounded))
+                                  child: Icon(Icons.camera_alt_outlined,
+                                      color: Colors.white))
                             ],
                           ),
                         ),
@@ -118,47 +130,181 @@ class _ShopRegisterSecondViewState extends State<ShopRegisterSecondView> {
                   ),
                 ],
               ),
-              const Spacer(),
-              InkWell(
-                splashColor: Colors.greenAccent,
-                onTap: () {
-                  //TODO Shop First
-                  // if (nameShop.text.isEmpty ||
-                  //     descriptionShop.text.isEmpty ||
-                  //     selectedProvince == null ||
-                  //     selectedDistrict == null ||
-                  //     selectedSubDistrict == null ||
-                  //     addressDetail.text.isEmpty) {
-                  //   // Display an error message or perform some action for invalid input
-                  //   Utility.flushBarErrorMessage(
-                  //       message: "Please insert data information",
-                  //       context: context);
-                  //   return;
-                  // }
-
-                  setState(() {
-                    Navigator.pushReplacement(
-                        (context),
-                        MaterialPageRoute(
-                          builder: (context) => const ShopRegisterSecondView(),
-                        ));
-                    // Add more logic as needed
-                  });
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8.0),
-                  width: double.infinity,
-                  height: constraints.maxHeight * 0.07,
-                  decoration: BoxDecoration(
-                      color: Colors.green,
-                      borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                  child: Center(
-                    child: Text(
-                      "NEXT PAGE",
-                      style: kfontH1InterBlackColor(),
-                    ),
+              sectionBufferHeight(bufferSection: 40),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                headingContainer(header: "MENU"),
+                Container(
+                  child: Text(
+                    "ดูทั้งหมด",
+                    style: kfontH3InterBlackColor(),
                   ),
-                ),
+                )
+              ]),
+              sectionBufferHeight(bufferSection: 5),
+              Column(
+                children: [
+                  CarouselSlider.builder(
+                    itemCount: 2,
+                    options: CarouselOptions(
+                      // height: 0,
+                      viewportFraction: 1,
+                      enableInfiniteScroll: false,
+                      scrollPhysics: BouncingScrollPhysics(),
+                    ),
+                    itemBuilder: (context, index, realIndex) {
+                      return Container(
+                        margin: EdgeInsets.all(16),
+                        width: double.infinity,
+                        height: 70,
+                        decoration: BoxDecoration(
+                          color: sup1V5,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(
+                                  top: 16, left: 16, right: 5, bottom: 16),
+                              width: 100,
+                              height: 100,
+                              decoration: BoxDecoration(
+                                  color: backGroundButton,
+                                  border: Border.all(),
+                                  borderRadius: BorderRadius.circular(10)),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(
+                                  top: 16, left: 16, right: 5, bottom: 16),
+                              width: 100,
+                              height: 100,
+                              decoration: BoxDecoration(),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "อเมริกาโน่",
+                                    style: kfontH3InterBlackColor(),
+                                  ),
+                                  Text(
+                                    "กาแฟ",
+                                    style: kfontH3InterBlackColorHalfOpacity(),
+                                    textAlign: TextAlign.left,
+                                  )
+                                ],
+                              ),
+                            ),
+                            Spacer(),
+                            Container(
+                              margin: EdgeInsets.only(left: 16, right: 16),
+                              child: Text(
+                                "50 ฿",
+                                style: kfontH3InterBlackColor(),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+              Spacer(),
+              Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      InkWell(
+                        splashColor: Colors.greenAccent,
+                        onTap: () {
+                          //TODO Shop First
+                          // if (nameShop.text.isEmpty ||
+                          //     descriptionShop.text.isEmpty ||
+                          //     selectedProvince == null ||
+                          //     selectedDistrict == null ||
+                          //     selectedSubDistrict == null ||
+                          //     addressDetail.text.isEmpty) {
+                          //   // Display an error message or perform some action for invalid input
+                          //   Utility.flushBarErrorMessage(
+                          //       message: "Please insert data information",
+                          //       context: context);
+                          //   return;
+                          // }
+
+                          setState(() {
+                            Navigator.pushReplacement(
+                                (context),
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const ShopRegisterSecondView(),
+                                ));
+                            // Add more logic as needed
+                          });
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 8.0),
+                          width: width / 4,
+                          height: constraints.maxHeight * 0.07,
+                          decoration: BoxDecoration(
+                              color: backGroundButton,
+                              border: Border.all(color: borderButton),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20.0))),
+                          child: Center(
+                            child: Text(
+                              "SKIP",
+                              style: kfontH2InterBlackColor(),
+                            ),
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        splashColor: Colors.greenAccent,
+                        onTap: () {
+                          //TODO Shop First
+                          // if (nameShop.text.isEmpty ||
+                          //     descriptionShop.text.isEmpty ||
+                          //     selectedProvince == null ||
+                          //     selectedDistrict == null ||
+                          //     selectedSubDistrict == null ||
+                          //     addressDetail.text.isEmpty) {
+                          //   // Display an error message or perform some action for invalid input
+                          //   Utility.flushBarErrorMessage(
+                          //       message: "Please insert data information",
+                          //       context: context);
+                          //   return;
+                          // }
+
+                          setState(() {
+                            Navigator.pushReplacement(
+                                (context),
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const ShopRegisterSecondView(),
+                                ));
+                            // Add more logic as needed
+                          });
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 8.0),
+                          width: width / 1.7,
+                          height: constraints.maxHeight * 0.07,
+                          decoration: BoxDecoration(
+                              color: colorAcceptButton,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20.0))),
+                          child: Center(
+                            child: Text(
+                              "NEXTPAGE",
+                              style: kfontH1InterBlackColor(),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               )
             ]),
           );

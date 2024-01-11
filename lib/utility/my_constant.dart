@@ -21,6 +21,14 @@ const Color main1V4 = Color.fromRGBO(185, 148, 112, 1);
 
 const Color sup3V4 = Color.fromRGBO(135, 206, 48, 1);
 
+const Color borderButton = Color.fromRGBO(192, 130, 97, 1);
+
+const Color backGroundButton = Color.fromRGBO(244, 234, 222, 1);
+
+const Color colorAcceptButton = Color.fromRGBO(135, 206, 48, 1);
+
+const Color backGroundApplication = Color.fromRGBO(255, 245, 233, 1);
+
 TextStyle kfontH0InterBlackColor() => const TextStyle(
     fontSize: 32,
     color: Colors.black,
