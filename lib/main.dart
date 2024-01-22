@@ -1,11 +1,21 @@
 import "package:flutter/material.dart";
 // import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_application_1/screen/Splashscreen.dart';
+import 'package:flutter_application_1/screen/garph_shop/bar_chart.dart';
+import 'package:flutter_application_1/screen/garph_shop/linear_chart.dart';
+import 'package:flutter_application_1/screen/garph_shop/pie_chart.dart';
+import 'package:flutter_application_1/screen/garph_shop/radar_chart_sample.dart';
+import 'package:flutter_application_1/screen/garph_shop/web_chart.dart';
+import 'package:flutter_application_1/screen/my_component/graph_shop.dart';
 import 'package:flutter_application_1/screen/register.dart';
+import 'package:flutter_application_1/screen/shop_information.dart';
 import 'package:flutter_application_1/screen/shop_register/shop_register_first_view.dart';
+import 'package:flutter_application_1/screen/shop_register/shop_register_forth_view.dart';
 import 'package:flutter_application_1/screen/shop_register/shop_register_second_view.dart';
+import 'package:flutter_application_1/screen/shop_register/shop_register_third_view.dart';
 import 'package:flutter_application_1/utility/routes/routes.dart';
 import 'package:flutter_application_1/utility/routes/routes_name.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() async {
   // WidgetsFlutterBinding.ensureInitialized();
@@ -38,13 +48,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
         title: 'Flutter Demo',
+        theme: ThemeData(
+          fontFamily: 'Open Sans',
+          // fontFamily: GoogleFonts.kanit().fontFamily
+        ),
         // color: Color.fromRGBO(0, 0, 0, 1),
         // theme: ThemeData(
         //     primarySwatch: Color.fromARGB(0, 0, 0, 255)),
         // initialRoute: RoutesName.splash,
         // onGenerateRoute: Routes.generateRoute,
-        home: RegisterPage());
+        home: SplashScreen());
   }
 }

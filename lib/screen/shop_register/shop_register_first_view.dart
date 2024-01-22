@@ -5,6 +5,7 @@ import 'package:flutter_application_1/screen/my_component/shop_register_statusba
 import 'package:flutter_application_1/screen/shop_register/shop_register_second_view.dart';
 import 'package:flutter_application_1/screen/shop_text_field_form.dart';
 import 'package:flutter_application_1/utility/my_constant.dart';
+import 'package:flutter_application_1/viewmodel/register_view_model.dart';
 
 class ShopRegisterView extends StatefulWidget {
   const ShopRegisterView({required this.id, super.key});
@@ -19,6 +20,9 @@ class _ShopRegisterViewState extends State<ShopRegisterView> {
   final TextEditingController descriptionShop = TextEditingController();
   final TextEditingController addressDetail = TextEditingController();
   final TextEditingController searchTextMenuList = TextEditingController();
+
+  late RegisterVM _vm;
+
   String? selectedProvince;
   String? selectedDistrict;
   String? selectedSubDistrict;
@@ -2075,12 +2079,20 @@ class _ShopRegisterViewState extends State<ShopRegisterView> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    // _vm = RegisterVM();
+    // _vm.userEnterPage();
+  }
+
+  @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: const Color.fromRGBO(255, 245, 233, 1),
         body: Container(
           decoration: const BoxDecoration(
@@ -2094,55 +2106,64 @@ class _ShopRegisterViewState extends State<ShopRegisterView> {
               return Container(
                 width: width,
                 height: height,
-                margin:
-                    const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                margin: EdgeInsets.symmetric(
+                    horizontal: width * 0.07281, vertical: height * 0.0163),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ShopStatusBarRegister(
+                    const ShopStatusBarRegister(
                       shopIndicatorRegistationState: 1,
                     ),
-                    sectionBufferHeight(bufferSection: 20),
+                    sectionBufferHeight(bufferSection: height * 0.0218),
                     Center(
                       child: Text(
                         "General information",
-                        style: kfontH1InterBlackColor(),
+                        style: kfontH1InterBoldBlackColor(),
                         textAlign: TextAlign.center,
                       ),
                     ),
-                    sectionBufferHeight(bufferSection: 20),
+                    sectionBufferHeight(bufferSection: height * 0.0218),
                     headingContainer(
                       header: "Name",
                     ),
-                    sectionBufferHeight(bufferSection: 10),
+                    sectionBufferHeight(bufferSection: height * 0.0109),
                     TextFieldContainer(
                       hightContainer: 40,
                       controller: nameShop,
                       hintText: "Shop name",
                     ),
-                    sectionBufferHeight(bufferSection: 20),
+                    sectionBufferHeight(bufferSection: height * 0.0218),
                     headingContainer(
                       header: "Description",
                     ),
-                    sectionBufferHeight(bufferSection: 10),
+                    sectionBufferHeight(bufferSection: height * 0.0109),
                     TextFieldContainer(
                         hightContainer: 175,
                         controller: descriptionShop,
                         hintText: "Description"),
-                    sectionBufferHeight(bufferSection: 20),
+                    sectionBufferHeight(bufferSection: height * 0.0218),
                     headingContainer(header: "Address"),
-                    sectionBufferHeight(bufferSection: 10),
+                    sectionBufferHeight(bufferSection: height * 0.0109),
                     dropdownButtonDependancySelectionProvince(
-                        header: "Province", selected: selectedProvince),
-                    sectionBufferHeight(bufferSection: 10),
+                        width: width,
+                        height: height,
+                        header: "Province",
+                        selected: selectedProvince),
+                    sectionBufferHeight(bufferSection: height * 0.0109),
                     dropdownButtonDependancySelectionDistricts(
-                        header: "District", listOfItem: district),
-                    sectionBufferHeight(bufferSection: 10),
+                        header: "District",
+                        listOfItem: district,
+                        height: height,
+                        width: width),
+                    sectionBufferHeight(bufferSection: height * 0.0109),
                     dropdownButtonDependancySelectionSubDistricts(
-                        header: "Sub District", listOfItem: subDistricts),
-                    sectionBufferHeight(bufferSection: 10),
+                        header: "Sub District",
+                        listOfItem: subDistricts,
+                        height: height,
+                        width: width),
+                    sectionBufferHeight(bufferSection: height * 0.0109),
                     TextFieldContainer(
-                        hightContainer: 175,
+                        hightContainer: height * 0.191,
                         controller: addressDetail,
                         hintText: "Address Detail"),
                     const Spacer(),
@@ -2165,6 +2186,8 @@ class _ShopRegisterViewState extends State<ShopRegisterView> {
 
                         setState(() {
                           // Your logic here
+                          print("hello");
+
                           print(nameShop.text);
                           print(descriptionShop.text);
                           print(selectedProvince);
@@ -2191,7 +2214,7 @@ class _ShopRegisterViewState extends State<ShopRegisterView> {
                         child: Center(
                           child: Text(
                             "NEXT PAGE",
-                            style: kfontH1InterBlackColor(),
+                            style: kfontH1InterBoldBlackColor(),
                           ),
                         ),
                       ),
@@ -2206,38 +2229,6 @@ class _ShopRegisterViewState extends State<ShopRegisterView> {
     );
   }
 
-  Container inactiveContainer() {
-    return Container(
-      width: 60,
-      height: 10,
-      decoration: BoxDecoration(boxShadow: [
-        BoxShadow(
-          color: Colors.brown.withOpacity(0.5),
-          blurRadius: 10,
-          offset: const Offset(0, 4), // changes position of shadow
-        ),
-      ], borderRadius: BorderRadius.circular(20), color: main1V4),
-    );
-  }
-
-  Container activeBarContainer() {
-    return Container(
-      width: 60,
-      height: 10,
-      decoration: BoxDecoration(
-          //ACTIVE
-          boxShadow: [
-            BoxShadow(
-              color: Colors.green.withOpacity(0.5),
-              blurRadius: 10,
-              offset: const Offset(0, 4), // changes position of shadow
-            ),
-          ],
-          borderRadius: BorderRadius.circular(20),
-          color: sup3V4),
-    );
-  }
-
   Text headingContainer({required String header}) {
     return Text(
       header,
@@ -2246,10 +2237,11 @@ class _ShopRegisterViewState extends State<ShopRegisterView> {
     );
   }
 
-  DropdownButtonHideUnderline dropdownButtonDependancySelectionSubDistricts({
-    required String header,
-    required List<Map<String, dynamic>> listOfItem,
-  }) {
+  DropdownButtonHideUnderline dropdownButtonDependancySelectionSubDistricts(
+      {required String header,
+      required List<Map<String, dynamic>> listOfItem,
+      required width,
+      required height}) {
     return DropdownButtonHideUnderline(
       child: DropdownButton2(
         items: (selectedProvince != null && selectedDistrict != null
@@ -2282,10 +2274,10 @@ class _ShopRegisterViewState extends State<ShopRegisterView> {
         },
         // disabledHint: ,
 
-        buttonStyleData: buttonStyleDropDown(),
-        dropdownStyleData: dropdownStyleBox(),
-        menuItemStyleData: menuItemStyleBox(),
-        dropdownSearchData: dropdownSearchBox(),
+        buttonStyleData: buttonStyleDropDown(height: height, width: width),
+        dropdownStyleData: dropdownStyleBox(height: height),
+        menuItemStyleData: menuItemStyleBox(height: height),
+        dropdownSearchData: dropdownSearchBox(height: height, width: width),
         //This to clear the search value when you close the menu
         onMenuStateChange: (isOpen) {
           if (!isOpen) {
@@ -2296,10 +2288,11 @@ class _ShopRegisterViewState extends State<ShopRegisterView> {
     );
   }
 
-  DropdownButtonHideUnderline dropdownButtonDependancySelectionDistricts({
-    required String header,
-    required List<Map<String, dynamic>> listOfItem,
-  }) {
+  DropdownButtonHideUnderline dropdownButtonDependancySelectionDistricts(
+      {required String header,
+      required List<Map<String, dynamic>> listOfItem,
+      required height,
+      required width}) {
     return DropdownButtonHideUnderline(
       child: DropdownButton2(
         items: (selectedProvince != null
@@ -2329,10 +2322,10 @@ class _ShopRegisterViewState extends State<ShopRegisterView> {
         },
         // disabledHint: ,
 
-        buttonStyleData: buttonStyleDropDown(),
-        dropdownStyleData: dropdownStyleBox(),
-        menuItemStyleData: menuItemStyleBox(),
-        dropdownSearchData: dropdownSearchBox(),
+        buttonStyleData: buttonStyleDropDown(height: height, width: width),
+        dropdownStyleData: dropdownStyleBox(height: height),
+        menuItemStyleData: menuItemStyleBox(height: height),
+        dropdownSearchData: dropdownSearchBox(height: height, width: width),
         //This to clear the search value when you close the menu
         onMenuStateChange: (isOpen) {
           if (!isOpen) {
@@ -2343,17 +2336,18 @@ class _ShopRegisterViewState extends State<ShopRegisterView> {
     );
   }
 
-  DropdownSearchData<Object?> dropdownSearchBox() {
+  DropdownSearchData<Object?> dropdownSearchBox(
+      {required height, required width}) {
     return DropdownSearchData(
       searchController: searchTextMenuList,
-      searchInnerWidgetHeight: 50,
+      searchInnerWidgetHeight: height * 0.0546,
       searchInnerWidget: Container(
-        height: 50,
-        padding: const EdgeInsets.only(
-          top: 8,
-          bottom: 4,
-          right: 8,
-          left: 8,
+        height: height * 0.0546,
+        padding: EdgeInsets.only(
+          top: height * 0.008,
+          bottom: height * 0.004,
+          right: width * 0.0194,
+          left: width * 0.0194,
         ),
         child: TextFormField(
           expands: true,
@@ -2361,9 +2355,9 @@ class _ShopRegisterViewState extends State<ShopRegisterView> {
           controller: searchTextMenuList,
           decoration: InputDecoration(
             isDense: true,
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 10,
-              vertical: 8,
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: width * 0.024,
+              vertical: height * 0.008,
             ),
             hintText: 'Search for an item...',
             hintStyle: kfontH4InterBlackColorHalfOpacity(),
@@ -2379,22 +2373,22 @@ class _ShopRegisterViewState extends State<ShopRegisterView> {
     );
   }
 
-  MenuItemStyleData menuItemStyleBox() {
-    return const MenuItemStyleData(
+  MenuItemStyleData menuItemStyleBox({required height}) {
+    return MenuItemStyleData(
       overlayColor: MaterialStatePropertyAll(Colors.transparent),
-      height: 40,
+      height: height * 0.0437,
     );
   }
 
-  DropdownStyleData dropdownStyleBox() {
-    return const DropdownStyleData(
+  DropdownStyleData dropdownStyleBox({required height}) {
+    return DropdownStyleData(
       decoration:
           BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(10))),
-      maxHeight: 200,
+      maxHeight: height * 0.2185,
     );
   }
 
-  ButtonStyleData buttonStyleDropDown() {
+  ButtonStyleData buttonStyleDropDown({required height, required width}) {
     return ButtonStyleData(
       decoration: BoxDecoration(
           color: Colors.white,
@@ -2403,14 +2397,17 @@ class _ShopRegisterViewState extends State<ShopRegisterView> {
             color: const Color.fromRGBO(226, 199, 153, 1),
           ),
           borderRadius: const BorderRadius.all(Radius.circular(10))),
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      height: 40,
+      padding: EdgeInsets.symmetric(horizontal: width * 0.0388),
+      height: height * 0.0437,
       width: double.infinity,
     );
   }
 
   DropdownButtonHideUnderline dropdownButtonDependancySelectionProvince(
-      {required String header, required String? selected}) {
+      {required String header,
+      required String? selected,
+      required height,
+      required width}) {
     return DropdownButtonHideUnderline(
       child: DropdownButton2(
         items: provinces.map((Map<String, dynamic> province) {
@@ -2432,10 +2429,10 @@ class _ShopRegisterViewState extends State<ShopRegisterView> {
             }
           });
         },
-        buttonStyleData: buttonStyleDropDown(),
-        dropdownStyleData: dropdownStyleBox(),
-        menuItemStyleData: menuItemStyleBox(),
-        dropdownSearchData: dropdownSearchBox(),
+        buttonStyleData: buttonStyleDropDown(height: height, width: width),
+        dropdownStyleData: dropdownStyleBox(height: height),
+        menuItemStyleData: menuItemStyleBox(height: height),
+        dropdownSearchData: dropdownSearchBox(height: height, width: width),
         //This to clear the search value when you close the menu
         onMenuStateChange: (isOpen) {
           if (!isOpen) {

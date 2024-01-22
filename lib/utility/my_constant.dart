@@ -3,7 +3,14 @@ import 'package:another_flushbar/flushbar_route.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-const String backgroundImagePath = "images/cafe_background.jpg";
+const String backgroundImagePath = "assets/images/cafe_background.jpg";
+const String backgroundShopInformationPath = "assets/images/owner_home.jpg";
+const String shopCoverImagePath = "assets/images/shop_cover.png";
+const String americanoImagePath = "assets/images/coffee_image.png";
+const String barChartPath = "assets/images/bar_chart.jpg";
+const String pieChartPath = "assets/images/pie_chart.png";
+const String webChartPath = "assets/images/web_chart.png";
+const String linearChartPath = "assets/images/linear_chart.png";
 
 const Color kRedButton = Color.fromRGBO(237, 98, 98, 1);
 
@@ -15,13 +22,15 @@ const Color kYellowSelectedButton = Color.fromRGBO(245, 224, 114, 1);
 
 const Color supV4 = Color.fromRGBO(241, 199, 98, 1);
 
-const Color sup1V5 = Color.fromRGBO(226, 199, 153, 1);
+const Color backgroundActiveButton = Color.fromRGBO(226, 199, 153, 1);
 
-const Color main1V4 = Color.fromRGBO(185, 148, 112, 1);
+const Color fontMenuNameColor = Color.fromRGBO(185, 148, 112, 1);
 
 const Color sup3V4 = Color.fromRGBO(135, 206, 48, 1);
 
-const Color borderButton = Color.fromRGBO(192, 130, 97, 1);
+const Color selectButtonColor = Color.fromRGBO(223, 184, 127, 1);
+
+const Color brownBorderButton = Color.fromRGBO(192, 130, 97, 1);
 
 const Color backGroundButton = Color.fromRGBO(244, 234, 222, 1);
 
@@ -29,106 +38,139 @@ const Color colorAcceptButton = Color.fromRGBO(135, 206, 48, 1);
 
 const Color backGroundApplication = Color.fromRGBO(255, 245, 233, 1);
 
+const Color colorStarReviewUnSelect = Color.fromRGBO(169, 179, 136, 1);
+
+TextStyle kfontNameMenu() => const TextStyle(
+      color: fontMenuNameColor,
+      fontSize: 22,
+      fontWeight: FontWeight.w400,
+    );
+
+TextStyle kfont22w_400black() => const TextStyle(
+      color: Colors.black,
+      fontSize: 22,
+      fontWeight: FontWeight.w400,
+    );
+
+TextStyle kfontMenuDescription() => const TextStyle(
+      color: Color(0xFF87CE30),
+      fontSize: 14,
+      fontFamily: 'Open Sans',
+      fontWeight: FontWeight.w300,
+    );
+
+TextStyle kfontMenuPrice() => const TextStyle(
+      color: Color(0xFFE2C799),
+      fontSize: 22,
+      fontFamily: 'Open Sans',
+      fontWeight: FontWeight.w400,
+    );
+
 TextStyle kfontH0InterBlackColor() => const TextStyle(
     fontSize: 32,
     color: Colors.black,
     fontStyle: FontStyle.normal,
-    fontFamily: "OpenSans",
     fontWeight: FontWeight.bold);
 
-TextStyle kfontH1InterBlackColor() => const TextStyle(
-    fontFamily: "OpenSans",
+TextStyle kfont26_400() => const TextStyle(
+    fontSize: 26,
+    color: Colors.black,
+    fontStyle: FontStyle.normal,
+    fontWeight: FontWeight.w400);
+
+TextStyle kfontH1Inter_400BlackColor() => const TextStyle(
+    fontStyle: FontStyle.normal,
+    fontSize: 20,
+    fontWeight: FontWeight.w400,
+    color: Colors.black);
+
+TextStyle kfontH1InterBoldBlackColor() => const TextStyle(
     fontStyle: FontStyle.normal,
     fontSize: 20,
     fontWeight: FontWeight.bold,
     color: Colors.black);
 
 TextStyle kfontH1InterWhiteColor() => const TextStyle(
-    fontFamily: "OpenSans",
     fontStyle: FontStyle.normal,
     fontSize: 20,
     fontWeight: FontWeight.bold,
     color: Colors.white);
 
 TextStyle kfontH2InterBlackColor() => const TextStyle(
-    fontFamily: "OpenSans",
     fontSize: 18,
-    fontWeight: FontWeight.bold,
+    fontWeight: FontWeight.w400,
     fontStyle: FontStyle.normal,
     color: Colors.black);
 
 TextStyle kfontH3InterBlackColor() => const TextStyle(
-    fontFamily: "OpenSans",
     fontStyle: FontStyle.normal,
     fontSize: 16,
-    fontWeight: FontWeight.bold,
+    fontWeight: FontWeight.normal,
     color: Color.fromARGB(255, 0, 0, 0));
 
 TextStyle kfontH4InterBlackColor() => const TextStyle(
-    fontFamily: "OpenSans",
     fontStyle: FontStyle.normal,
     fontSize: 14,
     fontWeight: FontWeight.bold,
     color: const Color.fromARGB(255, 0, 0, 0));
 
+
+TextStyle kfontH5InterBlackColor() => const TextStyle(
+    fontStyle: FontStyle.normal,
+    fontSize: 12,
+    fontWeight: FontWeight.bold,
+    color: const Color.fromARGB(255, 0, 0, 0));
+
 // TextStyle kfontH1InterWhiteColor() => const TextStyle(
-//     fontFamily: "OpenSans",
+//
 //     fontSize: 20,
 //     fontStyle: FontStyle.normal,
 //     fontWeight: FontWeight.bold,
 //     color: Colors.white);
 
 TextStyle kfontH2InterWhiteColor() => const TextStyle(
-    fontFamily: "OpenSans",
     fontSize: 18,
     fontStyle: FontStyle.normal,
     fontWeight: FontWeight.bold,
     color: Colors.white);
 
 TextStyle kfontH3InterWhiteColor() => const TextStyle(
-    fontFamily: "OpenSans",
     fontSize: 16,
     fontStyle: FontStyle.normal,
     fontWeight: FontWeight.bold,
     color: Colors.white);
 
 TextStyle kfontH4InterWhiteColor() => const TextStyle(
-    fontFamily: "OpenSans",
     fontStyle: FontStyle.normal,
     fontSize: 14,
     fontWeight: FontWeight.bold,
     color: Colors.white);
 
 TextStyle kfontH1InterBlackColorHalfOpacity() => const TextStyle(
-    fontFamily: "OpenSans",
     fontStyle: FontStyle.normal,
     fontSize: 20,
     fontWeight: FontWeight.bold,
     color: Color.fromRGBO(0, 0, 0, 0.5));
 
 TextStyle kfontH2InterBlackColorHalfOpacity() => const TextStyle(
-    fontFamily: "OpenSans",
     fontSize: 18,
     fontStyle: FontStyle.normal,
     fontWeight: FontWeight.bold,
     color: Color.fromRGBO(0, 0, 0, 0.5));
 
 TextStyle kfontH2InterNormalBlackColorHalfOpacity() => const TextStyle(
-    fontFamily: "OpenSans",
     fontSize: 18,
     fontStyle: FontStyle.normal,
     fontWeight: FontWeight.normal,
     color: Color.fromRGBO(0, 0, 0, 0.5));
 
 TextStyle kfontH3InterBlackColorHalfOpacity() => const TextStyle(
-    fontFamily: "OpenSans",
     fontSize: 16,
     fontStyle: FontStyle.normal,
     fontWeight: FontWeight.bold,
     color: Color.fromRGBO(0, 0, 0, 0.5));
 
 TextStyle kfontH4InterBlackColorHalfOpacity() => const TextStyle(
-    fontFamily: "OpenSans",
     fontSize: 14,
     fontStyle: FontStyle.normal,
     fontWeight: FontWeight.bold,

@@ -14,7 +14,7 @@ class Routes {
         return MaterialPageRoute(builder: ((context) => const LoginPage()));
       case RoutesName.splash:
         return MaterialPageRoute(builder: ((context) => const SplashScreen()));
-
+      
       default:
         return MaterialPageRoute(builder: (_) {
           return const Scaffold(

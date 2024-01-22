@@ -1,4 +1,4 @@
-name: flutter_application_1
+name: Coffee_Application
 description: A new Flutter project.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -32,7 +32,7 @@ dependencies:
   zoom_tap_animation: ^1.1.0
   flutter_iconly: ^1.0.2
   # cloud_firestore: ^4.4.2
-  dio: ^4.0.0
+  dio: ^5.4.0
   provider: ^6.1.1
   encrypt: ^5.0.3
   cupertino_icons: ^1.0.2
@@ -60,11 +60,15 @@ dependencies:
   animated_toggle_switch: ^0.8.0
   image_picker: ^1.0.7
   carousel_slider: ^4.2.1
+  numberpicker: ^2.1.2
+  flutter_animate: ^4.4.0
+  syncfusion_flutter_charts: ^24.1.46+1
+  flutter_radar_chart: ^0.2.1
   # provider:
 
 flutter_icons:
   android: true
-  image_path: "assets/images/shinji.jpg"
+  image_path: "assets/images/coffee_logo.png"
 
 dev_dependencies:
   # The "flutter_lints" package below contains a set of recommended lints to
@@ -80,7 +84,6 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 # The following section is specific to Flutter packages.
 flutter:
-  uses-material-design: true
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -135,14 +138,25 @@ flutter:
         - asset: fonts/Inter-Regular.ttf
         - asset: fonts/Inter-SemiBold.ttf
         - asset: fonts/Inter-Thin.ttf
-    - family: OpenSans
+    - family: Open Sans
       fonts:
-        - asset: fonts/OpenSans-Regular.ttf
-
-    # uses-material-design: true
+        - asset: fonts/OpenSansRegular.ttf
+          weight: 400
+        - asset: fonts/OpenSansLight.ttf
+          weight: 300
+        - asset: fonts/OpenSansRomanRegular.ttf
+          weight: 400
+        - asset: fonts/OpenSansRomanBold.ttf
+          weight: 700
+  uses-material-design:
+    true
     # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
+    - assets/images/cafe_background.jpg
+    - assets/images/owner_home.jpg
+    - assets/images/coffee_image.png
+
   #   - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

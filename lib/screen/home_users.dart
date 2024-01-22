@@ -390,7 +390,7 @@ class ItemCategoryHomeUserSlider extends StatefulWidget {
 Text headSliderMenuBar() {
   return Text(
     "ร้านค้าแนะนำ",
-    style: kfontH1InterBlackColor(),
+    style: kfontH1InterBoldBlackColor(),
   );
 }
 

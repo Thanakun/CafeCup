@@ -29,7 +29,7 @@ class _TextFieldContainerState extends State<TextFieldContainer> {
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
           width: 1,
-          color: sup1V5,
+          color: backgroundActiveButton,
         ),
       ),
       child: TextField(

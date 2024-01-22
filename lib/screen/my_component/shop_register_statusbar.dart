@@ -48,7 +48,7 @@ class _ShopStatusBarRegisterState extends State<ShopStatusBarRegister> {
           ),
         ],
         borderRadius: BorderRadius.circular(20),
-        color: isActive ? sup3V4 : main1V4,
+        color: isActive ? sup3V4 : fontMenuNameColor,
       ),
     );
   }

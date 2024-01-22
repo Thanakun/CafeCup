@@ -13,8 +13,8 @@ class DioApiService implements BaseApiService {
   DioApiService._() {
     _dio = Dio(BaseOptions(
       baseUrl: baseUrl,
-      receiveTimeout: const Duration(seconds: 10).inMilliseconds,
-      connectTimeout: const Duration(seconds: 10).inMilliseconds,
+      receiveTimeout: const Duration(seconds: 10),
+      connectTimeout: const Duration(seconds: 10),
       responseType: ResponseType.json,
     ));
   }
@@ -60,7 +60,7 @@ class DioApiService implements BaseApiService {
   dynamic returnResponse(Response response) {
     switch (response.statusCode) {
       case 200:
-        dynamic responseJson = jsonDecode(response.data);
+        dynamic responseJson = response.data;
         return responseJson;
       case 400:
         throw BadRequestException(response.data.toString());

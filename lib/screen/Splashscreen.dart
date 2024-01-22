@@ -7,8 +7,6 @@ import 'package:flutter_application_1/screen/shop_register/shop_register_first_v
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-String? final_username;
-
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -25,41 +23,28 @@ class _SplashScreenState extends State<SplashScreen> {
         const Duration(seconds: 2),
         () => Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) => final_username == null
-                ? const LoginPage()
-                : ShopRegisterView(
-                    id: 1,
-                  ),
-          ),
+          MaterialPageRoute(builder: (context) => const LoginPage()),
         ),
       ),
     );
   }
 
   Future getValidationData() async {
-    final SharedPreferences sharedPreferences =
-        await SharedPreferences.getInstance();
-    var obtainedUsername = sharedPreferences.getString('username');
-    setState(() {
-      final_username = obtainedUsername;
-    });
+    Future.delayed(Duration(seconds: 2));
   }
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircleAvatar(
-              radius: 50.0,
-              child: Icon(Icons.local_dining),
-            )
-          ],
-        ),
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
+    return Scaffold(
+      body: Container(
+        width: width,
+        height: height,
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage("assets/images/landing_page.png"),
+                fit: BoxFit.cover)),
       ),
     );
   }

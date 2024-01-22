@@ -81,165 +81,193 @@
 //     }
 //   }
 
-  // String getShopNameById(int shopId){
-  //   try {
-  //     if(this.shopId == shopId){
-  //       return shopName;
-  //     }
-  //     return;
-  //   } catch (e) {
+// String getShopNameById(int shopId){
+//   try {
+//     if(this.shopId == shopId){
+//       return shopName;
+//     }
+//     return;
+//   } catch (e) {
 
-  //   }
+//   }
 
-  // }
 // }
+// }
+import 'dart:io';
 
-class Shop {
-  int shopID;
+class ShopModel {
+  int? iId;
   String? username;
   String? password;
   String? name;
-  String description;
-  Address address;
-  List<Menu> menus;
-  String coverImage;
-  List<String> shopImages;
-  List<String> menuImages;
-  List<String> foodImages;
-  List<String> otherImages;
-  List<int> daysOpen;
-  DateTime timeOpen;
-  DateTime timeClose;
-  int singleSeat;
-  int doubleSeat;
-  int largeSeat;
-  bool wifi;
-  bool powerPlugs;
-  bool conferenceRoom;
-  String photoSpots;
-  String noise;
-  bool toilet;
-  bool smokingZone;
-  String consumerGroup;
+  Address? address;
+  List<Menus>? menus;
+  List<File>? shopImages;
+  List<File>? menuImages;
+  List<File>? foodImages;
+  List<File>? otherImages;
+  List<int>? daysOpen;
+  String? timeOpen;
+  String? timeClose;
+  int? singleSeat;
+  int? doubleSeat;
+  int? largeSeat;
+  bool? wifi;
+  bool? powerPlugs;
+  bool? conferenceRoom;
+  bool? toilet;
+  bool? smokingZone;
+  String? noice;
 
-  Shop({
-    required this.shopID,
-    required this.username,
-    required this.password,
-    required this.name,
-    required this.description,
-    required this.address,
-    required this.menus,
-    required this.coverImage,
-    required this.shopImages,
-    required this.menuImages,
-    required this.foodImages,
-    required this.otherImages,
-    required this.daysOpen,
-    required this.timeOpen,
-    required this.timeClose,
-    required this.singleSeat,
-    required this.doubleSeat,
-    required this.largeSeat,
-    required this.wifi,
-    required this.powerPlugs,
-    required this.conferenceRoom,
-    required this.photoSpots,
-    required this.noise,
-    required this.toilet,
-    required this.smokingZone,
-    required this.consumerGroup,
-  });
+  ShopModel(
+      {this.iId,
+      this.username,
+      this.password,
+      this.name,
+      this.address,
+      this.menus,
+      this.shopImages,
+      this.menuImages,
+      this.foodImages,
+      this.otherImages,
+      this.daysOpen,
+      this.timeOpen,
+      this.timeClose,
+      this.singleSeat,
+      this.doubleSeat,
+      this.largeSeat,
+      this.wifi,
+      this.powerPlugs,
+      this.conferenceRoom,
+      this.toilet,
+      this.smokingZone,
+      this.noice});
 
-  factory Shop.fromJson(Map<String, dynamic> json) {
-    return Shop(
-      shopID: json['shopID'],
-      username: json['username'],
-      password: json['password'],
-      name: json['name'],
-      description: json['description'],
-      address: Address.fromJson(json['address']),
-      menus: List<Menu>.from(json['menus'].map((menu) => Menu.fromJson(menu))),
-      coverImage: json['coverImage'],
-      shopImages: List<String>.from(json['shopImages']),
-      menuImages: List<String>.from(json['menuImages']),
-      foodImages: List<String>.from(json['foodImages']),
-      otherImages: List<String>.from(json['otherImages']),
-      daysOpen: List<int>.from(json['daysOpen']),
-      timeOpen: DateTime.parse(json['timeOpen']),
-      timeClose: DateTime.parse(json['timeClose']),
-      singleSeat: json['singleSeat'],
-      doubleSeat: json['doubleSeat'],
-      largeSeat: json['largeSeat'],
-      wifi: json['wifi'],
-      powerPlugs: json['powerPlugs'],
-      conferenceRoom: json['conferenceRoom'],
-      photoSpots: json['photoSpots'],
-      noise: json['noise'],
-      toilet: json['toilet'],
-      smokingZone: json['smokingZone'],
-      consumerGroup: json['consumerGroup'],
-    );
+  ShopModel.fromJson(Map<String, dynamic> json) {
+    iId = json['_id'];
+    username = json['username'];
+    password = json['password'];
+    name = json['name'];
+    address =
+        json['address'] != null ? Address.fromJson(json['address']) : null;
+    if (json['menus'] != null) {
+      menus = <Menus>[];
+      json['menus'].forEach((v) {
+        menus!.add(Menus.fromJson(v));
+      });
+    }
+    if (json['shopImages'] != null) {
+      shopImages = <File>[];
+      json['shopImages'].forEach((v) {
+        shopImages!.add(File(v.toString()));
+      });
+    }
+    if (json['menuImages'] != null) {
+      menuImages = <File>[];
+      json['menuImages'].forEach((v) {
+        menuImages!.add(File(v.toString()));
+      });
+    }
+    if (json['foodImages'] != null) {
+      foodImages = <File>[];
+      json['foodImages'].forEach((v) {
+        foodImages!.add(File(v.toString()));
+      });
+    }
+    if (json['otherImages'] != null) {
+      otherImages = <File>[];
+      json['otherImages'].forEach((v) {
+        otherImages!.add(File(v.toString()));
+      });
+    }
+    daysOpen = json['daysOpen'].cast<int>();
+    timeOpen = json['timeOpen'];
+    timeClose = json['timeClose'];
+    singleSeat = json['singleSeat'];
+    doubleSeat = json['doubleSeat'];
+    largeSeat = json['largeSeat'];
+    wifi = json['wifi'];
+    powerPlugs = json['powerPlugs'];
+    conferenceRoom = json['conferenceRoom'];
+    toilet = json['toilet'];
+    smokingZone = json['smokingZone'];
+    noice = json['noice'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['_id'] = iId;
+    data['username'] = username;
+    data['password'] = password;
+    data['name'] = name;
+    if (address != null) {
+      data['address'] = address!.toJson();
+    }
+    if (menus != null) {
+      data['menus'] = menus!.map((v) => v.toJson()).toList();
+    }
+    if (shopImages != null) {
+      data['shopImages'] = shopImages!.map((v) => v.path).toList();
+    }
+    if (menuImages != null) {
+      data['menuImages'] = menuImages!.map((v) => v.path).toList();
+    }
+    if (foodImages != null) {
+      data['foodImages'] = foodImages!.map((v) => v.path).toList();
+    }
+    if (otherImages != null) {
+      data['otherImages'] = otherImages!.map((v) => v.path).toList();
+    }
+    data['daysOpen'] = daysOpen;
+    data['timeOpen'] = timeOpen;
+    data['timeClose'] = timeClose;
+    data['singleSeat'] = singleSeat;
+    data['doubleSeat'] = doubleSeat;
+    data['largeSeat'] = largeSeat;
+    data['wifi'] = wifi;
+    data['powerPlugs'] = powerPlugs;
+    data['conferenceRoom'] = conferenceRoom;
+    data['toilet'] = toilet;
+    data['smokingZone'] = smokingZone;
+    data['noice'] = noice;
+    return data;
   }
 }
 
 class Address {
-  String country;
-  String province;
-  String district;
-  String subDistrict;
-  String road;
-  String postalCode;
-  String addressText;
+  String? subDistrict;
+  String? sId;
 
-  Address({
-    required this.country,
-    required this.province,
-    required this.district,
-    required this.subDistrict,
-    required this.road,
-    required this.postalCode,
-    required this.addressText,
-  });
+  Address({this.subDistrict, this.sId});
 
-  factory Address.fromJson(Map<String, dynamic> json) {
-    return Address(
-      country: json['country'],
-      province: json['province'],
-      district: json['district'],
-      subDistrict: json['subDistrict'],
-      road: json['road'],
-      postalCode: json['postalCode'],
-      addressText: json['addressText'],
-    );
+  Address.fromJson(Map<String, dynamic> json) {
+    subDistrict = json['subDistrict'];
+    sId = json['_id'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['subDistrict'] = subDistrict;
+    data['_id'] = sId;
+    return data;
   }
 }
 
-class Menu {
-  int menuID;
-  String name;
-  String category;
-  String description;
-  int price;
-  String image;
+class Menus {
+  int? price;
+  String? sId;
 
-  Menu({
-    required this.menuID,
-    required this.name,
-    required this.category,
-    required this.description,
-    required this.price,
-    required this.image,
-  });
+  Menus({this.price, this.sId});
 
-  factory Menu.fromJson(Map<String, dynamic> json) {
-    return Menu(
-      menuID: json['menuID'],
-      name: json['name'],
-      category: json['category'],
-      description: json['description'],
-      price: json['price'],
-      image: json['image'],
-    );
+  Menus.fromJson(Map<String, dynamic> json) {
+    price = json['price'];
+    sId = json['_id'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['price'] = price;
+    data['_id'] = sId;
+    return data;
   }
 }

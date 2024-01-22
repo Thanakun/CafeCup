@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/screen/home.dart';
 import 'package:flutter_application_1/screen/register.dart';
+import 'package:flutter_application_1/screen/shop_register/shop_register_first_view.dart';
 import 'package:flutter_application_1/utility/my_constant.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:async';
@@ -34,29 +35,32 @@ class LoginPageState extends State<LoginPage> {
       'http://10.126.160.76/flutter_application_1/lib/xamppfiles/Login.php';
 
   Future _signIn() async {
-    final response = await http.post(Uri.parse(rootLogin), body: {
-      'username': _usernameController.text,
-      'password': _passwordController.text,
-    });
-    print("here is a data ${response.body}");
-    var data = await json.decode(response.body);
-    // print(response.body);
-    if (data.toString() == "Success") {
-      Fluttertoast.showToast(
-          msg: 'Login Successful',
-          backgroundColor: Colors.green,
-          textColor: Colors.white,
-          toastLength: Toast.LENGTH_SHORT);
-      //https://stackoverflow.com/questions/68871880/do-not-use-buildcontexts-across-async-gaps
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => HomeScreen()));
-    } else {
-      Fluttertoast.showToast(
-          msg: 'Username and password invalid',
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          toastLength: Toast.LENGTH_SHORT);
-    }
+    // final response = await http.post(Uri.parse(rootLogin), body: {
+    //   'username': _usernameController.text,
+    //   'password': _passwordController.text,
+    // });
+    // print("here is a data ${response.body}");
+    // var data = await json.decode(response.body);
+    // // print(response.body);
+    // if (data.toString() == "Success") {
+    //   Fluttertoast.showToast(
+    //       msg: 'Login Successful',
+    //       backgroundColor: Colors.green,
+    //       textColor: Colors.white,
+    //       toastLength: Toast.LENGTH_SHORT);
+    //https://stackoverflow.com/questions/68871880/do-not-use-buildcontexts-across-async-gaps
+    //   Navigator.push(
+    //       context,
+    //       MaterialPageRoute(
+    //           builder: (context) => ShopRegisterView(
+    //                 id: 1,
+    //               )));
+    // } else {
+    Fluttertoast.showToast(
+        msg: 'Username and password invalid',
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        toastLength: Toast.LENGTH_SHORT);
   }
 
   @override
@@ -65,6 +69,7 @@ class LoginPageState extends State<LoginPage> {
     double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       // backgroundColor: Colors.white,
       body: Form(
         key: formKey,
@@ -101,7 +106,8 @@ class LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(30),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: width * 0.0364, vertical: 0.01639),
                   child: Column(
                     children: <Widget>[
                       Container(
@@ -118,7 +124,7 @@ class LoginPageState extends State<LoginPage> {
                         child: Column(
                           children: <Widget>[
                             Container(
-                              height: 40,
+                              height: height * 0.0437,
                               padding: const EdgeInsets.all(8.0),
                               decoration: BoxDecoration(
                                 color: Colors.white,
@@ -145,9 +151,9 @@ class LoginPageState extends State<LoginPage> {
                                 controller: _usernameController,
                               ),
                             ),
-                            sectionBufferHeight(bufferSection: 20),
+                            sectionBufferHeight(bufferSection: height * 0.0219),
                             Container(
-                              height: 40,
+                              height: height * 0.0437,
                               padding: const EdgeInsets.all(8.0),
                               decoration: BoxDecoration(
                                 color: Colors.white,
@@ -195,10 +201,12 @@ class LoginPageState extends State<LoginPage> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 30),
+                      SizedBox(
+                        height: height * 0.0327,
+                      ),
                       TextButton(
                         child: Container(
-                          height: 50,
+                          height: height*0.055,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
                               gradient: const LinearGradient(colors: [
@@ -231,7 +239,7 @@ class LoginPageState extends State<LoginPage> {
                           "Didn't have Account? Sign up now",
                           style: GoogleFonts.openSans(
                               color: const Color(0xFFC08261),
-                              fontSize: 14,
+                              fontSize: 24,
                               fontWeight: FontWeight.w600),
                         ),
                         onPressed: () {
