@@ -6,7 +6,7 @@ import 'user.dart';
 
 class Services {
   static const root =
-      'http://localhost:80/flutter_application_1/lib/xamppfiles/ConnectSettings.php';
+      'http://localhost:80/coffee_application/lib/xamppfiles/ConnectSettings.php';
 
   static const _createTableAction = 'CREATE_TABLE';
   static const _getAllAction = 'GET_ALL';

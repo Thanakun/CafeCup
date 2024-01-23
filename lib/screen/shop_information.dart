@@ -1,9 +1,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/data/widget/add_editing_image.dart';
-import 'package:flutter_application_1/screen/my_component/buttom_navigationbar_shop.dart';
-import 'package:flutter_application_1/utility/my_constant.dart';
+import 'package:coffee_application/data/widget/add_editing_image.dart';
+import 'package:coffee_application/screen/my_component/buttom_navigationbar_shop.dart';
+import 'package:coffee_application/utility/my_constant.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ShopInformationPage extends StatefulWidget {

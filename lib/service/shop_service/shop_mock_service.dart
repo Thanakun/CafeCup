@@ -1,8 +1,8 @@
-// import 'package:flutter_application_1/model/menu.dart';
-// import 'package:flutter_application_1/model/review_record.dart';
-// import 'package:flutter_application_1/model/shop_promotion_menu.dart';
-// import 'package:flutter_application_1/model/shop_reward_menu.dart';
-// import 'package:flutter_application_1/service/shop_service/shop_interface.dart';
+// import 'package:coffee_application/model/menu.dart';
+// import 'package:coffee_application/model/review_record.dart';
+// import 'package:coffee_application/model/shop_promotion_menu.dart';
+// import 'package:coffee_application/model/shop_reward_menu.dart';
+// import 'package:coffee_application/service/shop_service/shop_interface.dart';
 
 // class ShopPageMockService implements ShopPageServiceInterface {
 //   @override

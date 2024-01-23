@@ -1,6 +1,6 @@
-// import 'package:flutter_application_1/model/menu.dart';
-// import 'package:flutter_application_1/service/shop_service/shop_mock_service.dart';
-// import 'package:flutter_application_1/service/shop_service/shop_service.dart';
+// import 'package:coffee_application/model/menu.dart';
+// import 'package:coffee_application/service/shop_service/shop_mock_service.dart';
+// import 'package:coffee_application/service/shop_service/shop_service.dart';
 
 
 // class ShopViewModel{

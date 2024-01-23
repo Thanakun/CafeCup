@@ -1,9 +1,9 @@
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/data/widget/background_logo.dart';
-import 'package:flutter_application_1/model/shop.dart';
-import 'package:flutter_application_1/screen/shop_register/shop_register_first_view.dart';
-import 'package:flutter_application_1/utility/my_constant.dart';
+import 'package:coffee_application/data/widget/background_logo.dart';
+import 'package:coffee_application/model/shop.dart';
+import 'package:coffee_application/screen/shop_register/shop_register_first_view.dart';
+import 'package:coffee_application/utility/my_constant.dart';
 import 'dart:async';
 
 class RegisterPage extends StatefulWidget {
@@ -26,7 +26,7 @@ class _RegisterPageState extends State<RegisterPage> {
   ]; //here select male and female
   final List<String> ageOption = ['3-6', '>19', '>35+'];
   static const rootRegister =
-      'http://10.126.160.76/flutter_application_1/lib/xamppfiles/Register.php'; // IP Change to your Computer
+      'http://10.126.160.76/coffee_application/lib/xamppfiles/Register.php'; // IP Change to your Computer
   final List<String> usersType = ["Shop", "Customer"];
   List<bool> isSelected = [true, false];
   late String selectedAge = ageOption.elementAt(1);

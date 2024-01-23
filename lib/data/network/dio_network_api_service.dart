@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:flutter_application_1/data/app_exception.dart';
-import 'package:flutter_application_1/data/common/config.dart';
-import 'package:flutter_application_1/data/network/base_api_service.dart';
+import 'package:coffee_application/data/app_exception.dart';
+import 'package:coffee_application/data/common/config.dart';
+import 'package:coffee_application/data/network/base_api_service.dart';
 
 class DioApiService implements BaseApiService {
   late final Dio _dio;

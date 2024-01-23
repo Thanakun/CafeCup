@@ -1,4 +1,4 @@
-import 'package:flutter_application_1/data/response/status.dart';
+import 'package:coffee_application/data/response/status.dart';
 
 class ApiResponse<T> {
   Status? status;

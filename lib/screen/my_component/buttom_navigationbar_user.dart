@@ -1,10 +1,10 @@
-// import 'package:flutter_application_1/screen/home.dart';
-import 'package:flutter_application_1/screen/home_users.dart';
-import 'package:flutter_application_1/screen/search_page.dart';
+// import 'package:coffee_application/screen/home.dart';
+import 'package:coffee_application/screen/home_users.dart';
+import 'package:coffee_application/screen/search_page.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:flutter/material.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
-import 'package:flutter_application_1/utility/my_constant.dart';
+import 'package:coffee_application/utility/my_constant.dart';
 
 BottomAppBar userBottomNavigationBar(BuildContext context) {
   return BottomAppBar(

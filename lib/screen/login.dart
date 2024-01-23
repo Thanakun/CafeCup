@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/screen/home.dart';
-import 'package:flutter_application_1/screen/register.dart';
-import 'package:flutter_application_1/screen/shop_register/shop_register_first_view.dart';
-import 'package:flutter_application_1/utility/my_constant.dart';
+import 'package:coffee_application/screen/home.dart';
+import 'package:coffee_application/screen/register.dart';
+import 'package:coffee_application/screen/shop_register/shop_register_first_view.dart';
+import 'package:coffee_application/utility/my_constant.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-// import 'package:flutter_application_1/model/user.dart';
+// import 'package:coffee_application/model/user.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -32,7 +32,7 @@ class LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   static const rootLogin =
-      'http://10.126.160.76/flutter_application_1/lib/xamppfiles/Login.php';
+      'http://10.126.160.76/coffee_application/lib/xamppfiles/Login.php';
 
   Future _signIn() async {
     // final response = await http.post(Uri.parse(rootLogin), body: {

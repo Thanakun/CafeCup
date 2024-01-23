@@ -1,6 +1,6 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/utility/my_constant.dart';
+import 'package:coffee_application/utility/my_constant.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 class ShopOpenCard extends StatelessWidget {

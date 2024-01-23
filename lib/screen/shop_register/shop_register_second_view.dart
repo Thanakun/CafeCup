@@ -1,10 +1,10 @@
 import 'dart:io';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/screen/my_component/shop_register_statusbar.dart';
-import 'package:flutter_application_1/screen/shop_register/shop_register_third_view.dart';
-import 'package:flutter_application_1/screen/shop_text_field_form.dart';
-import 'package:flutter_application_1/utility/my_constant.dart';
+import 'package:coffee_application/screen/my_component/shop_register_statusbar.dart';
+import 'package:coffee_application/screen/shop_register/shop_register_third_view.dart';
+import 'package:coffee_application/screen/shop_text_field_form.dart';
+import 'package:coffee_application/utility/my_constant.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ShopRegisterSecondView extends StatefulWidget {

@@ -1,5 +1,5 @@
 // import 'package:flutter/material.dart';
-// import 'package:flutter_application_1/model/shop.dart';
+// import 'package:coffee_application/model/shop.dart';
 
 // class ShopProvider extends ChangeNotifier {
 //   Shop _currentShop = Shop(

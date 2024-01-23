@@ -1,4 +1,4 @@
-# flutter_application_1
+# coffee_application
 
 A new Flutter project.
 

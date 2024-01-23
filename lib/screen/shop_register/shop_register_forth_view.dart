@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_application_1/screen/my_component/shop_register_statusbar.dart';
-import 'package:flutter_application_1/screen/shop_information.dart';
-import 'package:flutter_application_1/utility/my_constant.dart';
+import 'package:coffee_application/screen/my_component/shop_register_statusbar.dart';
+import 'package:coffee_application/screen/shop_information.dart';
+import 'package:coffee_application/utility/my_constant.dart';
 
 class ShopRegisterForthView extends StatefulWidget {
   const ShopRegisterForthView({super.key});

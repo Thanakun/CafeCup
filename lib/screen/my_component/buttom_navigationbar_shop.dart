@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/screen/my_component/graph_shop.dart';
-import 'package:flutter_application_1/utility/my_constant.dart';
+import 'package:coffee_application/screen/my_component/graph_shop.dart';
+import 'package:coffee_application/utility/my_constant.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
-import 'package:flutter_application_1/screen/shop_information.dart';
+import 'package:coffee_application/screen/shop_information.dart';
 
 class ShopBottomNavigationBar extends StatefulWidget {
   const ShopBottomNavigationBar({required this.pageName, Key? key})

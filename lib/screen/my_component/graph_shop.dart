@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/screen/garph_shop/bar_chart.dart';
-import 'package:flutter_application_1/screen/garph_shop/linear_chart.dart';
-import 'package:flutter_application_1/screen/garph_shop/pie_chart.dart';
-import 'package:flutter_application_1/screen/garph_shop/web_chart.dart';
-import 'package:flutter_application_1/screen/my_component/buttom_navigationbar_shop.dart';
-import 'package:flutter_application_1/utility/my_constant.dart';
+import 'package:coffee_application/screen/garph_shop/bar_chart.dart';
+import 'package:coffee_application/screen/garph_shop/linear_chart.dart';
+import 'package:coffee_application/screen/garph_shop/pie_chart.dart';
+import 'package:coffee_application/screen/garph_shop/web_chart.dart';
+import 'package:coffee_application/screen/my_component/buttom_navigationbar_shop.dart';
+import 'package:coffee_application/utility/my_constant.dart';
 
 class ShopGraphPage extends StatefulWidget {
   const ShopGraphPage({super.key});

@@ -1,7 +1,7 @@
 // import 'dart:math';
-// import 'package:flutter_application_1/model/review_record.dart';
-// import 'package:flutter_application_1/model/shop.dart';
-// import 'package:flutter_application_1/service/search_service/search_shop_interface.dart';
+// import 'package:coffee_application/model/review_record.dart';
+// import 'package:coffee_application/model/shop.dart';
+// import 'package:coffee_application/service/search_service/search_shop_interface.dart';
 
 // class SearchShopMockService implements SearchShopServiceInterface {
 //   Random random = Random();

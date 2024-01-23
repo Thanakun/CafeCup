@@ -1,10 +1,10 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/data/widget/time_picker.dart';
-import 'package:flutter_application_1/screen/shop_register/shop_register_forth_view.dart';
+import 'package:coffee_application/data/widget/time_picker.dart';
+import 'package:coffee_application/screen/shop_register/shop_register_forth_view.dart';
 import 'package:numberpicker/numberpicker.dart';
-import 'package:flutter_application_1/screen/my_component/shop_register_statusbar.dart';
-import 'package:flutter_application_1/utility/my_constant.dart';
+import 'package:coffee_application/screen/my_component/shop_register_statusbar.dart';
+import 'package:coffee_application/utility/my_constant.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ShopRegisterThirdView extends StatefulWidget {

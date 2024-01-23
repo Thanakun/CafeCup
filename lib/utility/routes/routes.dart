@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/screen/Splashscreen.dart';
-import 'package:flutter_application_1/screen/home.dart';
-import 'package:flutter_application_1/screen/login.dart';
-import 'package:flutter_application_1/utility/routes/routes_name.dart';
+import 'package:coffee_application/screen/Splashscreen.dart';
+import 'package:coffee_application/screen/home.dart';
+import 'package:coffee_application/screen/login.dart';
+import 'package:coffee_application/utility/routes/routes_name.dart';
 
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {

@@ -1,8 +1,8 @@
 // import 'package:flutter/material.dart';
 // // import 'package:flutter/src/widgets/framework.dart';
 // // import 'package:flutter/src/widgets/placeholder.dart';
-// import 'package:flutter_application_1/model/shop.dart';
-// import 'package:flutter_application_1/utility/my_constant.dart';
+// import 'package:coffee_application/model/shop.dart';
+// import 'package:coffee_application/utility/my_constant.dart';
 // import 'package:google_maps_flutter/google_maps_flutter.dart';
 // import 'package:intl/intl.dart';
 // // import 'package:geolocator/geolocator.dart';

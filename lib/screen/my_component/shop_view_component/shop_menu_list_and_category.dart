@@ -1,8 +1,8 @@
 // // import 'dart:core';
-// // import 'package:flutter_application_1/model/menu.dart';
+// // import 'package:coffee_application/model/menu.dart';
 // // import 'package:intl/intl.dart';
 // // import 'package:flutter/material.dart';
-// // import 'package:flutter_application_1/utility/my_constant.dart';
+// // import 'package:coffee_application/utility/my_constant.dart';
 // // import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 
@@ -129,7 +129,7 @@
 
 // import 'dart:core';
 // import 'package:flutter/material.dart';
-// import 'package:flutter_application_1/model/menu.dart';
+// import 'package:coffee_application/model/menu.dart';
 
 // class ShopMenuTitleAndCategoryAndListItemAndListViewBuilder extends StatefulWidget {
 //   final String title;

@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_application_1/data/network/dio_network_api_service.dart';
-import 'package:flutter_application_1/model/customer.dart';
-import 'package:flutter_application_1/model/shop.dart';
+import 'package:coffee_application/data/network/dio_network_api_service.dart';
+import 'package:coffee_application/model/customer.dart';
+import 'package:coffee_application/model/shop.dart';
 
 class RegisterService {
   late final DioApiService _dio;

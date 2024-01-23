@@ -1,9 +1,9 @@
-import 'package:flutter_application_1/screen/login.dart';
+import 'package:coffee_application/screen/login.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter/src/widgets/framework.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_application_1/utility/my_constant.dart';
-import 'package:flutter_application_1/screen/home_users.dart';
+import 'package:coffee_application/utility/my_constant.dart';
+import 'package:coffee_application/screen/home_users.dart';
 
 class HomeScreen extends StatelessWidget {
   final formkey = GlobalKey<FormState>();

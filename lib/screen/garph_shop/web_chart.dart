@@ -1,7 +1,7 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/data/widget/sliver_multipleline_appbar.dart';
-import 'package:flutter_application_1/utility/my_constant.dart';
+import 'package:coffee_application/data/widget/sliver_multipleline_appbar.dart';
+import 'package:coffee_application/utility/my_constant.dart';
 import 'package:flutter_radar_chart/flutter_radar_chart.dart';
 
 class WebChartPage extends StatefulWidget {

@@ -1,15 +1,15 @@
 // // import 'package:animated_text_kit/animated_text_kit.dart';
 // import 'package:flutter/material.dart';
-// import 'package:flutter_application_1/screen/my_component/buttom_navigationbar_user.dart';
-// import 'package:flutter_application_1/screen/my_component/search_view_component/shop_close_card.dart';
-// import 'package:flutter_application_1/screen/shop_page.dart';
-// import 'package:flutter_application_1/viewmodel/search_view_page.dart';
+// import 'package:coffee_application/screen/my_component/buttom_navigationbar_user.dart';
+// import 'package:coffee_application/screen/my_component/search_view_component/shop_close_card.dart';
+// import 'package:coffee_application/screen/shop_page.dart';
+// import 'package:coffee_application/viewmodel/search_view_page.dart';
 // // import 'package:pixel_perfect/pixel_perfect.dart';
 // import 'package:zoom_tap_animation/zoom_tap_animation.dart';
-// import 'package:flutter_application_1/utility/my_constant.dart';
+// import 'package:coffee_application/utility/my_constant.dart';
 // // import 'package:intl/intl.dart';
 // import 'package:dropdown_button2/dropdown_button2.dart';
-// import 'package:flutter_application_1/screen/my_component/search_view_component/shop_open_card.dart';
+// import 'package:coffee_application/screen/my_component/search_view_component/shop_open_card.dart';
 // // import 'package:flutter/rendering.dart';
 
 // const mockupHeight = 844;

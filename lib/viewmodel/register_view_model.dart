@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/model/customer.dart';
-import 'package:flutter_application_1/model/shop.dart';
-import 'package:flutter_application_1/service/shop_register_service/register_service.dart';
+import 'package:coffee_application/model/customer.dart';
+import 'package:coffee_application/model/shop.dart';
+import 'package:coffee_application/service/shop_register_service/register_service.dart';
 
 class RegisterVM extends ChangeNotifier {
   final RegisterService _service = RegisterService();

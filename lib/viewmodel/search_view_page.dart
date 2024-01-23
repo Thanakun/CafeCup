@@ -1,8 +1,8 @@
 // // import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:flutter_application_1/model/shop.dart';
-// import 'package:flutter_application_1/service/search_service/search_shop_interface.dart';
-// import 'package:flutter_application_1/service/search_service/search_shop_mock_service.dart';
-// import 'package:flutter_application_1/model/review_record.dart';
+// import 'package:coffee_application/model/shop.dart';
+// import 'package:coffee_application/service/search_service/search_shop_interface.dart';
+// import 'package:coffee_application/service/search_service/search_shop_mock_service.dart';
+// import 'package:coffee_application/model/review_record.dart';
 
 // class SearchViewModel {
 //   final List<String> itemsFilterOrder = [

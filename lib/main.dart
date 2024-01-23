@@ -1,20 +1,20 @@
 import "package:flutter/material.dart";
 // import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_application_1/screen/Splashscreen.dart';
-import 'package:flutter_application_1/screen/garph_shop/bar_chart.dart';
-import 'package:flutter_application_1/screen/garph_shop/linear_chart.dart';
-import 'package:flutter_application_1/screen/garph_shop/pie_chart.dart';
-import 'package:flutter_application_1/screen/garph_shop/radar_chart_sample.dart';
-import 'package:flutter_application_1/screen/garph_shop/web_chart.dart';
-import 'package:flutter_application_1/screen/my_component/graph_shop.dart';
-import 'package:flutter_application_1/screen/register.dart';
-import 'package:flutter_application_1/screen/shop_information.dart';
-import 'package:flutter_application_1/screen/shop_register/shop_register_first_view.dart';
-import 'package:flutter_application_1/screen/shop_register/shop_register_forth_view.dart';
-import 'package:flutter_application_1/screen/shop_register/shop_register_second_view.dart';
-import 'package:flutter_application_1/screen/shop_register/shop_register_third_view.dart';
-import 'package:flutter_application_1/utility/routes/routes.dart';
-import 'package:flutter_application_1/utility/routes/routes_name.dart';
+import 'package:coffee_application/screen/Splashscreen.dart';
+import 'package:coffee_application/screen/garph_shop/bar_chart.dart';
+import 'package:coffee_application/screen/garph_shop/linear_chart.dart';
+import 'package:coffee_application/screen/garph_shop/pie_chart.dart';
+import 'package:coffee_application/screen/garph_shop/radar_chart_sample.dart';
+import 'package:coffee_application/screen/garph_shop/web_chart.dart';
+import 'package:coffee_application/screen/my_component/graph_shop.dart';
+import 'package:coffee_application/screen/register.dart';
+import 'package:coffee_application/screen/shop_information.dart';
+import 'package:coffee_application/screen/shop_register/shop_register_first_view.dart';
+import 'package:coffee_application/screen/shop_register/shop_register_forth_view.dart';
+import 'package:coffee_application/screen/shop_register/shop_register_second_view.dart';
+import 'package:coffee_application/screen/shop_register/shop_register_third_view.dart';
+import 'package:coffee_application/utility/routes/routes.dart';
+import 'package:coffee_application/utility/routes/routes_name.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() async {

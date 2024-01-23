@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/screen/search_page.dart';
+import 'package:coffee_application/screen/search_page.dart';
 
 class CustomPageRoute extends PageRouteBuilder {
   final Widget child;
