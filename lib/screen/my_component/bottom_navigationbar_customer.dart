@@ -1,3 +1,4 @@
+import 'package:coffee_application/screen/customer_shop_view.dart';
 import 'package:coffee_application/screen/promotion.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -6,25 +7,24 @@ import 'package:coffee_application/utility/my_constant.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:coffee_application/screen/shop_information.dart';
 
-class ShopBottomNavigationBar extends StatefulWidget {
-  const ShopBottomNavigationBar({required this.pageName, Key? key})
+class CustomerNavigationBar extends StatefulWidget {
+  const CustomerNavigationBar({required this.pageName, Key? key})
       : super(key: key);
 
   final String pageName;
 
   @override
-  State<ShopBottomNavigationBar> createState() =>
-      _ShopBottomNavigationBarState();
+  State<CustomerNavigationBar> createState() => _CustomerNavigationBarState();
 }
 
-class _ShopBottomNavigationBarState extends State<ShopBottomNavigationBar> {
+class _CustomerNavigationBarState extends State<CustomerNavigationBar> {
   late int _selectedIndex;
 
   // Define a map to associate page names with their corresponding index
   final Map<String, int> pageNameToIndex = {
     'HOME': 0,
-    'PROMOTION': 1,
-    'ANALYSIS': 2,
+    'REVIEW': 1,
+    'CODE': 2,
     'LOGOUT': 3
   };
 
@@ -44,23 +44,29 @@ class _ShopBottomNavigationBarState extends State<ShopBottomNavigationBar> {
           // Navigate to Home page
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => ShopInformationPage()),
+            MaterialPageRoute(builder: (context) => CustomerHomePageView()),
           );
           break;
         case 1:
+
+          //TODO REVIEW PAGE
           // Navigate to Promotion page
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => PromotionPage()),
-          );
+          // Navigator.pushReplacement(
+          //   context,
+          //   MaterialPageRoute(builder: (context) => PromotionPage()),
+          // );
           break;
         case 2:
+
+          //TODO CODE PAGE
           // Navigate to Analysis page
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => ShopGraphPage()),
           );
           break;
+
+        //TODO LOGOUT PAGE
         // case 3:
         // Navigate to Analysis page
         // Navigator.pushReplacement(
@@ -77,7 +83,7 @@ class _ShopBottomNavigationBarState extends State<ShopBottomNavigationBar> {
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
       currentIndex: _selectedIndex,
-      backgroundColor: brownBorderButton,
+      backgroundColor: colorBackGroundNavBar,
       selectedFontSize: 20,
       selectedLabelStyle: kfontH1InterWhiteColor(),
       unselectedFontSize: 16,
@@ -118,16 +124,16 @@ class _ShopBottomNavigationBarState extends State<ShopBottomNavigationBar> {
         BottomNavigationBarItem(
           icon: Container(
             decoration: BoxDecoration(
-              color: _selectedIndex == pageNameToIndex['PROMOTION']
+              color: _selectedIndex == pageNameToIndex['REVIEW']
                   ? Colors.white.withOpacity(0.2)
                   : Colors.transparent,
               borderRadius: BorderRadius.circular(50),
             ),
             child: Icon(
-              IconlyLight.discount,
+              Icons.rate_review_outlined,
               color: backGroundApplication,
               size: 50,
-              shadows: _selectedIndex == pageNameToIndex['PROMOTION']
+              shadows: _selectedIndex == pageNameToIndex['REVIEW']
                   ? [
                       BoxShadow(
                         color: Color(0x3F000000),
@@ -139,21 +145,21 @@ class _ShopBottomNavigationBarState extends State<ShopBottomNavigationBar> {
                   : [],
             ),
           ),
-          label: 'NAVIGATIONBAR.PROMOTION_NAVIGATION'.tr(),
+          label: 'NAVIGATIONBAR.REVIEW_NAVIGATION'.tr(),
         ),
         BottomNavigationBarItem(
           icon: Container(
             decoration: BoxDecoration(
-              color: _selectedIndex == pageNameToIndex['ANALYSIS']
+              color: _selectedIndex == pageNameToIndex['CODE']
                   ? Colors.white.withOpacity(0.2)
                   : Colors.transparent,
               borderRadius: BorderRadius.circular(50),
             ),
             child: Icon(
-              IconlyLight.graph,
+              Icons.discount_outlined,
               color: backGroundApplication,
               size: 50,
-              shadows: _selectedIndex == pageNameToIndex['ANALYSIS']
+              shadows: _selectedIndex == pageNameToIndex['CODE']
                   ? [
                       BoxShadow(
                         color: Color(0x3F000000),
@@ -165,7 +171,7 @@ class _ShopBottomNavigationBarState extends State<ShopBottomNavigationBar> {
                   : [],
             ),
           ),
-          label: 'NAVIGATIONBAR.ANALYSIS_NAVIGATION'.tr(),
+          label: 'NAVIGATIONBAR.CODE_NAVIGATION'.tr(),
         ),
         BottomNavigationBarItem(
           icon: Container(

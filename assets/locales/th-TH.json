@@ -1,0 +1,140 @@
+{
+  "APP_TITLE": "CAFE_CUP",
+  "SEARCH_HERE": "ค้นหาที่นี่...",
+  "APP_BAR_TITLE": {
+    "ALL_SHOP_MENU": "เมนูร้านค้า",
+    "HOME": "Cafe Cup"
+  },
+  "BUTTON": {
+    "BACK": "กลับ",
+    "SAVE": "บันทึก",
+    "NEXT_PAGE": "หน้าถัดไป",
+    "LOGIN": "เข้าสู่ระบบ",
+    "RESET_SETTINGS": "ตั้งค่าใหม่",
+    "BACK_TO_LOGIN_PAGE": "กลับไปยังหน้าล็อคอิน"
+  },
+  "NAVIGATIONBAR": {
+    "HOME_NAVIGATION": "หน้าหลัก",
+    "PROMOTION_NAVIGATION": "โปรโมชัน",
+    "ANALYSIS_NAVIGATION": "กราฟ",
+    "LOGOUT_NAVIGATION": "ออก",
+    "REVIEW_NAVIGATION": "รีวิว",
+    "CODE_NAVIGATION": "โค้ดส่วนลด"
+  },
+
+  "LOGIN": {
+    "USERNAME": "ชื่อผู้ใช้",
+    "PASSWORD": "รหัสผ่าน",
+    "SIGN_UP_CREATE_ACCOUNT": "ไม่มีบัญชีหรือไม่ สมัครสมาชิกเลย",
+    "PLEASE_ENTER_USERNAME": "กรุณากรอกชื่อผู้ใช้",
+    "PLEASE_ENTER_PASSWORD": "กรุณากรอกรหัสผ่าน",
+    "PLEASE_ASSIGN_USERNAME_PASSWORD": "กรุณากําหนดชื่อผู้ใช้และรหัสผ่าน"
+  },
+
+  "CUSTOMER_HOME": {
+    "CAFE_HOT": "ร้านค้าที่น่าสนใจ"
+  },
+
+  "CUSTOMER_REGISTER": {
+    "NAME": "ชื่อ",
+    "GENDER": "เพศ",
+    "AGE": "อายุ",
+    "OCCUPATION": "อาชีพ",
+    "HEADER_INFORMATION": "ข้อมูลทั่วไป",
+    "HEADER_TAGS": "ข้อมูลสำหรับความชอบ",
+    "CONFIRM_BUTTON": "ตกลง",
+    "DELETE_TAGS_BUTTON": "ไม่สนใจ",
+    "ADD_TAGS_BUTTON": "สนใจ",
+    "HINT_TEXT": {
+      "NAME": "กรอกชื่อ",
+      "GENDER": "เลือกเพศ",
+      "AGE": "เลือกช่วงอายุ",
+      "OCCUPATION": "เลือกช่วงอายุ"
+    },
+    "REGISTER_INFORMATION_COMPLETE": "สมัครสมาชิกสำเร็จ"
+  },
+
+  "PROMOTION": {
+    "CODE_AVALIABLE": "โค้ดที่แจกอยู่",
+    "SCAN_CODE": "สแกนรหัส",
+    "HISTORY_USED": "ประวัติการใช้โค้ด"
+  },
+
+  "CHART": {
+    "GRAPH_SHOP": {
+      "BAR_CHART_LABEL": "กราฟแสดงจำนวนลูกค้า",
+      "PIE_CHART_LABEL": "กราฟแสดงช่วงอายุ",
+      "WEB_CHART_LABEL": "กราฟแสดงคะแนนของร้าน",
+      "LINEAR_CHART_LABEL": "กราฟแสดงอันดับคะแนน"
+    },
+
+    "BAR_CHART_PAGE": {
+      "BAR_CHART_TITLE": "กราฟแสดงจำนวนลูกค้า เทียบตามช่วงเวลา"
+    },
+    "LINEAR_CHART_PAGE": {
+      "LINEAR_CHART_TITLE": "กราฟแสดงอันดับของคะแนนร้านแต่ละประเภท"
+    },
+    "PIE_CHART_PAGE": {
+      "PIE_CHART_TITLE": "กราฟแสดงช่วงอายุของกลุ่มลูกค้า เทียบตามช่วงเวลา"
+    },
+    "WEB_CHART_PAGE": {
+      "WEB_CHART_TITLE": "กราฟแสดงช่วงอายุของกลุ่มลูกค้า เทียบตามช่วงเวลา",
+      "TASTE": "รสชาติ",
+      "SERVICE": "บริการ",
+      "ENVIRONMENT": "บรรยากาศ",
+      "WORTH": "ความคุ้มค่า",
+      "PARKING": "ที่จอดรถ"
+    },
+    "TIME_RANGE_TITLE": "เลือกช่วงเวลา",
+    "PICK_DAY_OF_WEEK": "เลือกวัน"
+  },
+
+  "ALL_SHOP_MENU": {
+    "LABEL": {
+      "MENU_NAME": "ชื่อเมนู",
+      "PRICE": "ราคา",
+      "CATEGORY": "หมวดหมู่"
+    },
+    "VALIDATOR_FIELD": {
+      "MENU_NAME": "กรุณากรอกชื่อเมนู",
+      "CATEGORY": "กรุณากรอกหมวดหมู่"
+    }
+  },
+
+  "VALIDATE": {
+    "VALIDATE_USERNAME": {
+      "EMPTY": "ชื่อผู้ใช้ต้องไม่ว่าง",
+      "TOO_SHORT": "ชื่อผู้ใช้ต้องมีมากกว่า 4 ตัวอักษร",
+      "INVALID_CHARACTERS": "ชื่อผู้ใช้ต้องประกอบด้วยตัวอักษรและตัวเลขเท่านั้น"
+    },
+    "VALIDATE_PASSWORD": {
+      "EMPTY": "Please enter a password",
+      "TOO_SHORT": "Password must be at least 8 characters long"
+    },
+    "VALIDATE_NAME": {
+      "EMPTY": "ชื่อต้องไม่ว่าง",
+      "TOO_SHORT": "ชื่อต้องมีมากกว่า 2 ตัวอักษร"
+    },
+    "VALIDATE_MOBILE": {
+      "EMPTY": "กรุณากรอกหมายเลขโทรศัพท์",
+      "INVALID": "กรุณากรอกหมายเลขโทรศัพท์ที่ถูกต้อง"
+    },
+    "VALIDATE_EMAIL": {
+      "EMPTY": "อีเมลต้องไม่ว่าง",
+      "INVALID": "กรุณากรอกอีเมลที่ถูกต้อง"
+    },
+    "VALIDATE_PRICE": {
+      "EMPTY": "กรุณากรอกราคา",
+      "INVALID": "กรุณากรอกราคาที่ถูกต้อง",
+      "OUT_OF_RANGE": "ราคาต้องอยู่ระหว่าง 0 ถึง 99999"
+    }
+  },
+  "ERROR_MESSAGE": {
+    "PLEASE_ENTER_VALUE": "กรุณากรอกข้อมูลให้ถูกต้อง",
+    "PICK_ONLY_THREE_ITEM": "เลือกได้มากที่สุดเพียงแค่ 3 อย่าง",
+    "PLEASE_SELECT_IMAGE": "กรุณาเลือกรูปภาพ",
+    "PERMISSION_NOT_GRANTED": "ไม่ได้รับการอนุญาติในการเข้าถึง",
+    "PLEASE_SELECT_ITEM": " กรุณาเลือกอย่างน้อย 1 รายการ",
+    "LOGIN_FAILED" : "รหัสผ่านไม่ถูกต้องหรือไม่พบผู้ใช้นี้"
+  }
+}

@@ -1,3 +1,4 @@
+import 'package:coffee_application/data/widget/button_selection_animate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:coffee_application/screen/my_component/shop_register_statusbar.dart';
@@ -415,7 +416,7 @@ class _ShopRegisterForthViewState extends State<ShopRegisterForthView> {
                                       width: width / 1.7,
                                       height: constraints.maxHeight * 0.07,
                                       decoration: BoxDecoration(
-                                          color: colorAcceptButton,
+                                          color: kcolorAcceptButton,
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(20.0))),
                                       child: Center(
@@ -431,10 +432,15 @@ class _ShopRegisterForthViewState extends State<ShopRegisterForthView> {
                             ),
                             Row(
                               children: [
-                                Container(
-                                  child: Text(
-                                    " < ย้อนกลับ",
-                                    style: kfontH2InterBlackColor(),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Container(
+                                    child: Text(
+                                      " < ย้อนกลับ",
+                                      style: kfontH2InterBlackColor(),
+                                    ),
                                   ),
                                 ),
                               ],
@@ -520,76 +526,5 @@ class _ShopRegisterForthViewState extends State<ShopRegisterForthView> {
     }
 
     return buttonStateMap;
-  }
-}
-
-class ButtonSelectionAnimation extends StatelessWidget {
-  final Function() onTap;
-  bool isButtonPressed;
-  String nameButton;
-
-  ButtonSelectionAnimation({
-    Key? key,
-    required this.onTap,
-    required this.isButtonPressed,
-    required this.nameButton,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
-    return GestureDetector(
-      onTap: onTap,
-      child: TweenAnimationBuilder<double>(
-        duration: Duration(milliseconds: 300),
-        curve: Curves.easeInOutBack,
-        tween: Tween<double>(
-          begin: isButtonPressed ? 1.0 : 0.95,
-          end: isButtonPressed ? 0.95 : 1.0,
-        ),
-        builder: (context, scale, child) {
-          return Transform.scale(
-            scale: scale,
-            child: Container(
-              padding: EdgeInsets.only(left: 20, right: 20),
-              // width: 120,
-              height: height * 0.0437,
-              decoration: BoxDecoration(
-                border: isButtonPressed
-                    ? Border.all(color: Colors.transparent)
-                    : Border.all(color: brownBorderButton, width: 2),
-                borderRadius: BorderRadius.circular(20),
-                color:
-                    isButtonPressed ? backgroundActiveButton : backGroundButton,
-                boxShadow: isButtonPressed
-                    ? []
-                    : [
-                        BoxShadow(
-                          color: Colors.grey.shade500,
-                          offset: const Offset(3, 3),
-                          blurRadius: 5,
-                          // spreadRadius: 1,
-                        ),
-                        const BoxShadow(
-                          color: backGroundApplication,
-                          offset: Offset(-3, -3),
-                          blurRadius: 5,
-                          // spreadRadius: 1,
-                        )
-                      ],
-              ),
-              child: Center(
-                child: Text(
-                  nameButton,
-                  style: kfontH2InterBlackColor(),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
-          );
-        },
-      ),
-    );
   }
 }

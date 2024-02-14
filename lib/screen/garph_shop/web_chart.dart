@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:coffee_application/data/widget/sliver_multipleline_appbar.dart';
 import 'package:coffee_application/utility/my_constant.dart';
 import 'package:flutter_radar_chart/flutter_radar_chart.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class WebChartPage extends StatefulWidget {
   const WebChartPage({super.key});
@@ -99,7 +100,7 @@ class _WebChartPageState extends State<WebChartPage> {
           child: CustomScrollView(
             slivers: [
               SliverMultilineAppBar(
-                title: "กราฟแสดงช่วงอายุของกลุ่มลูกค้า เทียบตามช่วงเวลา",
+                title: "CHART.WEB_CHART_PAGE.WEB_CHART_TITLE".tr(),
                 leading: IconButton(
                   icon: Icon(Icons.arrow_back, color: Colors.black),
                   onPressed: () {
@@ -115,7 +116,7 @@ class _WebChartPageState extends State<WebChartPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "1. เลือกช่วงเวลา",
+                        "1. ${"CHART.TIME_RANGE_TITLE".tr()}",
                         style: kfontH2InterBlackColor(),
                       ),
                       sectionBufferHeight(),
@@ -399,6 +400,7 @@ class _WebChartPageState extends State<WebChartPage> {
                                   ),
                                   sectionBufferHeight(),
                                   Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       DropdownButtonHideUnderline(
                                         child: DropdownButton2<String>(
@@ -445,7 +447,7 @@ class _WebChartPageState extends State<WebChartPage> {
                                       DropdownButtonHideUnderline(
                                         child: DropdownButton2<String>(
                                           customButton: Container(
-                                            width: 70.9,
+                                            width: 100,
                                             height: 30,
                                             padding: EdgeInsets.only(
                                                 left: 5, right: 5),
@@ -490,7 +492,7 @@ class _WebChartPageState extends State<WebChartPage> {
                       ),
                       sectionBufferHeight(),
                       Text(
-                        "2. เลือกวัน",
+                        "2. ${"CHART.PICK_DAY_OF_WEEK".tr()}",
                         style: kfontH2InterBlackColor(),
                       ),
                       sectionBufferHeight(),
@@ -616,7 +618,6 @@ class _WebChartPageState extends State<WebChartPage> {
                   textAlign: TextAlign.center,
                   softWrap: true,
                   maxLines: 1,
-                  textDirection: TextDirection.ltr,
                 ),
               ),
             ),

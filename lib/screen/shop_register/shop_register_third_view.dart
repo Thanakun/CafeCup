@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:coffee_application/data/widget/time_picker.dart';
@@ -40,11 +42,11 @@ class _ShopRegisterThirdViewState extends State<ShopRegisterThirdView> {
 
   int openHour = 0;
   int openMinute = 0;
-  String openTimeFormat = "AM";
+  // String openTimeFormat = "AM";
 
   int closeHour = 0;
   int closeMinute = 0;
-  String closeTimeFormat = "AM";
+  // String closeTimeFormat = "AM";
 
   @override
   Widget build(BuildContext context) {
@@ -185,8 +187,8 @@ class _ShopRegisterThirdViewState extends State<ShopRegisterThirdView> {
                               ),
                               child: FittedBox(
                                 fit: BoxFit.fitHeight,
-                                child: Image.network(
-                                    _shopImagesFileList![index].path),
+                                child: Image.file(
+                                    File(_shopImagesFileList![index].path)),
                               ),
                             );
                     },
@@ -264,7 +266,7 @@ class _ShopRegisterThirdViewState extends State<ShopRegisterThirdView> {
                                 height: height,
                                 timeHour: openHour,
                                 timeMinute: openMinute,
-                                timeFormat: openTimeFormat,
+                                // timeFormat: openTimeFormat,
                                 onHourChanged: (value) {
                                   setState(() {
                                     openHour = value;
@@ -277,7 +279,7 @@ class _ShopRegisterThirdViewState extends State<ShopRegisterThirdView> {
                                 },
                                 onFormatChanged: (value) {
                                   setState(() {
-                                    openTimeFormat = value;
+                                    // openTimeFormat = value;
                                   });
                                 },
                               );
@@ -290,7 +292,7 @@ class _ShopRegisterThirdViewState extends State<ShopRegisterThirdView> {
                           Container(
                             margin: EdgeInsets.only(left: width * 0.0339),
                             child: Text(
-                              "${openHour.toString().padLeft(2, '0')}:${openMinute.toString().padLeft(2, '0')} $openTimeFormat",
+                              "${openHour.toString().padLeft(2, '0')}:${openMinute.toString().padLeft(2, '0')} ",
                               style: kfontH1InterBoldBlackColor(),
                             ),
                           ),
@@ -324,7 +326,7 @@ class _ShopRegisterThirdViewState extends State<ShopRegisterThirdView> {
                                 height: height,
                                 timeHour: closeHour,
                                 timeMinute: closeMinute,
-                                timeFormat: closeTimeFormat,
+                                // timeFormat: closeTimeFormat,
                                 onHourChanged: (value) {
                                   setState(() {
                                     closeHour = value;
@@ -337,7 +339,7 @@ class _ShopRegisterThirdViewState extends State<ShopRegisterThirdView> {
                                 },
                                 onFormatChanged: (value) {
                                   setState(() {
-                                    closeTimeFormat = value;
+                                    // closeTimeFormat = value;
                                   });
                                 },
                               );
@@ -350,7 +352,7 @@ class _ShopRegisterThirdViewState extends State<ShopRegisterThirdView> {
                           Container(
                             margin: EdgeInsets.only(left: width * 0.0339),
                             child: Text(
-                              "${closeHour.toString().padLeft(2, '0')}:${closeMinute.toString().padLeft(2, '0')} $closeTimeFormat",
+                              "${closeHour.toString().padLeft(2, '0')}:${closeMinute.toString().padLeft(2, '0')} ",
                               style: kfontH1InterBoldBlackColor(),
                             ),
                           ),
@@ -455,7 +457,7 @@ class _ShopRegisterThirdViewState extends State<ShopRegisterThirdView> {
                                 width: width / 1.7,
                                 height: constraints.maxHeight * 0.07,
                                 decoration: BoxDecoration(
-                                    color: colorAcceptButton,
+                                    color: kcolorAcceptButton,
                                     borderRadius: BorderRadius.all(
                                         Radius.circular(20.0))),
                                 child: Center(
@@ -471,12 +473,17 @@ class _ShopRegisterThirdViewState extends State<ShopRegisterThirdView> {
                       ),
                       Row(
                         children: [
-                          Container(
-                            child: Text(
-                              " < ย้อนกลับ",
-                              style: kfontH2InterBlackColor(),
-                            ),
-                          ),
+                          GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Container(
+                                    child: Text(
+                                      " < ย้อนกลับ",
+                                      style: kfontH2InterBlackColor(),
+                                    ),
+                                  ),
+                                ),
                           Spacer(),
                           Container(
                             child: Text(
@@ -516,7 +523,7 @@ class _ShopRegisterThirdViewState extends State<ShopRegisterThirdView> {
     required width,
     required int timeHour,
     required int timeMinute,
-    required String timeFormat,
+    // required String timeFormat,
     required Function(int) onHourChanged,
     required Function(int) onMinuteChanged,
     required Function(String) onFormatChanged,
@@ -541,7 +548,7 @@ class _ShopRegisterThirdViewState extends State<ShopRegisterThirdView> {
                     children: [
                       NumberPicker(
                         minValue: 0,
-                        maxValue: 12,
+                        maxValue: 23,
                         value: timeHour,
                         zeroPad: true,
                         infiniteLoop: true,

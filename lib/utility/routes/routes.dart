@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:coffee_application/screen/Splashscreen.dart';
+import 'package:coffee_application/screen/splash-screen.dart';
 import 'package:coffee_application/screen/home.dart';
 import 'package:coffee_application/screen/login.dart';
 import 'package:coffee_application/utility/routes/routes_name.dart';
@@ -14,7 +14,6 @@ class Routes {
         return MaterialPageRoute(builder: ((context) => const LoginPage()));
       case RoutesName.splash:
         return MaterialPageRoute(builder: ((context) => const SplashScreen()));
-      
       default:
         return MaterialPageRoute(builder: (_) {
           return const Scaffold(

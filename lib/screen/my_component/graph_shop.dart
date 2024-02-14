@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:coffee_application/screen/garph_shop/bar_chart.dart';
 import 'package:coffee_application/screen/garph_shop/linear_chart.dart';
@@ -14,16 +15,11 @@ class ShopGraphPage extends StatefulWidget {
 }
 
 class _ShopGraphPageState extends State<ShopGraphPage> {
-  final Map<String, String> graphDataMap = {
-    'barChart': 'กราฟแสดงจำนวนลูกค้า',
-    'pieChart': 'กราฟแสดงช่วงอายุ',
-    'webChart': 'กราฟแสดงคะแนนของร้าน',
-    'linearChart': 'กราฟแสดงอันดับคะแนน',
-  };
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+
     return SafeArea(
       child: Scaffold(
         bottomNavigationBar: ShopBottomNavigationBar(
@@ -44,7 +40,7 @@ class _ShopGraphPageState extends State<ShopGraphPage> {
               child: SingleChildScrollView(
                 child: Column(children: [
                   graphContainer(
-                    label: "กราฟแสดงจำนวนลูกค้า",
+                    label: "CHART.GRAPH_SHOP.BAR_CHART_LABEL".tr(),
                     onTap: () {
                       Navigator.push(
                           context,
@@ -54,7 +50,7 @@ class _ShopGraphPageState extends State<ShopGraphPage> {
                     imageGraphPath: getImagePathForGraphType("barChart"),
                   ),
                   graphContainer(
-                    label: "กราฟแสดงช่วงอายุ",
+                    label: "CHART.GRAPH_SHOP.PIE_CHART_LABEL".tr(),
                     onTap: () {
                       Navigator.push(
                           context,
@@ -64,7 +60,7 @@ class _ShopGraphPageState extends State<ShopGraphPage> {
                     imageGraphPath: getImagePathForGraphType("pieChart"),
                   ),
                   graphContainer(
-                    label: "กราฟแสดงคะแนนของร้าน",
+                    label: "CHART.GRAPH_SHOP.WEB_CHART_LABEL".tr(),
                     onTap: () {
                       Navigator.push(
                           context,
@@ -74,7 +70,7 @@ class _ShopGraphPageState extends State<ShopGraphPage> {
                     imageGraphPath: getImagePathForGraphType("webChart"),
                   ),
                   graphContainer(
-                    label: "กราฟแสดงอันดับคะแนน",
+                    label: "CHART.GRAPH_SHOP.LINEAR_CHART_LABEL".tr(),
                     onTap: () {
                       Navigator.push(
                           context,

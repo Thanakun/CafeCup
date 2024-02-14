@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:coffee_application/utility/my_constant.dart';
 import 'package:image_picker/image_picker.dart';
@@ -136,8 +138,8 @@ class _AddEditingImagesListState extends State<AddEditingImagesList> {
                                     height: 150,
                                     child: FittedBox(
                                       fit: BoxFit.cover,
-                                      child: Image.network(
-                                          widget.listOfImagesOne[index].path),
+                                      child: Image.file(File(
+                                          widget.listOfImagesOne[index].path)),
                                     ),
                                   );
                           },

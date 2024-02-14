@@ -1,15 +1,12 @@
+import 'package:coffee_application/screen/customer_shop_view.dart';
+import 'package:coffee_application/service/auth-service/auth-service.dart';
+import 'package:coffee_application/utility/helper.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:coffee_application/screen/home.dart';
 import 'package:coffee_application/screen/register.dart';
-import 'package:coffee_application/screen/shop_register/shop_register_first_view.dart';
 import 'package:coffee_application/utility/my_constant.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'dart:async';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-// import 'package:coffee_application/model/user.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -21,46 +18,18 @@ class LoginPage extends StatefulWidget {
 bool isPasswordVisible = false;
 
 class LoginPageState extends State<LoginPage> {
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
   final formKey = GlobalKey<FormState>();
 
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  static const rootLogin =
-      'http://10.126.160.76/coffee_application/lib/xamppfiles/Login.php';
+  String _username = '', _passowrd = '';
 
-  Future _signIn() async {
-    // final response = await http.post(Uri.parse(rootLogin), body: {
-    //   'username': _usernameController.text,
-    //   'password': _passwordController.text,
-    // });
-    // print("here is a data ${response.body}");
-    // var data = await json.decode(response.body);
-    // // print(response.body);
-    // if (data.toString() == "Success") {
-    //   Fluttertoast.showToast(
-    //       msg: 'Login Successful',
-    //       backgroundColor: Colors.green,
-    //       textColor: Colors.white,
-    //       toastLength: Toast.LENGTH_SHORT);
-    //https://stackoverflow.com/questions/68871880/do-not-use-buildcontexts-across-async-gaps
-    //   Navigator.push(
-    //       context,
-    //       MaterialPageRoute(
-    //           builder: (context) => ShopRegisterView(
-    //                 id: 1,
-    //               )));
-    // } else {
-    Fluttertoast.showToast(
-        msg: 'Username and password invalid',
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        toastLength: Toast.LENGTH_SHORT);
+  AuthService authService = AuthService();
+
+  @override
+  void initState() {
+    super.initState();
+    authService = AuthService();
   }
 
   @override
@@ -138,16 +107,11 @@ class LoginPageState extends State<LoginPage> {
                                 textAlign: TextAlign.start,
                                 decoration: InputDecoration(
                                     border: InputBorder.none,
-                                    hintText: "Username",
+                                    hintText: "LOGIN.USERNAME".tr(),
                                     hintStyle: GoogleFonts.openSans(
                                         color: Colors.grey.shade400,
                                         fontWeight: FontWeight.w600)),
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return 'Please enter a username';
-                                  }
-                                  return null;
-                                },
+                                validator: Helper.validateUsername,
                                 controller: _usernameController,
                               ),
                             ),
@@ -185,16 +149,11 @@ class LoginPageState extends State<LoginPage> {
                                       ),
                                     ),
                                     border: InputBorder.none,
-                                    hintText: "Password",
+                                    hintText: "LOGIN.PASSWORD".tr(),
                                     hintStyle: GoogleFonts.openSans(
                                         color: Colors.grey.shade400,
                                         fontWeight: FontWeight.w600)),
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return 'Please enter a password';
-                                  }
-                                  return null;
-                                },
+                                validator: Helper.validatePassword,
                                 controller: _passwordController,
                               ),
                             ),
@@ -206,17 +165,17 @@ class LoginPageState extends State<LoginPage> {
                       ),
                       TextButton(
                         child: Container(
-                          height: height*0.055,
+                          height: height * 0.055,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
                               gradient: const LinearGradient(colors: [
                                 Color.fromRGBO(234, 191, 128, 1),
                                 Color.fromRGBO(234, 191, 128, 0.6)
                               ])),
-                          child: const Center(
+                          child: Center(
                             child: Text(
-                              "Login",
-                              style: TextStyle(
+                              "BUTTON.LOGIN".tr(),
+                              style: const TextStyle(
                                   fontFamily: "THSarabun",
                                   fontSize: 25,
                                   fontWeight: FontWeight.bold,
@@ -226,27 +185,60 @@ class LoginPageState extends State<LoginPage> {
                           ),
                         ),
                         onPressed: () async {
-                          final SharedPreferences sharedPreferences =
-                              await SharedPreferences.getInstance();
-                          sharedPreferences.setString(
-                              'username', _usernameController.text);
-                          _signIn();
+                          if (_usernameController.text.isEmpty &&
+                              _passwordController.text.isEmpty) {
+                            Utility.flushBarErrorMessage(
+                              message:
+                                  "LOGIN.PLEASE_ASSIGN_USERNAME_PASSWORD".tr(),
+                              context: context,
+                            );
+                          }
+
+                          if (_usernameController.text.isEmpty) {
+                            Utility.flushBarErrorMessage(
+                                message: "LOGIN.PLEASE_ENTER_USERNAME".tr(),
+                                context: context);
+                          }
+
+                          if (_passwordController.text.isEmpty) {
+                            Utility.flushBarErrorMessage(
+                                message: "LOGIN.PLEASE_ENTER_PASSWORD".tr(),
+                                context: context);
+                          }
+                          _username = _usernameController.text;
+                          _passowrd = _passwordController.text;
+                          bool isLoginSuccess =
+                              await authService.login(_username, _passowrd);
+
+                          if (isLoginSuccess) {
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const CustomerHomePageView(),
+                              ),
+                            );
+                          } else {
+                            print(isLoginSuccess);
+                            Utility.flushBarErrorMessage(
+                                message: "ERROR_MESSAGE.LOGIN_FAILED".tr(),
+                                context: context);
+                          }
                         },
                       ),
                       sectionBufferHeight(bufferSection: 10),
                       TextButton(
                         child: Text(
-                          "Didn't have Account? Sign up now",
+                          "LOGIN.SIGN_UP_CREATE_ACCOUNT".tr(),
                           style: GoogleFonts.openSans(
                               color: const Color(0xFFC08261),
                               fontSize: 24,
                               fontWeight: FontWeight.w600),
                         ),
                         onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const RegisterPage()));
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                                builder: (context) => const RegisterPage()),
+                          );
                         },
                       )
                     ],
@@ -290,7 +282,7 @@ class LoginPageState extends State<LoginPage> {
   }
 
   Text titleTextOfApplication() {
-    return Text('Cafe Cup',
+    return Text('APP_TITLE'.tr(),
         textAlign: TextAlign.center,
         style: GoogleFonts.pacifico(
           color: const Color(0xFF352B19),

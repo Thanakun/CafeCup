@@ -1,4 +1,5 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:coffee_application/data/widget/sliver_multipleline_appbar.dart';
 import 'package:coffee_application/utility/my_constant.dart';
@@ -83,7 +84,7 @@ class _BarChartPageState extends State<BarChartPage> {
           child: CustomScrollView(
             slivers: [
               SliverMultilineAppBar(
-                title: "กราฟแสดงจำนวนลูกค้า เทียบตามช่วงเวลา",
+                title: "CHART.BAR_CHART_PAGE.BAR_CHART_TITLE".tr(),
                 leading: IconButton(
                   icon: Icon(Icons.arrow_back, color: Colors.black),
                   onPressed: () {
@@ -99,7 +100,7 @@ class _BarChartPageState extends State<BarChartPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "1. เลือกช่วงเวลา",
+                        "1. ${"CHART.TIME_RANGE_TITLE".tr()}",
                         style: kfontH2InterBlackColor(),
                       ),
                       sectionBufferHeight(),
@@ -383,6 +384,7 @@ class _BarChartPageState extends State<BarChartPage> {
                                   ),
                                   sectionBufferHeight(),
                                   Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       DropdownButtonHideUnderline(
                                         child: DropdownButton2<String>(
@@ -474,7 +476,7 @@ class _BarChartPageState extends State<BarChartPage> {
                       ),
                       sectionBufferHeight(),
                       Text(
-                        "2. เลือกวัน",
+                        "2. ${"CHART.PICK_DAY_OF_WEEK".tr()}",
                         style: kfontH2InterBlackColor(),
                       ),
                       sectionBufferHeight(),
@@ -580,7 +582,7 @@ class _BarChartPageState extends State<BarChartPage> {
                   textAlign: TextAlign.center,
                   softWrap: true,
                   maxLines: 1,
-                  textDirection: TextDirection.ltr,
+                  // textDirection: TextDirection.,
                 ),
               ),
             ),

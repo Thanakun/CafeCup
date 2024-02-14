@@ -1,10 +1,17 @@
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
+import 'package:coffee_application/model/customer.dart';
+import 'package:coffee_application/provider/customer-provider.dart';
+import 'package:coffee_application/provider/shop_provider.dart';
+import 'package:coffee_application/screen/customer_register_view.dart';
+import 'package:coffee_application/viewmodel/register_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:coffee_application/data/widget/background_logo.dart';
 import 'package:coffee_application/model/shop.dart';
 import 'package:coffee_application/screen/shop_register/shop_register_first_view.dart';
 import 'package:coffee_application/utility/my_constant.dart';
 import 'dart:async';
+
+import 'package:provider/provider.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -13,49 +20,22 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  late RegisterVM registerVM;
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
-      TextEditingController();
-  final List<String> genderOption = [
-    'Any',
-    'Male',
-    'Female'
-  ]; //here select male and female
-  final List<String> ageOption = ['3-6', '>19', '>35+'];
-  static const rootRegister =
-      'http://10.126.160.76/coffee_application/lib/xamppfiles/Register.php'; // IP Change to your Computer
+      TextEditingController(); //here select male and female
   final List<String> usersType = ["Shop", "Customer"];
   List<bool> isSelected = [true, false];
-  late String selectedAge = ageOption.elementAt(1);
-  late String selectedGender = genderOption.first;
-  String selectedType = "Customer";
   bool isPasswordVisible = false;
-
-  Future _signUp() async {
-    if (usersType.first == "Shop") {
-      // Create a ShopModel instance
-      ShopModel shopModel = ShopModel(
-        username: _usernameController.text,
-        password: _passwordController.text,
-      );
-
-      // print(response.body);
-      // } else {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => ShopRegisterView(id: 1)));
-    }
-  }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    String selectedGender = genderOption.first;
-    String selectedAge = ageOption.elementAt(1);
-    selectedType = "Customer";
+    registerVM = RegisterVM(
+        customerProvider: context.read<CustomerProvider>(),
+        shopProvider: context.read<ShopProvider>());
   }
 
   @override
@@ -63,77 +43,110 @@ class _RegisterPageState extends State<RegisterPage> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: Color.fromRGBO(255, 245, 233, 1),
-      body: Column(
-        children: [
-          LogoApplication(),
-          Center(
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: width * 0.0242, vertical: height * 0.0218),
-              child: Form(
-                key: _formKey,
-                child: ListView(
-                  shrinkWrap: true,
-                  children: <Widget>[
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(bottom: height * 0.0437),
-                          child: Text(
-                            "REGISTER",
-                            style: kfontH0InterBlackColor(),
-                          ),
-                        ),
-                        toggleUserType(height: height,width: width),
-                        SizedBox(height: height * 0.0218),
-                        SizedBox(height: height * 0.0174),
-                        usernameTextForm(),
-                        SizedBox(height: height * 0.0174),
-                        passwordTextForm(),
-                        SizedBox(height: height * 0.0174),
-                        confirmPasswordTextForm(),
-                         SizedBox(height:height*0.0437),
-                        SizedBox(
-                          width: width,
-                          height: height / 12,
-                          child: ElevatedButton(
-                            style: const ButtonStyle(
-                                backgroundColor:
-                                    MaterialStatePropertyAll(sup3V4)),
-                            onPressed: () {
-                              if (_formKey.currentState!.validate()) {
-                                // Validation passed, register user
-                                _signUp();
-                              }
-                            },
-                            child: Text(
-                              'Register',
-                              style: kfontH1InterWhiteColor(),
+      // resizeToAvoidBottomInset: false,
+      backgroundColor: backGroundApplication,
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).requestFocus(FocusNode());
+        },
+        child: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(backgroundRegisterPath),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // LogoApplication(),
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: width * 0.0242, vertical: height * 0.0218),
+                  child: Form(
+                    key: _formKey,
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: <Widget>[
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(bottom: height * 0.0437),
+                              child: Text(
+                                "REGISTER",
+                                style: kfontH0InterBlackColor(),
+                              ),
                             ),
-                          ),
+                            toggleUserType(height: height, width: width),
+                            SizedBox(height: height * 0.0218),
+                            SizedBox(height: height * 0.0174),
+                            usernameTextForm(),
+                            SizedBox(height: height * 0.0174),
+                            passwordTextForm(),
+                            SizedBox(height: height * 0.0174),
+                            confirmPasswordTextForm(),
+                            SizedBox(height: height * 0.0437),
+                            SizedBox(
+                              width: width,
+                              height: height / 12,
+                              child: ChangeNotifierProvider(
+                                create: (context) => CustomerProvider(),
+                                child: ElevatedButton(
+                                  style: const ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStatePropertyAll(sup3V4)),
+                                  onPressed: () {
+                                    if (_formKey.currentState!.validate()) {
+                                      // Validation passed, register user
+                                      // registerVM.signUp(
+                                      //   shop: ShopModel(),
+                                      //   customer: CustomerModel(),
+                                      //   userType: selectedType
+                                      // );
+                                      // context.read<CustomerProvider>().username;
+                                      registerVM.signUpFirstPage(
+                                          username: _usernameController.text,
+                                          password: _passwordController.text);
+
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const CustomerRegister(),
+                                          ));
+                                    }
+                                  },
+                                  child: Text(
+                                    'Register',
+                                    style: kfontH1InterWhiteColor(),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ],
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
 
-  Widget toggleUserType({required height,required width}) {
+  Widget toggleUserType({required height, required width}) {
     return AnimatedToggleSwitch.size(
-      current: selectedType,
+      current: registerVM.userType,
       values: usersType,
       iconOpacity: 1,
       height: height * 0.08196,
-      indicatorSize: Size.fromWidth( width*0.2427),
+      indicatorSize: Size.fromWidth(width * 0.2427),
       iconAnimationType: AnimationType.onHover,
       styleAnimationType: AnimationType.onHover,
       iconBuilder: (value) => Center(
@@ -145,10 +158,10 @@ class _RegisterPageState extends State<RegisterPage> {
                     WidgetSpan(
                       child: Icon(
                         Icons.local_cafe_outlined,
-                        color: selectedType == usersType[0]
+                        color: registerVM.userType == usersType[0]
                             ? Colors.white
                             : Colors.black,
-                        shadows: [
+                        shadows: const [
                           Shadow(
                             blurRadius: 0.5,
                             color: Colors.black,
@@ -162,10 +175,10 @@ class _RegisterPageState extends State<RegisterPage> {
                       child: Icon(
                         Icons.supervised_user_circle,
                         // color: Colors.white,
-                        color: selectedType == usersType[1]
+                        color: registerVM.userType == usersType[1]
                             ? Colors.white
                             : Colors.black,
-                        shadows: [
+                        shadows: const [
                           Shadow(
                             blurRadius: 0.5,
                             color: Colors.black,
@@ -189,7 +202,7 @@ class _RegisterPageState extends State<RegisterPage> {
         );
       },
       onChanged: (i) {
-        setState(() => selectedType = i);
+        setState(() => registerVM.userType = i);
       },
     );
   }
@@ -207,26 +220,11 @@ class _RegisterPageState extends State<RegisterPage> {
     }
   }
 
-  TextFormField emailTextForm() {
-    return TextFormField(
-      controller: _emailController,
-      keyboardType: TextInputType.emailAddress,
-      decoration: const InputDecoration(
-        labelText: 'Email',
-        border: OutlineInputBorder(),
-      ),
-      validator: (value) {
-        if (value!.isEmpty) {
-          return 'Please enter an email';
-        }
-        return null;
-      },
-    );
-  }
-
   TextFormField usernameTextForm() {
     return TextFormField(
       decoration: InputDecoration(
+        filled: true,
+        fillColor: Colors.white,
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: const BorderSide(
@@ -260,6 +258,8 @@ class _RegisterPageState extends State<RegisterPage> {
       controller: _confirmPasswordController,
       obscureText: true,
       decoration: InputDecoration(
+        filled: true,
+        fillColor: Colors.white,
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: const BorderSide(
@@ -294,6 +294,8 @@ class _RegisterPageState extends State<RegisterPage> {
       controller: _passwordController,
       obscureText: true,
       decoration: InputDecoration(
+        filled: true,
+        fillColor: Colors.white,
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: const BorderSide(
@@ -320,56 +322,4 @@ class _RegisterPageState extends State<RegisterPage> {
       },
     );
   }
-
-  DropdownButtonFormField<String> ageDropdown() {
-    return DropdownButtonFormField(
-        decoration: const InputDecoration(
-          labelText: 'Age',
-          prefixIcon: Icon(Icons.manage_accounts),
-        ),
-        value: selectedAge,
-        items: ageOption.map((age) {
-          return DropdownMenuItem(
-              value: age,
-              child: Text(
-                age,
-                style: const TextStyle(
-                    fontFamily: "THSarabun",
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
-              ));
-        }).toList(),
-        onChanged: (value) {
-          setState(() {
-            selectedAge = value.toString();
-          });
-        });
-  }
-
-  DropdownButtonFormField<String> genderDropdown() {
-    return DropdownButtonFormField(
-        decoration: const InputDecoration(
-          labelText: 'Gender',
-          prefixIcon: Icon(Icons.face),
-        ),
-        value: selectedGender,
-        items: genderOption.map((gender) {
-          return DropdownMenuItem(
-              value: gender,
-              child: Text(
-                gender,
-                style: const TextStyle(
-                    fontFamily: "THSarabun",
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
-              ));
-        }).toList(),
-        onChanged: (value) {
-          setState(() {
-            selectedGender = value.toString();
-          });
-        });
-  }
-
-  Future _registerUser(String email, String username, String password) async {}
 }

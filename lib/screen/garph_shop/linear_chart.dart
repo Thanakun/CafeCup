@@ -1,5 +1,7 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
+
 import 'package:coffee_application/data/widget/sliver_multipleline_appbar.dart';
 import 'package:coffee_application/utility/my_constant.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -81,7 +83,7 @@ class _LinearChartPageState extends State<LinearChartPage> {
           child: CustomScrollView(
             slivers: [
               SliverMultilineAppBar(
-                title: "กราฟแสดงอันดับของคะแนนร้านแต่ละประเภท",
+                title: "CHART.LINEAR_CHART_PAGE.BAR_CHART_TITLE".tr(),
                 leading: IconButton(
                   icon: Icon(Icons.arrow_back, color: Colors.black),
                   onPressed: () {
@@ -97,7 +99,7 @@ class _LinearChartPageState extends State<LinearChartPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "1. เลือกช่วงเวลา",
+                        "1. ${"CHART.TIME_RANGE_TITLE".tr()}",
                         style: kfontH2InterBlackColor(),
                       ),
                       sectionBufferHeight(),
@@ -381,6 +383,7 @@ class _LinearChartPageState extends State<LinearChartPage> {
                                   ),
                                   sectionBufferHeight(),
                                   Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       DropdownButtonHideUnderline(
                                         child: DropdownButton2<String>(
@@ -427,7 +430,7 @@ class _LinearChartPageState extends State<LinearChartPage> {
                                       DropdownButtonHideUnderline(
                                         child: DropdownButton2<String>(
                                           customButton: Container(
-                                            width: 70.9,
+                                            width: 100,
                                             height: 30,
                                             padding: EdgeInsets.only(
                                                 left: 5, right: 5),
@@ -472,7 +475,7 @@ class _LinearChartPageState extends State<LinearChartPage> {
                       ),
                       sectionBufferHeight(),
                       Text(
-                        "2. เลือกวัน",
+                        "2. ${"CHART.PICK_DAY_OF_WEEK".tr()}",
                         style: kfontH2InterBlackColor(),
                       ),
                       sectionBufferHeight(),
@@ -570,7 +573,6 @@ class _LinearChartPageState extends State<LinearChartPage> {
                   textAlign: TextAlign.center,
                   softWrap: true,
                   maxLines: 1,
-                  textDirection: TextDirection.ltr,
                 ),
               ),
             ),

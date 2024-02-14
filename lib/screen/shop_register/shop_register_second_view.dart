@@ -16,7 +16,6 @@ class ShopRegisterSecondView extends StatefulWidget {
 
 class _ShopRegisterSecondViewState extends State<ShopRegisterSecondView> {
   final ImagePicker _imagePicker = ImagePicker();
-  // XFile? _selectedImage;
   File? _selectedImage;
 
   @override
@@ -69,16 +68,22 @@ class _ShopRegisterSecondViewState extends State<ShopRegisterSecondView> {
                       margin: const EdgeInsets.all(16),
                       width: width * 0.606,
                       height: height * 0.1639,
+                      decoration: BoxDecoration(
+                          color: backGroundButton,
+                          borderRadius: BorderRadius.circular(20)),
                       child: FittedBox(
+                        clipBehavior: Clip.hardEdge,
                         fit: BoxFit.fill,
-                        child: Image.network(_selectedImage!.path),
+                        child: Image.file(File(_selectedImage!.path)),
                       ),
                     )
                   : Container(
                       margin: const EdgeInsets.all(16),
                       width: width * 0.606,
                       height: height * 0.1639,
-                      decoration: const BoxDecoration(color: Colors.grey),
+                      decoration: BoxDecoration(
+                          color: backGroundButton,
+                          borderRadius: BorderRadius.circular(20)),
                     ),
               sectionBufferHeight(bufferSection: height * 0.0109),
               Row(
@@ -181,6 +186,8 @@ class _ShopRegisterSecondViewState extends State<ShopRegisterSecondView> {
                               width: width * 0.2427,
                               height: height * 0.109,
                               decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                      image: AssetImage(americanoImagePath)),
                                   color: backGroundButton,
                                   border: Border.all(),
                                   borderRadius: BorderRadius.circular(10)),
@@ -310,7 +317,7 @@ class _ShopRegisterSecondViewState extends State<ShopRegisterSecondView> {
                           width: width / 1.7,
                           height: constraints.maxHeight * 0.07,
                           decoration: const BoxDecoration(
-                              color: colorAcceptButton,
+                              color: kcolorAcceptButton,
                               borderRadius:
                                   BorderRadius.all(Radius.circular(20.0))),
                           child: Center(

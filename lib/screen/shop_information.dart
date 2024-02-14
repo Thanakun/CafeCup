@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -489,9 +491,9 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12.0),
                               ),
-                              child: Image.network(
-                                selectedImagesList[index].path,
-                                fit: BoxFit.cover,
+                              child: Image.file(
+                                File(selectedImagesList[index].path),
+                                fit: BoxFit.fitHeight,
                               ),
                             ),
                           );
@@ -647,7 +649,7 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
                           Expanded(
                               flex: 8,
                               child: Container(
-                                padding: EdgeInsets.only(
+                                padding:  EdgeInsets.only(
                                     left: 10, right: 10, top: 5, bottom: 5),
                                 height: 80,
                                 // color: Colors.green,

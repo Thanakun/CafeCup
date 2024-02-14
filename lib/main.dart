@@ -1,45 +1,30 @@
-import "package:flutter/material.dart";
-// import 'package:firebase_core/firebase_core.dart';
-import 'package:coffee_application/screen/Splashscreen.dart';
+import 'package:coffee_application/data/network/cookie-manager.dart';
+import 'package:coffee_application/provider/customer-provider.dart';
+import 'package:coffee_application/provider/shop_provider.dart';
+import 'package:coffee_application/screen/customer_register_second_view.dart';
+import 'package:coffee_application/screen/customer_register_third_view.dart';
+import 'package:coffee_application/screen/customer_register_view.dart';
+import 'package:coffee_application/screen/customer_shop_view.dart';
 import 'package:coffee_application/screen/garph_shop/bar_chart.dart';
-import 'package:coffee_application/screen/garph_shop/linear_chart.dart';
-import 'package:coffee_application/screen/garph_shop/pie_chart.dart';
-import 'package:coffee_application/screen/garph_shop/radar_chart_sample.dart';
-import 'package:coffee_application/screen/garph_shop/web_chart.dart';
+import 'package:coffee_application/screen/login.dart';
 import 'package:coffee_application/screen/my_component/graph_shop.dart';
 import 'package:coffee_application/screen/register.dart';
-import 'package:coffee_application/screen/shop_information.dart';
-import 'package:coffee_application/screen/shop_register/shop_register_first_view.dart';
-import 'package:coffee_application/screen/shop_register/shop_register_forth_view.dart';
-import 'package:coffee_application/screen/shop_register/shop_register_second_view.dart';
-import 'package:coffee_application/screen/shop_register/shop_register_third_view.dart';
-import 'package:coffee_application/utility/routes/routes.dart';
-import 'package:coffee_application/utility/routes/routes_name.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:coffee_application/screen/splash-screen.dart';
+import "package:flutter/material.dart";
+import 'package:easy_localization/easy_localization.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
-  // WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp();
-
-  // // Provide your Firebase configuration options
-  // FirebaseOptions firebaseOptions = FirebaseOptions(
-  //   apiKey: "YOUR_API_KEY",
-  //   authDomain: "YOUR_AUTH_DOMAIN",
-  //   projectId: "YOUR_PROJECT_ID",
-  //   storageBucket: "YOUR_STORAGE_BUCKET",
-  //   messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  //   appId: "YOUR_APP_ID",
-  // );
-
-  // // Initialize Firebase with the provided options
-  // await Firebase.initializeApp(
-  //   name: 'yourAppName', // Provide a unique name for your app
-  //   options: firebaseOptions,
-  // );
-
-  var app = const MyApp();
-
-  runApp(app);
+  WidgetsFlutterBinding.ensureInitialized();
+  TokenManager.instance.initToken();
+  runApp(EasyLocalization(
+    startLocale: const Locale('th', 'TH'),
+    path: 'assets/locales',
+    fallbackLocale: const Locale('th', 'TH'),
+    supportedLocales: const [Locale('en', 'US'), Locale('th', 'TH')],
+    saveLocale: true,
+    child: const MyApp(),
+  ));
 }
 
 //สร้าง widget
@@ -48,17 +33,32 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          fontFamily: 'Open Sans',
-          // fontFamily: GoogleFonts.kanit().fontFamily
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<ShopProvider>(
+          create: (context) => ShopProvider(),
         ),
-        // color: Color.fromRGBO(0, 0, 0, 1),
-        // theme: ThemeData(
-        //     primarySwatch: Color.fromARGB(0, 0, 0, 255)),
-        // initialRoute: RoutesName.splash,
-        // onGenerateRoute: Routes.generateRoute,
-        home: SplashScreen());
+        ChangeNotifierProvider<CustomerProvider>(
+          create: (context) => CustomerProvider(),
+        ),
+      ],
+      child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'APP_TITLE'.tr(),
+          localizationsDelegates: context.localizationDelegates,
+          supportedLocales: context.supportedLocales,
+          locale: context.locale,
+          theme: ThemeData(
+              fontFamily: 'Open Sans',
+              visualDensity: VisualDensity.adaptivePlatformDensity
+              // fontFamily: GoogleFonts.kanit().fontFamily
+              ),
+          // color: Color.fromRGBO(0, 0, 0, 1),
+          // theme: ThemeData(
+          //     primarySwatch: Color.fromARGB(0, 0, 0, 255)),
+          // initialRoute: RoutesName.splash,
+          // onGenerateRoute: Routes.generateRoute,
+          home: SplashScreen()),
+    );
   }
 }

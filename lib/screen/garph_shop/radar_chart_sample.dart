@@ -29,7 +29,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Radar Chart Example'),
+        title: Text('Radar CHART Example'),
       ),
       body: Container(
         color: darkMode ? Colors.black : Colors.white,

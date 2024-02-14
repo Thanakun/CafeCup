@@ -1,22 +1,36 @@
-import 'dart:convert';
 import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:coffee_application/data/app_exception.dart';
 import 'package:coffee_application/data/common/config.dart';
+import 'package:coffee_application/data/network/cookie-manager.dart';
 import 'package:coffee_application/data/network/base_api_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DioApiService implements BaseApiService {
   late final Dio _dio;
 
+  final baseOptions = BaseOptions(
+    baseUrl: baseUrl,
+    receiveTimeout: const Duration(seconds: 20),
+    connectTimeout: const Duration(seconds: 20),
+    responseType: ResponseType.json,
+    contentType: Headers.jsonContentType,
+    validateStatus: (int? status) {
+      return status != null;
+      // return status != null && status >= 200 && status < 300;
+    },
+  );
+
   // Private constructor
   DioApiService._() {
-    _dio = Dio(BaseOptions(
-      baseUrl: baseUrl,
-      receiveTimeout: const Duration(seconds: 10),
-      connectTimeout: const Duration(seconds: 10),
-      responseType: ResponseType.json,
-    ));
+    _dio = Dio(baseOptions);
+    _dio.interceptors.addAll([
+      TokenManager.instance,
+      LogInterceptor(
+        responseBody: true,
+        responseHeader: true,
+      ),
+    ]);
   }
 
   // Singleton instance
@@ -38,6 +52,22 @@ class DioApiService implements BaseApiService {
       throw FetchDataException('Cannot Get Data or No Internet Connection');
     }
 
+    return responseJson;
+  }
+
+  Future getGetApiResponseWithRequestParam(String url) async {
+    dynamic responseJson;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final response =
+          await _dio.get(url, queryParameters: {"_id": prefs.getInt("_id")!});
+      responseJson = returnResponse(response);
+    } on DioError catch (e) {
+      print("Dio Error: $e");
+      throw FetchDataException('Error during Dio GET request');
+    } on SocketException {
+      throw FetchDataException('Cannot Get Data or No Internet Connection');
+    }
     return responseJson;
   }
 
@@ -74,3 +104,20 @@ class DioApiService implements BaseApiService {
     }
   }
 }
+
+// class ErrorInterceptor extends Interceptor {
+//   @override
+//   void onResponse(Response response, ResponseInterceptorHandler handler) {
+//     final status = response.statusCode;
+//     final isValid = status != null && status >= 200 && status < 300;
+//     if (!isValid) {
+//       throw DioException.badResponse(
+//         statusCode: status!,
+//         requestOptions: response.requestOptions,
+//         response: response,
+//       );
+//     }
+
+//     super.onResponse(response, handler);
+//   }
+// }

@@ -1,5 +1,6 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:coffee_application/data/widget/sliver_multipleline_appbar.dart';
 import 'package:coffee_application/utility/my_constant.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -83,9 +84,9 @@ class _PieChartPageState extends State<PieChartPage> {
           child: CustomScrollView(
             slivers: [
               SliverMultilineAppBar(
-                title: "กราฟแสดงช่วงอายุของกลุ่มลูกค้า เทียบตามช่วงเวลา",
+                title: "CHART.PIE_CHART_PAGE.PIE_CHART_TITLE".tr(),
                 leading: IconButton(
-                  icon: Icon(Icons.arrow_back, color: Colors.black),
+                  icon: const Icon(Icons.arrow_back, color: Colors.black),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
@@ -99,7 +100,7 @@ class _PieChartPageState extends State<PieChartPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "1. เลือกช่วงเวลา",
+                        "1. ${"CHART.TIME_RANGE_TITLE".tr()}",
                         style: kfontH2InterBlackColor(),
                       ),
                       sectionBufferHeight(),
@@ -115,10 +116,10 @@ class _PieChartPageState extends State<PieChartPage> {
                                 });
                               },
                               child: AnimatedContainer(
-                                duration: Duration(milliseconds: 500),
+                                duration: const Duration(milliseconds: 500),
                                 height:
                                     allTimeHeight == 0 ? 100 : allTimeHeight,
-                                padding: EdgeInsets.all(15),
+                                padding: const EdgeInsets.all(15),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   color: selectDateType == "All Time"
@@ -152,7 +153,7 @@ class _PieChartPageState extends State<PieChartPage> {
                                 });
                               },
                               child: AnimatedContainer(
-                                duration: Duration(milliseconds: 500),
+                                duration: const Duration(milliseconds: 500),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   color: selectDateType == "Quarter"
@@ -165,7 +166,7 @@ class _PieChartPageState extends State<PieChartPage> {
                                       ? null
                                       : selectButtonColor.withOpacity(0.4),
                                 ),
-                                padding: EdgeInsets.all(15),
+                                padding: const EdgeInsets.all(15),
                                 child: Column(children: [
                                   Center(
                                     child: Text(
@@ -183,7 +184,7 @@ class _PieChartPageState extends State<PieChartPage> {
                                           customButton: Container(
                                             width: 80,
                                             height: 30,
-                                            padding: EdgeInsets.only(
+                                            padding: const EdgeInsets.only(
                                                 left: 5, right: 5),
                                             decoration: BoxDecoration(
                                                 borderRadius:
@@ -192,8 +193,8 @@ class _PieChartPageState extends State<PieChartPage> {
                                             child: Row(
                                               children: [
                                                 Text(selectedYearQuarter),
-                                                Spacer(),
-                                                Icon(
+                                                const Spacer(),
+                                                const Icon(
                                                   Icons.arrow_drop_down_rounded,
                                                   color: selectButtonColor,
                                                 )
@@ -223,7 +224,7 @@ class _PieChartPageState extends State<PieChartPage> {
                                           customButton: Container(
                                             width: 60,
                                             height: 30,
-                                            padding: EdgeInsets.only(
+                                            padding: const EdgeInsets.only(
                                                 left: 5, right: 5),
                                             decoration: BoxDecoration(
                                                 borderRadius:
@@ -232,8 +233,8 @@ class _PieChartPageState extends State<PieChartPage> {
                                             child: Row(
                                               children: [
                                                 Text(selectedQuarter),
-                                                Spacer(),
-                                                Icon(
+                                                const Spacer(),
+                                                const Icon(
                                                   Icons.arrow_drop_down_rounded,
                                                   color: selectButtonColor,
                                                 )
@@ -279,10 +280,10 @@ class _PieChartPageState extends State<PieChartPage> {
                                 });
                               },
                               child: AnimatedContainer(
-                                duration: Duration(milliseconds: 500),
+                                duration: const Duration(milliseconds: 500),
                                 height:
                                     allTimeHeight == 0 ? 100 : allTimeHeight,
-                                padding: EdgeInsets.all(15),
+                                padding: const EdgeInsets.all(15),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   color: selectDateType == "Year"
@@ -309,7 +310,7 @@ class _PieChartPageState extends State<PieChartPage> {
                                         customButton: Container(
                                           width: 80,
                                           height: 30,
-                                          padding: EdgeInsets.only(
+                                          padding: const EdgeInsets.only(
                                               left: 5, right: 5),
                                           decoration: BoxDecoration(
                                               borderRadius:
@@ -318,8 +319,8 @@ class _PieChartPageState extends State<PieChartPage> {
                                           child: Row(
                                             children: [
                                               Text(selectedYearQuarter),
-                                              Spacer(),
-                                              Icon(
+                                              const Spacer(),
+                                              const Icon(
                                                 Icons.arrow_drop_down_rounded,
                                                 color: selectButtonColor,
                                               )
@@ -360,7 +361,7 @@ class _PieChartPageState extends State<PieChartPage> {
                                 });
                               },
                               child: AnimatedContainer(
-                                duration: Duration(milliseconds: 500),
+                                duration: const Duration(milliseconds: 500),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   color: selectDateType == "Month"
@@ -373,7 +374,7 @@ class _PieChartPageState extends State<PieChartPage> {
                                       ? null
                                       : selectButtonColor.withOpacity(0.4),
                                 ),
-                                padding: EdgeInsets.all(15),
+                                padding: const EdgeInsets.all(15),
                                 child: Column(children: [
                                   Center(
                                     child: Text(
@@ -383,13 +384,14 @@ class _PieChartPageState extends State<PieChartPage> {
                                   ),
                                   sectionBufferHeight(),
                                   Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       DropdownButtonHideUnderline(
                                         child: DropdownButton2<String>(
                                           customButton: Container(
                                             width: 125,
                                             height: 30,
-                                            padding: EdgeInsets.only(
+                                            padding: const EdgeInsets.only(
                                                 left: 5, right: 5),
                                             decoration: BoxDecoration(
                                                 borderRadius:
@@ -398,8 +400,8 @@ class _PieChartPageState extends State<PieChartPage> {
                                             child: Row(
                                               children: [
                                                 Text(selectMonthString),
-                                                Spacer(),
-                                                Icon(
+                                                const Spacer(),
+                                                const Icon(
                                                   Icons.arrow_drop_down_rounded,
                                                   color: selectButtonColor,
                                                 )
@@ -429,9 +431,9 @@ class _PieChartPageState extends State<PieChartPage> {
                                       DropdownButtonHideUnderline(
                                         child: DropdownButton2<String>(
                                           customButton: Container(
-                                            width: 70.9,
+                                            width: 100,
                                             height: 30,
-                                            padding: EdgeInsets.only(
+                                            padding: const EdgeInsets.only(
                                                 left: 5, right: 5),
                                             decoration: BoxDecoration(
                                                 borderRadius:
@@ -440,7 +442,7 @@ class _PieChartPageState extends State<PieChartPage> {
                                             child: Row(
                                               children: [
                                                 Text(selectedYearMonth),
-                                                Icon(
+                                                const Icon(
                                                   Icons.arrow_drop_down_rounded,
                                                   color: selectButtonColor,
                                                 )
@@ -474,7 +476,7 @@ class _PieChartPageState extends State<PieChartPage> {
                       ),
                       sectionBufferHeight(),
                       Text(
-                        "2. เลือกวัน",
+                        "2. ${"CHART.PICK_DAY_OF_WEEK".tr()}",
                         style: kfontH2InterBlackColor(),
                       ),
                       sectionBufferHeight(),
@@ -510,10 +512,8 @@ class _PieChartPageState extends State<PieChartPage> {
                               child: SfCircularChart(series: <CircularSeries>[
                         // Render pie chart
                         PieSeries<ChartData, String>(
-                          
-                          dataLabelSettings: DataLabelSettings(
-                            isVisible: true
-                          ),
+                            dataLabelSettings:
+                                const DataLabelSettings(isVisible: true),
                             strokeWidth: 1,
                             strokeColor: Colors.black,
                             dataSource: chartData,
@@ -527,7 +527,7 @@ class _PieChartPageState extends State<PieChartPage> {
                                 borderRadius: BorderRadius.circular(15),
                                 color: selectButtonColor.withOpacity(0.5)),
                             alignment: Alignment.center,
-                            padding: EdgeInsets.all(30),
+                            padding: const EdgeInsets.all(30),
                             child: Text(
                               "กราฟแสดงอันดับคะแนนของร้านในหมวด บรรยากาศ ในเดือนกุมภาภันธ์ 2022",
                               style: kfontH2InterBlackColor(),
@@ -561,7 +561,7 @@ class _PieChartPageState extends State<PieChartPage> {
               // padding: EdgeInsets.only(left: 5, right: 5, top: 10, bottom: 10),
               decoration: BoxDecoration(
                 border: isSelected
-                    ? Border(
+                    ? const Border(
                         bottom: BorderSide(
                           color:
                               Colors.black, // Change the border color as needed
@@ -581,7 +581,6 @@ class _PieChartPageState extends State<PieChartPage> {
                   textAlign: TextAlign.center,
                   softWrap: true,
                   maxLines: 1,
-                  textDirection: TextDirection.ltr,
                 ),
               ),
             ),

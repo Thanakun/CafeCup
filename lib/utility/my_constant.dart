@@ -3,7 +3,10 @@ import 'package:another_flushbar/flushbar_route.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+const String backgroundRegisterPath = "assets/images/register-background.png";
 const String backgroundImagePath = "assets/images/cafe_background.jpg";
+const String backgroundCustomerImagePath = "assets/images/customer-background.png";
+const String backgroundCustomerHomeImagePath = "assets/images/customer-home.png";
 const String backgroundShopInformationPath = "assets/images/owner_home.jpg";
 const String shopCoverImagePath = "assets/images/shop_cover.png";
 const String americanoImagePath = "assets/images/coffee_image.png";
@@ -34,11 +37,13 @@ const Color brownBorderButton = Color.fromRGBO(192, 130, 97, 1);
 
 const Color backGroundButton = Color.fromRGBO(244, 234, 222, 1);
 
-const Color colorAcceptButton = Color.fromRGBO(135, 206, 48, 1);
+const Color kcolorAcceptButton = Color.fromRGBO(135, 206, 48, 1);
 
 const Color backGroundApplication = Color.fromRGBO(255, 245, 233, 1);
 
 const Color colorStarReviewUnSelect = Color.fromRGBO(169, 179, 136, 1);
+
+const Color colorBackGroundNavBar = Color.fromRGBO(185,148,112, 1);
 
 TextStyle kfontNameMenu() => const TextStyle(
       color: fontMenuNameColor,
@@ -66,15 +71,33 @@ TextStyle kfontMenuPrice() => const TextStyle(
       fontWeight: FontWeight.w400,
     );
 
+TextStyle kfont32_400() => const TextStyle(
+      fontSize: 32,
+      color: Colors.black,
+      fontStyle: FontStyle.normal,
+    );
+
 TextStyle kfontH0InterBlackColor() => const TextStyle(
     fontSize: 32,
     color: Colors.black,
     fontStyle: FontStyle.normal,
     fontWeight: FontWeight.bold);
 
+TextStyle kfontH0InterWhiteColor() => const TextStyle(
+    fontSize: 32,
+    color: Colors.white,
+    fontStyle: FontStyle.normal,
+    fontWeight: FontWeight.bold);
+
 TextStyle kfont26_400() => const TextStyle(
     fontSize: 26,
     color: Colors.black,
+    fontStyle: FontStyle.normal,
+    fontWeight: FontWeight.w400);
+
+TextStyle kfont22_400ErrorStyle() => const TextStyle(
+    fontSize: 22,
+    color: Colors.red,
     fontStyle: FontStyle.normal,
     fontWeight: FontWeight.w400);
 
@@ -113,7 +136,6 @@ TextStyle kfontH4InterBlackColor() => const TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.bold,
     color: const Color.fromARGB(255, 0, 0, 0));
-
 
 TextStyle kfontH5InterBlackColor() => const TextStyle(
     fontStyle: FontStyle.normal,
@@ -188,13 +210,33 @@ SizedBox sectionBufferWidth({double bufferSection = 8}) {
   );
 }
 
+Text headingContainer({required String header}) {
+  return Text(
+    header,
+    style: kfontH2InterBlackColor(),
+    textAlign: TextAlign.left,
+  );
+}
+
+Text headerContainer({required String header}) {
+  return Text(
+    header,
+    style: kfontH1InterBoldBlackColor(),
+    textAlign: TextAlign.center,
+  );
+}
+
 class Utility {
   static toastMessage(String message) {
     Fluttertoast.showToast(
+        fontSize: 24,
         msg: message,
+        gravity: ToastGravity.CENTER,
         backgroundColor: Colors.black,
         textColor: Colors.white,
-        toastLength: Toast.LENGTH_LONG);
+        toastLength: Toast.LENGTH_LONG,
+        webPosition: "center",
+        webBgColor: "linear-gradient(to top, #FE6000, #FD5000)");
   }
 
   static void flushBarErrorMessage(
@@ -207,9 +249,28 @@ class Utility {
           padding: const EdgeInsets.all(15),
           message: message,
           borderRadius: BorderRadius.circular(8),
-          duration: const Duration(seconds: 3),
+          duration: const Duration(seconds: 2),
           flushbarPosition: FlushbarPosition.TOP,
           backgroundColor: Colors.red,
+          reverseAnimationCurve: Curves.easeInOut,
+          positionOffset: 20,
+          icon: const Icon(Icons.error, size: 28, color: Colors.white),
+        )..show(context));
+  }
+
+  static void flushBarGrantedMessage(
+      {required String message, required BuildContext context}) {
+    showFlushbar(
+        context: context,
+        flushbar: Flushbar(
+          forwardAnimationCurve: Curves.decelerate,
+          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          padding: const EdgeInsets.all(15),
+          message: message,
+          borderRadius: BorderRadius.circular(8),
+          duration: const Duration(seconds: 3),
+          flushbarPosition: FlushbarPosition.TOP,
+          backgroundColor: Colors.green,
           reverseAnimationCurve: Curves.easeInOut,
           positionOffset: 20,
           icon: const Icon(Icons.error, size: 28, color: Colors.white),
