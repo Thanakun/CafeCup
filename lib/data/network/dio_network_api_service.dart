@@ -44,6 +44,8 @@ class DioApiService implements BaseApiService {
     dynamic responseJson;
     try {
       final response = await _dio.get(url);
+      print("response");
+      print(response);
       responseJson = returnResponse(response);
     } on DioError catch (e) {
       print("Dio Error: $e");

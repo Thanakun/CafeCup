@@ -60,7 +60,7 @@ class _CustomerHomePageViewState extends State<CustomerHomePageView> {
                       headerContainer(header: "CUSTOMER_HOME.CAFE_HOT").tr(),
                       sectionBufferHeight(bufferSection: 16),
                       //Create Carousel Shop Cafe here
-                      FutureBuilder(
+                      FutureBuilder<List<ShopModel>>(
                         future: _vm.listAllShopFuture,
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
@@ -68,6 +68,12 @@ class _CustomerHomePageViewState extends State<CustomerHomePageView> {
                             return Center(
                               child: CircularProgressIndicator(),
                             );
+                          } else if ( 
+                              snapshot.hasError) {
+                            return Text(
+                              "ERROR_MESSAGE.ERROR_LOADING_FAIL",
+                              style: kfont32_400(),
+                            ).tr();
                           } else {
                             return CarouselSlider.builder(
                               options: CarouselOptions(
@@ -79,7 +85,6 @@ class _CustomerHomePageViewState extends State<CustomerHomePageView> {
                                   onPageChanged: (index, reason) {
                                     setState(() {
                                       _current = index;
-
                                       print(_current);
                                       print(index);
                                     });
