@@ -1,5 +1,5 @@
 import 'package:coffee_application/screen/customer_register_view.dart';
-import 'package:coffee_application/screen/customer_shop_view.dart';
+import 'package:coffee_application/screen/customer_home_view.dart';
 import 'package:coffee_application/screen/login.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';

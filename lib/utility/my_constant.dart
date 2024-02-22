@@ -5,8 +5,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 const String backgroundRegisterPath = "assets/images/register-background.png";
 const String backgroundImagePath = "assets/images/cafe_background.jpg";
-const String backgroundCustomerImagePath = "assets/images/customer-background.png";
-const String backgroundCustomerHomeImagePath = "assets/images/customer-home.png";
+const String backgroundCustomerImagePath =
+    "assets/images/customer-background.png";
+const String backgroundCustomerHomeImagePath =
+    "assets/images/customer-home.png";
 const String backgroundShopInformationPath = "assets/images/owner_home.jpg";
 const String shopCoverImagePath = "assets/images/shop_cover.png";
 const String americanoImagePath = "assets/images/coffee_image.png";
@@ -14,6 +16,7 @@ const String barChartPath = "assets/images/bar_chart.jpg";
 const String pieChartPath = "assets/images/pie_chart.png";
 const String webChartPath = "assets/images/web_chart.png";
 const String linearChartPath = "assets/images/linear_chart.png";
+const String imageNotFound = "assets/images/image_not_found.png";
 
 const Color kRedButton = Color.fromRGBO(237, 98, 98, 1);
 
@@ -23,7 +26,9 @@ const Color kGreyUnSelectedButton = Color.fromRGBO(217, 217, 217, 1);
 
 const Color kYellowSelectedButton = Color.fromRGBO(245, 224, 114, 1);
 
-const Color supV4 = Color.fromRGBO(241, 199, 98, 1);
+const Color kYellowSelectedButtonSearchView = Color.fromRGBO(241, 199, 98, 1);
+
+const Color kGreenUnSelectedButton = Color.fromRGBO(241, 199, 98, 1);
 
 const Color backgroundActiveButton = Color.fromRGBO(226, 199, 153, 1);
 
@@ -43,7 +48,9 @@ const Color backGroundApplication = Color.fromRGBO(255, 245, 233, 1);
 
 const Color colorStarReviewUnSelect = Color.fromRGBO(169, 179, 136, 1);
 
-const Color colorBackGroundNavBar = Color.fromRGBO(185,148,112, 1);
+const Color colorBackGroundNavBar = Color.fromRGBO(185, 148, 112, 1);
+
+const Color colorBackGroundSearchBox = Color.fromRGBO(169, 179, 136, 1);
 
 TextStyle kfontNameMenu() => const TextStyle(
       color: fontMenuNameColor,
@@ -95,6 +102,12 @@ TextStyle kfont26_400() => const TextStyle(
     fontStyle: FontStyle.normal,
     fontWeight: FontWeight.w400);
 
+TextStyle kfont26Bold_400() => const TextStyle(
+    fontSize: 26,
+    color: Colors.black,
+    fontStyle: FontStyle.normal,
+    fontWeight: FontWeight.bold);
+
 TextStyle kfont22_400ErrorStyle() => const TextStyle(
     fontSize: 22,
     color: Colors.red,
@@ -122,6 +135,12 @@ TextStyle kfontH1InterWhiteColor() => const TextStyle(
 TextStyle kfontH2InterBlackColor() => const TextStyle(
     fontSize: 18,
     fontWeight: FontWeight.w400,
+    fontStyle: FontStyle.normal,
+    color: Colors.black);
+
+TextStyle kfontH2InterBoldBlackColor() => const TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
     fontStyle: FontStyle.normal,
     color: Colors.black);
 
@@ -179,6 +198,12 @@ TextStyle kfontH2InterBlackColorHalfOpacity() => const TextStyle(
     fontStyle: FontStyle.normal,
     fontWeight: FontWeight.bold,
     color: Color.fromRGBO(0, 0, 0, 0.5));
+
+TextStyle kfontH2GreyColorHalfOpacity() => const TextStyle(
+    fontSize: 18,
+    fontStyle: FontStyle.normal,
+    fontWeight: FontWeight.bold,
+    color: Color.fromRGBO(77, 75, 75, 1));
 
 TextStyle kfontH2InterNormalBlackColorHalfOpacity() => const TextStyle(
     fontSize: 18,

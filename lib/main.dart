@@ -1,10 +1,12 @@
 import 'package:coffee_application/data/network/cookie-manager.dart';
+import 'package:coffee_application/hive/boxes.dart';
+import 'package:coffee_application/hive/users.dart';
 import 'package:coffee_application/provider/customer-provider.dart';
 import 'package:coffee_application/provider/shop_provider.dart';
 import 'package:coffee_application/screen/customer_register_second_view.dart';
 import 'package:coffee_application/screen/customer_register_third_view.dart';
 import 'package:coffee_application/screen/customer_register_view.dart';
-import 'package:coffee_application/screen/customer_shop_view.dart';
+import 'package:coffee_application/screen/customer_home_view.dart';
 import 'package:coffee_application/screen/garph_shop/bar_chart.dart';
 import 'package:coffee_application/screen/login.dart';
 import 'package:coffee_application/screen/my_component/graph_shop.dart';
@@ -13,8 +15,12 @@ import 'package:coffee_application/screen/splash-screen.dart';
 import "package:flutter/material.dart";
 import 'package:easy_localization/easy_localization.dart';
 import 'package:provider/provider.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 void main() async {
+  await Hive.initFlutter();
+  Hive.registerAdapter(UsersAdapter());
+  boxUsers = await Hive.openBox<Users>('users');
   WidgetsFlutterBinding.ensureInitialized();
   TokenManager.instance.initToken();
   runApp(EasyLocalization(
@@ -50,14 +56,7 @@ class MyApp extends StatelessWidget {
           locale: context.locale,
           theme: ThemeData(
               fontFamily: 'Open Sans',
-              visualDensity: VisualDensity.adaptivePlatformDensity
-              // fontFamily: GoogleFonts.kanit().fontFamily
-              ),
-          // color: Color.fromRGBO(0, 0, 0, 1),
-          // theme: ThemeData(
-          //     primarySwatch: Color.fromARGB(0, 0, 0, 255)),
-          // initialRoute: RoutesName.splash,
-          // onGenerateRoute: Routes.generateRoute,
+              visualDensity: VisualDensity.adaptivePlatformDensity),
           home: SplashScreen()),
     );
   }

@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:coffee_application/data/network/dio_network_api_service.dart';
-import 'package:coffee_application/screen/customer_shop_view.dart';
+import 'package:coffee_application/screen/customer_home_view.dart';
 import 'package:coffee_application/screen/login.dart';
 import 'package:coffee_application/viewmodel/splash_screen_view_model.dart';
 import 'package:cookie_jar/cookie_jar.dart';

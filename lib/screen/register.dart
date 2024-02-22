@@ -233,7 +233,7 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
         ),
         focusedBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: supV4, width: 2.5),
+          borderSide: BorderSide(color: kYellowSelectedButton, width: 2.5),
           borderRadius: BorderRadius.all(
             Radius.circular(10),
           ),
@@ -268,7 +268,7 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
         ),
         focusedBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: supV4, width: 2.5),
+          borderSide: BorderSide(color: kYellowSelectedButton, width: 2.5),
           borderRadius: BorderRadius.all(
             Radius.circular(10),
           ),
@@ -304,7 +304,7 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
         ),
         focusedBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: supV4, width: 2.5),
+          borderSide: BorderSide(color: kYellowSelectedButton, width: 2.5),
           borderRadius: BorderRadius.all(
             Radius.circular(10),
           ),

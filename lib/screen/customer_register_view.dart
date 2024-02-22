@@ -41,7 +41,7 @@ class _CustomerRegisterState extends State<CustomerRegister> {
     "Doctor",
     "Artist",
     "IT Programmer",
-    "Book Writer",
+    "Tourist",
     "Student",
     "Officer",
   ];

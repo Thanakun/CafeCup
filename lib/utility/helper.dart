@@ -144,37 +144,37 @@ class Helper {
   static List<Map<String, dynamic>> listDateInWeek = [
     {
       "id": 1,
-      "dayOfWeekTh": "วันอาทิตย์",
+      "dayOfWeekTh": "อาทิตย์",
       "dayOfWeekEng": "Sunday",
     },
     {
       "id": 2,
-      "dayOfWeekTh": "วันจันทร์",
+      "dayOfWeekTh": "จันทร์",
       "dayOfWeekEng": "Monday",
     },
     {
       "id": 3,
-      "dayOfWeekTh": "วันอังคาร",
+      "dayOfWeekTh": "อังคาร",
       "dayOfWeekEng": "Tuesday",
     },
     {
       "id": 4,
-      "dayOfWeekTh": "วันพุธ",
+      "dayOfWeekTh": "พุธ",
       "dayOfWeekEng": "Wednesday",
     },
     {
       "id": 5,
-      "dayOfWeekTh": "วันพฤหัสบดี",
+      "dayOfWeekTh": "พฤหัสบดี",
       "dayOfWeekEng": "Thursday",
     },
     {
       "id": 6,
-      "dayOfWeekTh": "วันศุกร์",
+      "dayOfWeekTh": "ศุกร์",
       "dayOfWeekEng": "Friday",
     },
     {
       "id": 7,
-      "dayOfWeekTh": "วันเสาร์",
+      "dayOfWeekTh": "เสาร์",
       "dayOfWeekEng": "Saturday",
     },
   ];
@@ -228,7 +228,7 @@ class Helper {
   }
 
   static String? validateUsername(String? username) {
-    if (username == null ||username.isEmpty) {
+    if (username == null || username.isEmpty) {
       return tr('VALIDATE.VALIDATE_USERNAME.EMPTY');
     } else if (username.length < 5) {
       return tr('VALIDATE.VALIDATE_USERNAME.TOO_SHORT');
@@ -313,4 +313,140 @@ class Helper {
 
   static bool isThai(BuildContext context) =>
       Localizations.localeOf(context) == const Locale('th', 'TH');
+  static String getDisplayDayOfWeekOpenShop(List<int> daysOpen, bool isThai) {
+    if (daysOpen.isEmpty) {
+      return isThai ? "ปิดทุกวัน" : "Closed all week";
+    }
+
+    List<String> daysOfWeek = isThai
+        ? [
+          "อา",
+          "จ",
+          "อ",
+          "พ",
+          "พฤ",
+          "ศ",
+          "ส",
+          ]
+        : [
+            "Sunday",
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+          ];
+    String displayDayOfWeek = "";
+    int startRange = -1;
+
+    for (int i = 0; i <= 6; i++) {
+      if (daysOpen.contains(i)) {
+        if (startRange == -1) {
+          // Start of a new range
+          startRange = i;
+        }
+      } else {
+        if (startRange != -1) {
+          // End of the current range
+          int endRange = i - 1;
+          if (startRange == endRange) {
+            displayDayOfWeek += "${daysOfWeek[startRange]}, ";
+          } else {
+            displayDayOfWeek +=
+                "${daysOfWeek[startRange]} - ${daysOfWeek[endRange]}, ";
+          }
+          startRange = -1; // Reset the range
+        }
+      }
+    }
+
+    // Check if the last day is part of a range
+    if (startRange != -1) {
+      int endRange = 6;
+      if (startRange == endRange) {
+        displayDayOfWeek += "${daysOfWeek[startRange]}, ";
+      } else {
+        displayDayOfWeek +=
+            "${daysOfWeek[startRange]} - ${daysOfWeek[endRange]}, ";
+      }
+    }
+
+    // Remove the trailing comma and space if the string is not empty
+    if (displayDayOfWeek.isNotEmpty) {
+      displayDayOfWeek =
+          displayDayOfWeek.substring(0, displayDayOfWeek.length - 2);
+    }
+
+    return displayDayOfWeek;
+  }
+
+  static String getDisplayDayOfWeekCloseShop(List<int> daysOpen, bool isThai) {
+    if (daysOpen.isEmpty) {
+      return isThai ? "ปิดทุกวัน" : "Closed all week";
+    }
+  List<String> daysOfWeek = isThai
+      ? [
+          "อา",
+          "จ",
+          "อ",
+          "พ",
+          "พฤ",
+          "ศ",
+          "ส",
+        ]
+      : [
+          "Sunday",
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+        ];
+
+    String displayDayOfWeek = "";
+    int startRange = -1;
+
+    for (int i = 0; i <= 6; i++) {
+      if (!daysOpen.contains(i)) {
+        if (startRange == -1) {
+          // Start of a new range
+          startRange = i;
+        }
+      } else {
+        if (startRange != -1) {
+          // End of the current range
+          int endRange = i - 1;
+          if (startRange == endRange) {
+            displayDayOfWeek += "${daysOfWeek[startRange]}, ";
+          } else {
+            displayDayOfWeek +=
+                "${daysOfWeek[startRange]} - ${daysOfWeek[endRange]}, ";
+          }
+          startRange = -1; // Reset the range
+        }
+      }
+    }
+
+    // Check if the last day is part of a range
+    if (startRange != -1) {
+      int endRange = 6;
+      if (startRange == endRange) {
+        displayDayOfWeek += "${daysOfWeek[startRange]}, ";
+      } else {
+        displayDayOfWeek +=
+            "${daysOfWeek[startRange]} - ${daysOfWeek[endRange]}, ";
+      }
+    }
+
+    // Remove the trailing comma and space if the string is not empty
+    if (displayDayOfWeek.isNotEmpty) {
+      displayDayOfWeek =
+          displayDayOfWeek.substring(0, displayDayOfWeek.length - 2);
+    }
+
+    return displayDayOfWeek;
+  }
+
 }

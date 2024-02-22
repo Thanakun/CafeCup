@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'package:coffee_application/hive/boxes.dart';
+import 'package:coffee_application/hive/users.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,27 +13,24 @@ class TokenManager extends Interceptor {
 
   String? _token;
   int? _id;
-
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
     final status = response.statusCode;
-    final isValid = status != null && status >= 200 && status < 300;
+    try {
+      if (response.data.containsKey('token') &&
+          response.data.containsKey('currentUser')) {
+        var token = response.data['token'] as String?;
+        var currentUser = response.data['currentUser'] as Map<String, dynamic>?;
 
-    if (!isValid) {
-      throw DioException.badResponse(
-        statusCode: status!,
-        requestOptions: response.requestOptions,
-        response: response,
-      );
-    }
-
-    // Handle the token for any successful response
-    if (response.data['token'] != null && response.data["currentUser"]['_id'] != null) {
-      _saveToken(response.data['token'].toString(), response.data["currentUser"]['_id']);
-    } else if (status == 401) {
-      // Assuming 401 is used for unauthorized access
-      _clearToken();
-    }
+        if (token != null &&
+            currentUser != null &&
+            currentUser['_id'] != null) {
+          _saveToken(token, currentUser['_id']);
+        } else if (status == 401) {
+          _clearToken();
+        }
+      } else {}
+    } catch (e) {}
 
     // Continue with the response handling
     super.onResponse(response, handler);
@@ -38,17 +38,23 @@ class TokenManager extends Interceptor {
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    debugPrint('token: $_token');
-    debugPrint('_id: $_id');
-    options.headers['token'] = '$_token'; // Use 'Authorization' for JWT tokens
-    options.queryParameters = {'_id': _id};
+    options.headers['token'] = '$_token';
+    options.headers['Access-Control-Allow-Origin'] = '*';
+    //   "Access-Control-Allow-Credentials": true,
+    // "Access-Control-Allow-Headers": "Origin,Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,locale",
+    // "Access-Control-Allow-Methods": "POST, OPTIONS"
+    if (options.path == "/customer/login") {
+      options.queryParameters = {'_id': _id};
+    }
+
+    print(options.uri);
     return super.onRequest(options, handler);
   }
 
   Future<void> initToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _token = prefs.getString('token');
-    _id = prefs.getInt('_id');
+    _id = boxUsers.get(0).id;
   }
 
   void _saveToken(String newToken, int id) async {
@@ -57,17 +63,19 @@ class TokenManager extends Interceptor {
       _id = id;
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString("token", _token!);
-      prefs.setInt("_id", _id!);
-      debugPrint(_token);
-      debugPrint(_id.toString());
+      boxUsers.put(
+          0,
+          Users(
+            id: _id!,
+          ));
     }
   }
 
   void _clearToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     _token = null;
     _id = null;
-    SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove("token");
-    prefs.remove("_id");
+    boxUsers.delete(0);
   }
 }

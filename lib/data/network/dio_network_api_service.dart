@@ -1,68 +1,111 @@
 import 'dart:io';
+import 'package:coffee_application/hive/boxes.dart';
 import 'package:dio/dio.dart';
 import 'package:coffee_application/data/app_exception.dart';
 import 'package:coffee_application/data/common/config.dart';
 import 'package:coffee_application/data/network/cookie-manager.dart';
 import 'package:coffee_application/data/network/base_api_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class DioApiService implements BaseApiService {
-  late final Dio _dio;
+  late final Dio _dioAuthService;
+  late final Dio _dioAnalyticService;
+  late final Dio _dioPromotionService;
 
-  final baseOptions = BaseOptions(
-    baseUrl: baseUrl,
-    receiveTimeout: const Duration(seconds: 20),
-    connectTimeout: const Duration(seconds: 20),
-    responseType: ResponseType.json,
-    contentType: Headers.jsonContentType,
-    validateStatus: (int? status) {
-      return status != null;
-      // return status != null && status >= 200 && status < 300;
-    },
-  );
-
-  // Private constructor
   DioApiService._() {
-    _dio = Dio(baseOptions);
-    _dio.interceptors.addAll([
-      TokenManager.instance,
-      LogInterceptor(
-        responseBody: true,
-        responseHeader: true,
-      ),
-    ]);
+    _dioAuthService = _createDio(baseUrlAuthService);
+    _dioAnalyticService = _createDio(baseUrlAnalyticService);
+    _dioPromotionService = _createDio(baseUrlPromotionService);
   }
 
-  // Singleton instance
-  static final DioApiService _instance = DioApiService._();
+  Dio _createDio(String baseUrl) {
+    BaseOptions options = BaseOptions(
+      receiveTimeout: const Duration(seconds: 20),
+      connectTimeout: const Duration(seconds: 20),
+      responseType: ResponseType.json,
+      contentType: Headers.jsonContentType,
+      validateStatus: (int? status) {
+        return status != null;
+      },
+    );
 
-  // Factory constructor to return the singleton instance
+    Dio dio = Dio(options);
+    dio.options.baseUrl = baseUrl;
+    dio.interceptors.addAll([TokenManager.instance]);
+    return dio;
+  }
+
   factory DioApiService() => _instance;
 
+  static final DioApiService _instance = DioApiService._();
+
+  Dio get authService => _dioAuthService;
+
+  Dio get analyticService => _dioAnalyticService;
+
+  Dio get promotionService => _dioPromotionService;
+
   @override
-  Future getGetApiResponse(String url) async {
+  Future<dynamic> getApiAuth(String url, [Map<String, dynamic>? query]) async {
     dynamic responseJson;
     try {
-      final response = await _dio.get(url);
-      print("response");
-      print(response);
-      responseJson = returnResponse(response);
-    } on DioError catch (e) {
-      print("Dio Error: $e");
-      throw FetchDataException('Error during Dio GET request');
-    } on SocketException {
-      throw FetchDataException('Cannot Get Data or No Internet Connection');
-    }
-
-    return responseJson;
-  }
-
-  Future getGetApiResponseWithRequestParam(String url) async {
-    dynamic responseJson;
-    try {
-      final prefs = await SharedPreferences.getInstance();
       final response =
-          await _dio.get(url, queryParameters: {"_id": prefs.getInt("_id")!});
+          await _dioAuthService.get(url, queryParameters: query ?? {});
+      responseJson = returnResponse(response);
+    } on DioException catch (_) {
+      throw FetchDataException('Error during Dio GET request');
+    } on SocketException {
+      throw FetchDataException('Cannot Get Data or No Internet Connection');
+    }
+
+    return responseJson; // Return the processed response or null if not handled
+  }
+
+  Future<dynamic> getApiAnalytics(String url,
+      [Map<String, dynamic>? query]) async {
+    dynamic responseJson;
+    try {
+      final response =
+          await _dioAnalyticService.get(url, queryParameters: query ?? {});
+      responseJson = returnResponse(response);
+    } on DioError catch (e) {
+      print("Dio Error: $e");
+      throw FetchDataException('Error during Dio GET request');
+    } on SocketException {
+      throw FetchDataException('Cannot Get Data or No Internet Connection');
+    }
+    return responseJson;
+  }
+
+  Future<dynamic> getApiAnalyticsWithParam(
+    String url,
+  ) async {
+    dynamic responseJson;
+    try {
+      final response = await _dioAnalyticService
+          .get(url, queryParameters: {"_id": boxUsers.get(0).id});
+      responseJson = returnResponse(response);
+    } on DioError catch (e) {
+      print("Dio Error: $e");
+      throw FetchDataException('Error during Dio GET request');
+    } on SocketException {
+      throw FetchDataException('Cannot Get Data or No Internet Connection');
+    }
+    return responseJson;
+  }
+
+  void clearCookies() {
+    _dioAuthService.options.headers.clear();
+    _dioAnalyticService.options.headers.clear();
+    _dioPromotionService.options.headers.clear();
+  }
+
+  Future getAuthApiWithParam(
+    String url,
+  ) async {
+    dynamic responseJson;
+    try {
+      final response = await _dioAuthService
+          .get(url, queryParameters: {"_id": boxUsers.get(0).id});
       responseJson = returnResponse(response);
     } on DioError catch (e) {
       print("Dio Error: $e");
@@ -74,10 +117,10 @@ class DioApiService implements BaseApiService {
   }
 
   @override
-  Future getPostApiResponse(String url, dynamic data) async {
+  Future postAuthApi(String url, dynamic data) async {
     dynamic responseJson;
     try {
-      final response = await _dio.post(url, data: data);
+      final response = await _dioAuthService.post(url, data: data);
       responseJson = returnResponse(response);
     } on DioError catch (e) {
       print("Dio Error: $e");
@@ -94,6 +137,8 @@ class DioApiService implements BaseApiService {
       case 200:
         dynamic responseJson = response.data;
         return responseJson;
+      case 401:
+        throw UnautorizedException(response.data.toString());
       case 400:
         throw BadRequestException(response.data.toString());
       case 404:
@@ -106,20 +151,3 @@ class DioApiService implements BaseApiService {
     }
   }
 }
-
-// class ErrorInterceptor extends Interceptor {
-//   @override
-//   void onResponse(Response response, ResponseInterceptorHandler handler) {
-//     final status = response.statusCode;
-//     final isValid = status != null && status >= 200 && status < 300;
-//     if (!isValid) {
-//       throw DioException.badResponse(
-//         statusCode: status!,
-//         requestOptions: response.requestOptions,
-//         response: response,
-//       );
-//     }
-
-//     super.onResponse(response, handler);
-//   }
-// }

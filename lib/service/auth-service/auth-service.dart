@@ -15,17 +15,26 @@ class AuthService {
   Future mockingShopDataService() async {
     final prefs = await SharedPreferences.getInstance();
     final data =
-        await _dio.getGetApiResponseWithRequestParam("/shop/inserttest");
+        await _dio.getAuthApiWithParam("/shop/inserttest");
   }
 
   Future mockingCustomerDataService() async {
-    final data = await _dio.getPostApiResponse("/customer/inserttest", []);
+    final data = await _dio.postAuthApi("/customer/inserttest", []);
   }
 
   Future<bool> validateToken() async {
     try {
       final data =
-          await _dio.getGetApiResponseWithRequestParam("/validateToken");
+          await _dio.getAuthApiWithParam("/validateToken");
+      return true;
+    } catch (_) {
+      rethrow;
+    }
+  }
+
+  Future<bool> logout() async {
+    try {
+      _dio.clearCookies();
       return true;
     } catch (_) {
       rethrow;
@@ -34,7 +43,7 @@ class AuthService {
 
   Future<bool> login(String username, String password) async {
     try {
-      final data = await _dio.getPostApiResponse(
+      final data = await _dio.postAuthApi(
           "/customer/login", {"username": username, "password": password});
 
       return true;
@@ -45,7 +54,7 @@ class AuthService {
 
   Future<dynamic> postShopRegister(ShopModel shop) async {
     try {
-      final data = await _dio.getPostApiResponse("/shop/register", shop);
+      final data = await _dio.postAuthApi("/shop/register", shop);
 
       return data;
       // print(data);
@@ -56,7 +65,7 @@ class AuthService {
 
   Future<dynamic> postCustomerRegister(CustomerModel customer) async {
     try {
-      final data = await _dio.getPostApiResponse(
+      final data = await _dio.postAuthApi(
           "/customer/register", customer.toJson());
       return data;
       // print(data);
@@ -67,7 +76,7 @@ class AuthService {
 
   Future<void> getUserWhenEnteringTheRegisterPage() async {
     try {
-      final data = await _dio.getGetApiResponse("/shop/get");
+      final data = await _dio.getApiAuth("/shop/get");
     } catch (_) {
       rethrow;
     }

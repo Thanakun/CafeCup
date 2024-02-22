@@ -143,6 +143,30 @@ class ShopModel {
       this.smokingZone,
       this.noice});
 
+  ShopModel.defaultWithIdNegativeOne()
+      : iId = -1,
+        username = null,
+        password = null,
+        name = null,
+        address = null,
+        menus = null,
+        shopImages = null,
+        menuImages = null,
+        foodImages = null,
+        otherImages = null,
+        daysOpen = null,
+        timeOpen = null,
+        timeClose = null,
+        singleSeat = null,
+        doubleSeat = null,
+        largeSeat = null,
+        wifi = null,
+        powerPlugs = null,
+        conferenceRoom = null,
+        toilet = null,
+        smokingZone = null,
+        noice = null;
+
   ShopModel.fromJson(Map<String, dynamic> json) {
     iId = json['_id'];
     username = json['username'];

@@ -137,3 +137,79 @@
 //     }
 //   }
 // }
+
+import 'package:coffee_application/model/shop.dart';
+import 'package:coffee_application/service/search_service/search_shop_service.dart';
+
+class SearchCustomerVM {
+  SearchCustomerService service = SearchCustomerService();
+  late Future<List<ShopModel>> listAllFilterShop;
+  List filterMapList = [];
+
+  void onUserSearchByNameAndFilterShop(
+    String searchString,
+  ) {
+    Map<String, dynamic> filters = {"name": searchString};
+
+    for (var e in filterMapList) {
+      switch (e) {
+        case "largeSeat":
+          filters["largeSeat"] = true;
+          break;
+        case "wifi":
+          filters["wifi"] = true;
+          break;
+        case "powerPlugs":
+          filters["powerPlugs"] = true;
+          break;
+        case "conferenceRoom":
+          filters["conferenceRoom"] = true;
+          break;
+        case "toilet":
+          filters["toilet"] = true;
+          break;
+        case "smokingZone":
+          filters["smokingZone"] = true;
+          break;
+        case "QUITE":
+          filters["noice"] = "QUITE";
+          break;
+        case "NORMAL":
+          filters["noice"] = "NORMAL";
+          break;
+        case "STUDENT":
+          filters["customerGroup"] = "NORMAL";
+          break;
+        case "OFFICE_WORKER":
+          filters["customerGroup"] = "OFFICE_WORKER";
+          break;
+        case "TOURIST":
+          filters["customerGroup"] = "TOURIST";
+          break;
+        case "DIGITAL_NOMAD":
+          filters["customerGroup"] = "DIGITAL_NOMAD";
+          break;
+        case "TAKEAWAY":
+          filters["customerGroup"] = "TAKEAWAY";
+          break;
+
+        // Add more cases for other filterMapList values if needed
+      }
+    }
+    print(filterMapList.toString());
+
+    listAllFilterShop = service.getShopByShopNameAndTag(filters);
+  }
+
+  void onUserTapRemoveFilter({required String filter}) {
+    filterMapList.remove(filter);
+  }
+
+  void onUserTapAddFilter({required String filter}) {
+    filterMapList.add(filter);
+  }
+
+  void onUserClearFilter(){
+    filterMapList.clear();
+  }
+}

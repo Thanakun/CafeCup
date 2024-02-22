@@ -5,6 +5,22 @@
     "ALL_SHOP_MENU": "เมนูร้านค้า",
     "HOME": "Cafe Cup"
   },
+  "SEARCH_SUGGEST": "คำค้นหาแนะนำ",
+  "SEARCH_HISTORY": "คำค้นหาล่าสุด",
+
+  "SHOP_CATEGORY": {
+    "SINGLE_SEAT": "โต๊ะเดี่ยว",
+    "DOUBLE_SEAT": "โต๊ะคู่",
+    "LARGE_SEAT": "โต๊ะใหญ่",
+    "WIFI": "Wifi",
+    "POWER_PLUGS": "ปลั๊ก",
+    "CONFERENCE_ROOM": "ห้องประชุม",
+    "TOILET": "ห้องน้ำ",
+    "SMOKING_ZONE": "ที่สูบบุหรี่",
+    "NORMAL_NOICE": "โซนปกติ",
+    "QUITE_NOICE": "โซนเงียบ"
+  },
+
   "BUTTON": {
     "BACK": "กลับ",
     "SAVE": "บันทึก",
@@ -32,7 +48,29 @@
   },
 
   "CUSTOMER_HOME": {
-    "CAFE_HOT": "ร้านค้าที่น่าสนใจ"
+    "CAFE_HOT": "ร้านค้าที่น่าสนใจ",
+    "CAFE_CATEGORY": "ประเภทของร้าน",
+    "CAFE_RECOMMENDED_FOR_YOU": "แนะนำสำหรับคุณ",
+    "CAFE_OTHER": "ร้านอื่นๆ"
+  },
+
+  "CUSTOMER_SEARCH_RESULT": {
+    "price": "ราคา",
+    "facilities": "สิ่งอำนวยความสดวก",
+    "timeOpen": "เปิดอยู่",
+    "singleSeat": "โต๊ะเดี่ยว",
+    "doubleSeat": "โต๊ะคู่",
+    "largeSeat": "โต๊ะใหญ่",
+    "wifi": "Wifi",
+    "powerPlugs": "ปลั๊ก",
+    "conferenceRoom": "ห้องประชุม",
+    "QUITE": "โซนเงียบ",
+    "NORMAL": "โซนปกติ",
+    "STUDENT": "นักเรียน",
+    "OFFICE_WORKER": "เจ้าหน้าที่",
+    "TOURIST": "นักท่องเที่ยว",
+    "DIGITAL_NOMAD": "ดิจิทัลโนเมด",
+    "TAKEAWAY": "กลับบ้าน"
   },
 
   "CUSTOMER_REGISTER": {
@@ -135,7 +173,9 @@
     "PLEASE_SELECT_IMAGE": "กรุณาเลือกรูปภาพ",
     "PERMISSION_NOT_GRANTED": "ไม่ได้รับการอนุญาติในการเข้าถึง",
     "PLEASE_SELECT_ITEM": " กรุณาเลือกอย่างน้อย 1 รายการ",
-    "LOGIN_FAILED" : "รหัสผ่านไม่ถูกต้องหรือไม่พบผู้ใช้นี้",
-    "ERROR_LOADING_FAIL": "เกิดข้อผิดพลาดระหว่างโหลดข้อมูล"
+    "LOGIN_FAILED": "รหัสผ่านไม่ถูกต้องหรือไม่พบผู้ใช้นี้",
+    "ERROR_LOADING_FAIL": "เกิดข้อผิดพลาดระหว่างโหลดข้อมูล",
+    "EMPTY_DATA": "ไม่พบข้อมูล",
+    "SHOP_NAME_EMPTY": "ไม่พบชื่อร้านค้า"
   }
 }

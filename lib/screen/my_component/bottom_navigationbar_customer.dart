@@ -1,4 +1,5 @@
-import 'package:coffee_application/screen/customer_shop_view.dart';
+import 'package:coffee_application/screen/customer_home_view.dart';
+import 'package:coffee_application/screen/logout.dart';
 import 'package:coffee_application/screen/promotion.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -67,13 +68,13 @@ class _CustomerNavigationBarState extends State<CustomerNavigationBar> {
           break;
 
         //TODO LOGOUT PAGE
-        // case 3:
-        // Navigate to Analysis page
-        // Navigator.pushReplacement(
-        // context,
-        // MaterialPageRoute(builder: (context) => ()),
-        // );
-        // break;
+        case 3:
+          // Navigate to Analysis page
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => LogOutPage()),
+          );
+          break;
       }
     }
   }

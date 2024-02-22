@@ -70,6 +70,10 @@ dependencies:
   easy_localization: ^3.0.3
   cookie_jar: ^4.0.8
   path_provider: ^2.1.2
+  hive: ^2.2.3
+  hive_generator: ^2.0.1
+  hive_flutter: ^1.1.0
+  shimmer: ^3.0.0
 
   # provider:
 
@@ -83,6 +87,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
+  build_runner: ^2.4.8
   flutter_lints: ^2.0.0
   flutter_test:
     sdk: flutter
@@ -166,3 +171,4 @@ flutter:
     - assets/images/coffee_image.png
     - assets/images/customer-home.png
     - assets/images/customer-background.png
+    - assets/images/image_not_found.png

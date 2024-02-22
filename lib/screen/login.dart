@@ -1,4 +1,4 @@
-import 'package:coffee_application/screen/customer_shop_view.dart';
+import 'package:coffee_application/screen/customer_home_view.dart';
 import 'package:coffee_application/service/auth-service/auth-service.dart';
 import 'package:coffee_application/utility/helper.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:coffee_application/screen/register.dart';
 import 'package:coffee_application/utility/my_constant.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -211,12 +210,11 @@ class LoginPageState extends State<LoginPage> {
                               await authService.login(_username, _passowrd);
 
                           if (isLoginSuccess) {
-                            Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const CustomerHomePageView(),
-                              ),
-                            );
+                            Navigator.of(context)
+                                .pushAndRemoveUntil(MaterialPageRoute(
+                              builder: (context) =>
+                                  const CustomerHomePageView(),
+                            ), (route) => false);
                           } else {
                             print(isLoginSuccess);
                             Utility.flushBarErrorMessage(
