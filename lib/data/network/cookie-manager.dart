@@ -13,6 +13,7 @@ class TokenManager extends Interceptor {
 
   String? _token;
   int? _id;
+  
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
     final status = response.statusCode;
@@ -27,7 +28,7 @@ class TokenManager extends Interceptor {
             currentUser['_id'] != null) {
           _saveToken(token, currentUser['_id']);
         } else if (status == 401) {
-          _clearToken();
+          clearToken();
         }
       } else {}
     } catch (e) {}
@@ -38,23 +39,27 @@ class TokenManager extends Interceptor {
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    options.headers['token'] = '$_token';
-    options.headers['Access-Control-Allow-Origin'] = '*';
-    //   "Access-Control-Allow-Credentials": true,
-    // "Access-Control-Allow-Headers": "Origin,Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,locale",
-    // "Access-Control-Allow-Methods": "POST, OPTIONS"
-    if (options.path == "/customer/login") {
-      options.queryParameters = {'_id': _id};
-    }
+    try {
+      options.headers['token'] = '$_token';
+      options.headers['Access-Control-Allow-Origin'] = '*';
 
-    print(options.uri);
-    return super.onRequest(options, handler);
+      if (options.path == "/customer/login") {
+        options.queryParameters = {'_id': _id};
+      }
+      super.onRequest(options, handler);
+    } catch (_) {
+      rethrow;
+    }
   }
 
   Future<void> initToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _token = prefs.getString('token');
-    _id = boxUsers.get(0).id;
+
+    if (boxUsers.isNotEmpty) {
+      var user = boxUsers.get(0);
+      _id = user.id;
+    }
   }
 
   void _saveToken(String newToken, int id) async {
@@ -71,7 +76,7 @@ class TokenManager extends Interceptor {
     }
   }
 
-  void _clearToken() async {
+  void clearToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _token = null;
     _id = null;

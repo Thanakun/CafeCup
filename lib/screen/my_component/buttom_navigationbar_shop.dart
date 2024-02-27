@@ -1,4 +1,5 @@
 import 'package:coffee_application/screen/promotion.dart';
+import 'package:coffee_application/screen/shop_logout.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:coffee_application/screen/my_component/graph_shop.dart';
@@ -61,13 +62,13 @@ class _ShopBottomNavigationBarState extends State<ShopBottomNavigationBar> {
             MaterialPageRoute(builder: (context) => ShopGraphPage()),
           );
           break;
-        // case 3:
-        // Navigate to Analysis page
-        // Navigator.pushReplacement(
-        // context,
-        // MaterialPageRoute(builder: (context) => ()),
-        // );
-        // break;
+        case 3:
+          // Navigate to Analysis page
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => ShopLogOutPage()),
+          );
+          break;
       }
     }
   }

@@ -1,4 +1,7 @@
+import 'package:coffee_application/provider/customer-provider.dart';
+import 'package:coffee_application/provider/shop_provider.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:coffee_application/model/shop.dart';
 import 'package:coffee_application/screen/my_component/shop_register_statusbar.dart';
@@ -6,10 +9,10 @@ import 'package:coffee_application/screen/shop_register/shop_register_second_vie
 import 'package:coffee_application/screen/shop_text_field_form.dart';
 import 'package:coffee_application/utility/my_constant.dart';
 import 'package:coffee_application/viewmodel/register_view_model.dart';
+import 'package:provider/provider.dart';
 
 class ShopRegisterView extends StatefulWidget {
-  const ShopRegisterView({required this.id, super.key});
-  final int id;
+  const ShopRegisterView({super.key});
 
   @override
   State<ShopRegisterView> createState() => _ShopRegisterViewState();
@@ -2081,7 +2084,10 @@ class _ShopRegisterViewState extends State<ShopRegisterView> {
   @override
   void initState() {
     super.initState();
-    // _vm = RegisterVM();
+    _vm = RegisterVM(
+      customerProvider: context.read<CustomerProvider>(),
+      shopProvider: context.read<ShopProvider>(),
+    );
     // _vm.userEnterPage();
   }
 
@@ -2145,10 +2151,10 @@ class _ShopRegisterViewState extends State<ShopRegisterView> {
                     headingContainer(header: "Address"),
                     sectionBufferHeight(bufferSection: height * 0.0109),
                     dropdownButtonDependancySelectionProvince(
-                        width: width,
-                        height: height,
-                        header: "Province",
-                        selected: selectedProvince),
+                      width: width,
+                      height: height,
+                      header: "Province",
+                    ),
                     sectionBufferHeight(bufferSection: height * 0.0109),
                     dropdownButtonDependancySelectionDistricts(
                         header: "District",
@@ -2171,29 +2177,31 @@ class _ShopRegisterViewState extends State<ShopRegisterView> {
                       splashColor: Colors.greenAccent,
                       onTap: () {
                         //TODO Shop First
-                        // if (nameShop.text.isEmpty ||
-                        //     descriptionShop.text.isEmpty ||
-                        //     selectedProvince == null ||
-                        //     selectedDistrict == null ||
-                        //     selectedSubDistrict == null ||
-                        //     addressDetail.text.isEmpty) {
-                        //   // Display an error message or perform some action for invalid input
-                        //   Utility.flushBarErrorMessage(
-                        //       message: "Please insert data information",
-                        //       context: context);
-                        //   return;
-                        // }
 
                         setState(() {
                           // Your logic here
-                          print("hello");
 
-                          print(nameShop.text);
-                          print(descriptionShop.text);
-                          print(selectedProvince);
-                          print(selectedDistrict);
-                          print(selectedSubDistrict);
-                          print(addressDetail.text);
+                          if (nameShop.text.isEmpty ||
+                              descriptionShop.text.isEmpty ||
+                              selectedProvince == null ||
+                              selectedDistrict == null ||
+                              selectedSubDistrict == null ||
+                              addressDetail.text.isEmpty) {
+                            return Utility.flushBarErrorMessage(
+                                message:
+                                    "ERROR_MESSAGE.PLEASE_INSERT_DATA_INFORMATION"
+                                        .tr(),
+                                context: context);
+                          }
+
+                          _vm.signUpShopPage(
+                            nameShop: nameShop.text,
+                            descriptionShop: descriptionShop.text,
+                            selectedProvince: selectedProvince!,
+                            selectedDistrict: selectedDistrict!,
+                            selectedSubDistrict: selectedSubDistrict!,
+                            addressDetail: addressDetail.text,
+                          );
                           Navigator.push(
                               (context),
                               MaterialPageRoute(
@@ -2404,10 +2412,7 @@ class _ShopRegisterViewState extends State<ShopRegisterView> {
   }
 
   DropdownButtonHideUnderline dropdownButtonDependancySelectionProvince(
-      {required String header,
-      required String? selected,
-      required height,
-      required width}) {
+      {required String header, required height, required width}) {
     return DropdownButtonHideUnderline(
       child: DropdownButton2(
         items: provinces.map((Map<String, dynamic> province) {

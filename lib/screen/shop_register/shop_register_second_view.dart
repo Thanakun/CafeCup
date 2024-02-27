@@ -1,11 +1,19 @@
 import 'dart:io';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:coffee_application/provider/customer-provider.dart';
+import 'package:coffee_application/provider/shop_provider.dart';
+import 'package:coffee_application/screen/all_menu_shop.dart';
+import 'package:coffee_application/viewmodel/register_view_model.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:coffee_application/screen/my_component/shop_register_statusbar.dart';
 import 'package:coffee_application/screen/shop_register/shop_register_third_view.dart';
 import 'package:coffee_application/screen/shop_text_field_form.dart';
 import 'package:coffee_application/utility/my_constant.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter/foundation.dart' show Uint8List, kIsWeb;
 
 class ShopRegisterSecondView extends StatefulWidget {
   const ShopRegisterSecondView({super.key});
@@ -16,7 +24,20 @@ class ShopRegisterSecondView extends StatefulWidget {
 
 class _ShopRegisterSecondViewState extends State<ShopRegisterSecondView> {
   final ImagePicker _imagePicker = ImagePicker();
-  File? _selectedImage;
+  XFile? _file;
+
+  Uint8List webImage = Uint8List(10);
+
+  late RegisterVM _vm;
+
+  @override
+  void initState() {
+    super.initState();
+    _vm = RegisterVM(
+      customerProvider: context.read<CustomerProvider>(),
+      shopProvider: context.read<ShopProvider>(),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,14 +45,6 @@ class _ShopRegisterSecondViewState extends State<ShopRegisterSecondView> {
     double height = MediaQuery.of(context).size.height;
     return SafeArea(
         child: Scaffold(
-      // appBar: AppBar(
-      //   leading: IconButton(
-      //     icon: Icon(Icons.arrow_back, color: Colors.black),
-      //     onPressed: () => Navigator.of(context).pop(),
-      //   ),
-      //   backgroundColor: Colors.transparent,
-      //   centerTitle: true,
-      // ),
       resizeToAvoidBottomInset: false,
       backgroundColor: const Color.fromRGBO(255, 245, 233, 1),
       body: Container(
@@ -63,18 +76,29 @@ class _ShopRegisterSecondViewState extends State<ShopRegisterSecondView> {
               ),
               sectionBufferHeight(bufferSection: height * 0.0218),
               headingContainer(header: "Cafe Thumbnail"),
-              _selectedImage != null
+              context.read<ShopProvider>().shop.coverImage != null
                   ? Container(
                       margin: const EdgeInsets.all(16),
                       width: width * 0.606,
                       height: height * 0.1639,
                       decoration: BoxDecoration(
                           color: backGroundButton,
-                          borderRadius: BorderRadius.circular(20)),
+                          borderRadius: BorderRadius.circular(20),
+                          shape: BoxShape.rectangle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset: const Offset(0, 3),
+                            )
+                          ]),
                       child: FittedBox(
                         clipBehavior: Clip.hardEdge,
                         fit: BoxFit.fill,
-                        child: Image.file(File(_selectedImage!.path)),
+                        child: kIsWeb
+                            ? Image.memory(webImage)
+                            : Image.file(File(_file!.path)),
                       ),
                     )
                   : Container(
@@ -91,7 +115,14 @@ class _ShopRegisterSecondViewState extends State<ShopRegisterSecondView> {
                 children: [
                   InkWell(
                     onTap: () {
-                      _pickImageFromGallery();
+                      uploadImage().then((value) => {
+                            if (value != null)
+                              {
+                                print("Hello world"),
+                                context.read<ShopProvider>().coverImage =
+                                    value.path
+                              }
+                          });
                     },
                     child: Container(
                       padding: const EdgeInsets.all(16),
@@ -119,7 +150,10 @@ class _ShopRegisterSecondViewState extends State<ShopRegisterSecondView> {
                   ),
                   InkWell(
                     onTap: () {
-                      _pickImageFromCamera();
+                      uploadImage().then((value) => {
+                            if (value != null)
+                              {context.read<ShopProvider>().coverImage = value}
+                          });
                     },
                     child: Container(
                       padding: const EdgeInsets.all(16),
@@ -148,10 +182,19 @@ class _ShopRegisterSecondViewState extends State<ShopRegisterSecondView> {
               sectionBufferHeight(bufferSection: height * 0.0437),
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                 headingContainer(header: "MENU"),
-                Container(
-                  child: Text(
-                    "ดูทั้งหมด",
-                    style: kfontH3InterBlackColor(),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const AllMenuShopPage()))
+                        .then((value) => setState(() {}));
+                  },
+                  child: Container(
+                    child: Text(
+                      "ดูทั้งหมด",
+                      style: kfontH3InterBlackColor(),
+                    ),
                   ),
                 )
               ]),
@@ -159,7 +202,9 @@ class _ShopRegisterSecondViewState extends State<ShopRegisterSecondView> {
               Column(
                 children: [
                   CarouselSlider.builder(
-                    itemCount: 2,
+                    itemCount: context.read<ShopProvider>().shop.menus == null
+                        ? 1
+                        : context.read<ShopProvider>().shop.menus.length,
                     options: CarouselOptions(
                       // height: 0,
                       viewportFraction: 1,
@@ -177,21 +222,16 @@ class _ShopRegisterSecondViewState extends State<ShopRegisterSecondView> {
                         ),
                         child: Row(
                           children: [
-                            Container(
-                              margin: EdgeInsets.only(
-                                  top: height * 0.0174,
-                                  left: width * 0.0388,
-                                  right: width * 0.0121,
-                                  bottom: height * 0.0174),
-                              width: width * 0.2427,
-                              height: height * 0.109,
-                              decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                      image: AssetImage(americanoImagePath)),
-                                  color: backGroundButton,
-                                  border: Border.all(),
-                                  borderRadius: BorderRadius.circular(10)),
-                            ),
+                            context.read<ShopProvider>().shop.menus == null
+                                ? _imageContainerTemp(height, width)
+                                : _imageContainerToDisplay(
+                                    height,
+                                    width,
+                                    context
+                                        .read<ShopProvider>()
+                                        .shop
+                                        .menus[index]
+                                        .image!),
                             Container(
                               margin: EdgeInsets.only(
                                   top: height * 0.0174,
@@ -206,12 +246,20 @@ class _ShopRegisterSecondViewState extends State<ShopRegisterSecondView> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "อเมริกาโน่",
-                                    style: kfontH3InterBlackColor(),
+                                    context
+                                        .read<ShopProvider>()
+                                        .shop
+                                        .menus[index]
+                                        .name!,
+                                    style: kfontH2InterBlackColor(),
                                   ),
                                   Text(
-                                    "กาแฟ",
-                                    style: kfontH3InterBlackColorHalfOpacity(),
+                                    context
+                                        .read<ShopProvider>()
+                                        .shop
+                                        .menus[index]
+                                        .category!,
+                                    style: kfontH2InterBlackColorHalfOpacity(),
                                     textAlign: TextAlign.left,
                                   )
                                 ],
@@ -222,8 +270,8 @@ class _ShopRegisterSecondViewState extends State<ShopRegisterSecondView> {
                               margin: EdgeInsets.only(
                                   left: width * 0.0388, right: width * 0.0388),
                               child: Text(
-                                "50 ฿",
-                                style: kfontH3InterBlackColor(),
+                                "${context.read<ShopProvider>().shop.menus[index].price!.toString()} ฿",
+                                style: kfontH2InterBlackColor(),
                               ),
                             ),
                           ],
@@ -242,26 +290,12 @@ class _ShopRegisterSecondViewState extends State<ShopRegisterSecondView> {
                       InkWell(
                         splashColor: Colors.greenAccent,
                         onTap: () {
-                          //TODO Shop First
-                          // if (nameShop.text.isEmpty ||
-                          //     descriptionShop.text.isEmpty ||
-                          //     selectedProvince == null ||
-                          //     selectedDistrict == null ||
-                          //     selectedSubDistrict == null ||
-                          //     addressDetail.text.isEmpty) {
-                          //   // Display an error message or perform some action for invalid input
-                          //   Utility.flushBarErrorMessage(
-                          //       message: "Please insert data information",
-                          //       context: context);
-                          //   return;
-                          // }
-
                           setState(() {
-                            Navigator.pushReplacement(
+                            Navigator.push(
                                 (context),
                                 MaterialPageRoute(
                                   builder: (context) =>
-                                      const ShopRegisterSecondView(),
+                                      const ShopRegisterThirdView(),
                                 ));
                             // Add more logic as needed
                           });
@@ -288,21 +322,22 @@ class _ShopRegisterSecondViewState extends State<ShopRegisterSecondView> {
                         splashColor: Colors.greenAccent,
                         onTap: () {
                           //TODO Shop First
-                          // if (nameShop.text.isEmpty ||
-                          //     descriptionShop.text.isEmpty ||
-                          //     selectedProvince == null ||
-                          //     selectedDistrict == null ||
-                          //     selectedSubDistrict == null ||
-                          //     addressDetail.text.isEmpty) {
-                          //   // Display an error message or perform some action for invalid input
-                          //   Utility.flushBarErrorMessage(
-                          //       message: "Please insert data information",
-                          //       context: context);
-                          //   return;
-                          // }
+                          if (context.read<ShopProvider>().shop.coverImage ==
+                              null) {
+                            return Utility.flushBarErrorMessage(
+                                message:
+                                    "ERROR_MESSAGE.PLEASE_SELECT_IMAGE".tr(),
+                                context: context);
+                          }
+                          if (context.read<ShopProvider>().shop.menus.isEmpty) {
+                            return Utility.flushBarErrorMessage(
+                                message:
+                                    "ERROR_MESSAGE.PLEASE_SELECT_MENU".tr(),
+                                context: context);
+                          }
 
                           setState(() {
-                            Navigator.pushReplacement(
+                            Navigator.push(
                                 (context),
                                 MaterialPageRoute(
                                   builder: (context) =>
@@ -339,22 +374,99 @@ class _ShopRegisterSecondViewState extends State<ShopRegisterSecondView> {
     ));
   }
 
-  Future _pickImageFromGallery() async {
-    final returnedImage =
-        await _imagePicker.pickImage(source: ImageSource.gallery);
-
-    setState(() {
-      if (returnedImage != null) _selectedImage = File(returnedImage.path);
-    });
+  Container _imageContainerTemp(double height, double width) {
+    return Container(
+      margin: EdgeInsets.only(
+          top: height * 0.0174,
+          left: width * 0.0388,
+          right: width * 0.0121,
+          bottom: height * 0.0174),
+      width: width * 0.2427,
+      height: height * 0.109,
+      decoration: BoxDecoration(
+          image: DecorationImage(image: AssetImage(americanoImagePath)),
+          color: backGroundButton,
+          border: Border.all(),
+          borderRadius: BorderRadius.circular(10)),
+    );
   }
 
-  Future _pickImageFromCamera() async {
-    final returnedImage =
-        await _imagePicker.pickImage(source: ImageSource.camera);
+  Container _imageContainerToDisplay(
+      double height, double width, String imageToDisplay) {
+    return Container(
+      margin: EdgeInsets.only(
+          top: height * 0.0174,
+          left: width * 0.0388,
+          right: width * 0.0121,
+          bottom: height * 0.0174),
+      width: width * 0.2427,
+      height: height * 0.109,
+      decoration: BoxDecoration(
+        color: backGroundButton,
+        border: Border.all(),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: kIsWeb
+          ? FutureBuilder(
+              future: (_xfileToUnit8(XFile(imageToDisplay))),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Text("ERROR_MESSAGE.ERROR_LOADING_FAIL").tr();
+                } else if (snapshot.connectionState ==
+                    ConnectionState.waiting) {
+                  return Container();
+                } else if (snapshot.connectionState == ConnectionState.done &&
+                    snapshot.data != null) {
+                  return Image.memory(
+                    snapshot.data!,
+                  );
+                }
+                return Container();
+              },
+            )
+          : Image.file(File(XFile(imageToDisplay).path)),
+    );
+  }
 
-    setState(() {
-      _selectedImage = File(returnedImage!.path);
-    });
+  Future<Uint8List> _xfileToUnit8(XFile file) async {
+    var f = await file.readAsBytes();
+    return f;
+  }
+
+  Future uploadImage() async {
+    // MOBILE
+    if (!kIsWeb) {
+      final ImagePicker _picker = ImagePicker();
+      XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+
+      if (image != null) {
+        XFile selected = image;
+
+        setState(() {
+          _file = selected;
+        });
+        return _file;
+      } else {
+        Utility.toastMessage("ERROR_MESSAGE.PLEASE_SELECT_IMAGE".tr());
+      }
+    }
+    // WEB
+    else if (kIsWeb) {
+      final ImagePicker _picker = ImagePicker();
+      XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+      if (image != null) {
+        var f = await image.readAsBytes();
+        setState(() {
+          _file = image;
+          webImage = f;
+        });
+        return _file;
+      } else {
+        Utility.toastMessage("ERROR_MESSAGE.PLEASE_SELECT_IMAGE".tr());
+      }
+    } else {
+      Utility.toastMessage("ERROR_MESSAGE.PERMISSION_NOT_GRANTED".tr());
+    }
   }
 
   Text headingContainer({required String header}) {

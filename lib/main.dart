@@ -11,6 +11,8 @@ import 'package:coffee_application/screen/garph_shop/bar_chart.dart';
 import 'package:coffee_application/screen/login.dart';
 import 'package:coffee_application/screen/my_component/graph_shop.dart';
 import 'package:coffee_application/screen/register.dart';
+import 'package:coffee_application/screen/shop_register/shop_register_second_view.dart';
+import 'package:coffee_application/screen/shop_register/shop_register_third_view.dart';
 import 'package:coffee_application/screen/splash-screen.dart';
 import "package:flutter/material.dart";
 import 'package:easy_localization/easy_localization.dart';
@@ -50,7 +52,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'APP_TITLE'.tr(),
+          title: "CAFE CUP",
           localizationsDelegates: context.localizationDelegates,
           supportedLocales: context.supportedLocales,
           locale: context.locale,

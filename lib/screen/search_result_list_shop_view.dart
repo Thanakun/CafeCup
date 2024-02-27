@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:coffee_application/model/shop.dart';
 import 'package:coffee_application/screen/customer_shop_view.dart';
 import 'package:coffee_application/utility/decoration.dart';
@@ -7,6 +9,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:shimmer/shimmer.dart';
 
 class SearchResultView extends StatefulWidget {
   const SearchResultView({Key? key, required this.search}) : super(key: key);
@@ -24,8 +27,10 @@ class _SearchResultViewState extends State<SearchResultView> {
 
   String selectCustomerGroup = "";
   String selectNoise = "";
-  final _list = <String>[];
   int _currentPage = 1;
+
+  bool _debouncing = false;
+  late Timer _debounceTimer = Timer(Duration(milliseconds: 500), () {});
 
   SearchCustomerVM _vm = SearchCustomerVM();
 
@@ -53,6 +58,44 @@ class _SearchResultViewState extends State<SearchResultView> {
     "QUITE": false,
     "NORMAL": false,
   };
+  bool _loadingMore = false;
+  void _loadMore() {
+    if (_scrollController.position.maxScrollExtent ==
+        _scrollController.offset) {
+      if (_debouncing) {
+        return; // Debounce in progress, skip this scroll event
+      }
+
+      setState(() {
+        _loadingMore = true;
+      });
+
+      // Start debounce timer
+      _debouncing = true;
+      _debounceTimer = Timer(const Duration(milliseconds: 500), () {
+        _debouncing = false;
+        // Call the method to load the next page
+        print("call api2");
+        _vm
+            .onLoadingMorePage(
+                searchString: searchController.text,
+                nextPageToLoad: _currentPage + 1)
+            .then((success) {
+          if (success) {
+            setState(() {
+              _currentPage++;
+              _loadingMore = false;
+            });
+          } else {
+            // Handle error or end of data
+            setState(() {
+              _loadingMore = false;
+            });
+          }
+        });
+      });
+    }
+  }
 
   @override
   void initState() {
@@ -60,22 +103,16 @@ class _SearchResultViewState extends State<SearchResultView> {
     searchController.text = widget.search;
     _scrollController.addListener(_loadMore);
     _vm = SearchCustomerVM();
-    _vm.onUserSearchByNameAndFilterShop(searchController.text);
+    _vm.onUserSearchByNameAndFilterShop(
+        searchString: searchController.text, pageToLoad: 1);
     // _fetchData(_currentPage);
   }
 
   @override
   void dispose() {
     _scrollController.dispose();
+    _debounceTimer.cancel();
     super.dispose();
-  }
-
-  void _loadMore() {
-    if (_scrollController.position.pixels ==
-        _scrollController.position.maxScrollExtent) {
-      _currentPage++;
-      // _fetchData(_currentPage);
-    }
   }
 
   @override
@@ -90,199 +127,247 @@ class _SearchResultViewState extends State<SearchResultView> {
           onTap: () {
             FocusManager.instance.primaryFocus?.unfocus();
           },
-          child: Container(
-            width: width,
-            height: height,
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage(backgroundCustomerImagePath),
-                fit: BoxFit.cover,
+          child: NotificationListener<ScrollNotification>(
+            onNotification: (ScrollNotification scrollInfo) {
+              if (scrollInfo is ScrollEndNotification) {
+                _loadMore();
+              }
+
+              return true;
+            },
+            child: Container(
+              width: width,
+              height: height,
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage(backgroundCustomerImagePath),
+                  fit: BoxFit.cover,
+                ),
               ),
-            ),
-            child: CustomScrollView(
-              slivers: [
-                SliverAppBar(
-                  backgroundColor: backGroundApplication,
-                  toolbarHeight: height * 0.08,
-                  elevation: 0,
-                  leading: Container(
-                    alignment: Alignment.centerLeft,
-                    child: IconButton(
-                      icon: const Icon(Icons.arrow_back_ios_new,
-                          color: Colors.black, size: 30),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ),
-                  pinned: true,
-                  title: _searchBar(),
-                  bottom: PreferredSize(
-                    preferredSize: height * 0.1 > 50
-                        ? const Size.fromHeight(50)
-                        : Size.fromHeight(height * 0.1),
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: height * 0.06,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              InkWell(
-                                onTap: () {
-                                  selectCustomerGroup != "" ||
-                                          selectNoise != "" ||
-                                          _vm.filterMapList.isNotEmpty
-                                      ? (setState(() {
-                                          selectCustomerGroup = "";
-                                          selectNoise = "";
-                                          _vm.onUserClearFilter();
-                                          _filterStringList
-                                              .forEach((key, value) {
-                                            _filterStringList[key] = false;
-                                          });
-                                          _filterCustomerList
-                                              .forEach((key, value) {
-                                            _filterCustomerList[key] = false;
-                                          });
-                                          _filterNoiseList
-                                              .forEach((key, value) {
-                                            _filterNoiseList[key] = false;
-                                          });
-                                          _vm.onUserSearchByNameAndFilterShop(
-                                              searchController.text);
-                                        }))
-                                      : () {};
+              child: CustomScrollView(
+                controller: _scrollController,
+                slivers: [
+                  _appBarWithSearchBar(height, context, width),
+                  SliverList(
+                    delegate: SliverChildListDelegate(
+                      [
+                        FutureBuilder<List<ShopModel>>(
+                          future: _vm.listAllFilterShop,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              //create List of Shimmer define length
+                              return ListView.builder(
+                                physics: const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount: 20,
+                                itemBuilder: (context, index) {
+                                  return _shimmerLoading(width, height);
                                 },
-                                child: AnimatedContainer(
-                                  duration: const Duration(milliseconds: 300),
-                                  margin: EdgeInsets.only(left: width * 0.02),
-                                  alignment: Alignment.center,
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: width * 0.05,
-                                    vertical: height * 0.01,
+                              );
+                            } else if (snapshot.hasError) {
+                              return Text(
+                                "ERROR_MESSAGE.ERROR_LOADING_FAIL".tr(),
+                                style: kfontH1InterBoldBlackColor(),
+                              );
+                            } else if (snapshot.connectionState ==
+                                    ConnectionState.done &&
+                                !snapshot.hasError) {
+                              if (snapshot.data!.isEmpty) {
+                                return Center(
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    height: height / 1.5,
+                                    child: Text(
+                                      "ERROR_MESSAGE.EMPTY_DATA".tr(),
+                                      style: kfontH0InterBlackColor(),
+                                    ),
                                   ),
-                                  height: height * 0.04,
-                                  decoration: selectCustomerGroup != "" ||
-                                          selectNoise != "" ||
-                                          _vm.filterMapList.isNotEmpty
-                                      ? kdecorationForContainerButton
-                                      : kdecorationForContainerbuttonSelectedSearchResultView,
-                                  child: selectCustomerGroup != "" ||
-                                          selectNoise != "" ||
-                                          _vm.filterMapList.isNotEmpty
-                                      ? Icon(
-                                          Icons.clear_outlined,
-                                          size: height * 0.025,
-                                        )
-                                      : const Icon(Icons.settings_outlined),
-                                ),
-                              ),
-                              Expanded(
-                                child: Container(
-                                  margin: EdgeInsets.only(left: width * 0.02),
-                                  height: height * 0.04,
-                                  child: ListView(
-                                    physics: const BouncingScrollPhysics(),
-                                    shrinkWrap: true,
-                                    scrollDirection: Axis.horizontal,
-                                    children: [
-                                      ..._filterStringList.entries
-                                          .map(
-                                            (MapEntry<String, bool> entry) =>
-                                                _selectFilterMutipleSection(
-                                              width: width,
-                                              height: height,
-                                              filterText: entry.key,
-                                              isSelected: entry.value,
-                                              onTap: () {
-                                                setState(() {
-                                                  _filterStringList[entry.key] =
-                                                      !entry.value;
-                                                  if (_filterStringList[
-                                                      entry.key]!) {
-                                                    _vm.onUserTapAddFilter(
-                                                        filter: entry.key);
-                                                  } else {
-                                                    _vm.onUserTapRemoveFilter(
-                                                        filter: entry.key);
-                                                  }
-                                                  _vm.onUserSearchByNameAndFilterShop(
-                                                      searchController.text);
-                                                });
-                                              },
+                                );
+                              }
+
+                              return Column(children: [
+                                ..._vm.shopsBeloaded.map(
+                                  (shop) {
+                                    return _shopCard(
+                                      width: width,
+                                      height: height,
+                                      onTapShopCard: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                CustomerShopView(
+                                              shopId: shop.iId!,
                                             ),
-                                          )
-                                          .toList(),
-                                      _buildFilterCustomerGroups(width, height),
-                                      _buildFilterNoiseGroups(width, height)
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                                          ),
+                                        );
+                                      },
+                                      shop: shop,
+                                    );
+                                  },
+                                ).toList(),
+                                _loadingMore
+                                    ? _shimmerLoading(width, height)
+                                    : Container(),
+                              ]);
+                            }
+                            return Container();
+                          },
                         ),
                       ],
                     ),
                   ),
-                ),
-                SliverList(
-                  delegate: SliverChildListDelegate(
-                    [
-                      FutureBuilder<List<ShopModel>>(
-                        future: _vm.listAllFilterShop,
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          } else if (snapshot.hasError) {
-                            return Text(
-                              "ERROR_MESSAGE.ERROR_LOADING_FAIL".tr(),
-                              style: kfontH1InterBoldBlackColor(),
-                            );
-                          } else if (snapshot.connectionState ==
-                                  ConnectionState.done &&
-                              !snapshot.hasError) {
-                            // Replace the comment with the appropriate code
-
-                            if (snapshot.data!.isEmpty) {
-                              return Text(
-                                "ERROR_MESSAGE.EMPTY_DATA".tr(),
-                                style: kfontH1InterBoldBlackColor(),
-                              );
-                            }
-                            List<ShopModel> shopsList = snapshot.data!;
-                            return Column(
-                                children: shopsList.map((shop) {
-                              return _shopCard(
-                                width: width,
-                                height: height,
-                                onTapShopCard: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => CustomerShopView(
-                                        shopId: shop.iId!,
-                                      ),
-                                    ),
-                                  );
-                                },
-                                shop: shop,
-                              );
-                            }).toList());
-                          }
-                          return Container();
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Shimmer _shimmerLoading(double width, double height) {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey.shade300,
+      highlightColor: Colors.grey.shade100,
+      child: Container(
+        width: width,
+        height: height * 0.13,
+        margin: EdgeInsets.only(
+            bottom: height * 0.01, left: width * 0.05, right: width * 0.05),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15), color: Colors.grey),
+      ),
+    );
+  }
+
+  SliverAppBar _appBarWithSearchBar(
+      double height, BuildContext context, double width) {
+    return SliverAppBar(
+      backgroundColor: backGroundApplication,
+      toolbarHeight: height * 0.08,
+      elevation: 0,
+      leading: Container(
+        alignment: Alignment.centerLeft,
+        child: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new,
+              color: Colors.black, size: 30),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
+      pinned: true,
+      title: _searchBar(),
+      bottom: PreferredSize(
+        preferredSize: height * 0.1 > 50
+            ? const Size.fromHeight(50)
+            : Size.fromHeight(height * 0.1),
+        child: Column(
+          children: [
+            SizedBox(
+              height: height * 0.06,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      _currentPage = 1;
+                      selectCustomerGroup != "" ||
+                              selectNoise != "" ||
+                              _vm.filterMapList.isNotEmpty
+                          ? (setState(() {
+                              selectCustomerGroup = "";
+                              selectNoise = "";
+                              _vm.onUserClearFilter();
+                              _filterStringList.forEach((key, value) {
+                                _filterStringList[key] = false;
+                              });
+                              _filterCustomerList.forEach((key, value) {
+                                _filterCustomerList[key] = false;
+                              });
+                              _filterNoiseList.forEach((key, value) {
+                                _filterNoiseList[key] = false;
+                              });
+                              _vm.onUserSearchByNameAndFilterShop(
+                                  searchString: searchController.text,
+                                  pageToLoad: 1);
+                            }))
+                          : () {};
+                    },
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
+                      margin: EdgeInsets.only(left: width * 0.02),
+                      alignment: Alignment.center,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: width * 0.05,
+                        vertical: height * 0.01,
+                      ),
+                      height: height * 0.04,
+                      decoration: selectCustomerGroup != "" ||
+                              selectNoise != "" ||
+                              _vm.filterMapList.isNotEmpty
+                          ? kdecorationForContainerButton
+                          : kdecorationForContainerbuttonSelectedSearchResultView,
+                      child: selectCustomerGroup != "" ||
+                              selectNoise != "" ||
+                              _vm.filterMapList.isNotEmpty
+                          ? Icon(
+                              Icons.clear_outlined,
+                              size: height * 0.025,
+                            )
+                          : const Icon(Icons.settings_outlined),
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      margin: EdgeInsets.only(left: width * 0.02),
+                      height: height * 0.04,
+                      child: ListView(
+                        physics: const BouncingScrollPhysics(),
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        children: [
+                          ..._filterStringList.entries
+                              .map(
+                                (MapEntry<String, bool> entry) =>
+                                    _selectFilterMutipleSection(
+                                  width: width,
+                                  height: height,
+                                  filterText: entry.key,
+                                  isSelected: entry.value,
+                                  onTap: () {
+                                    setState(() {
+                                      _currentPage = 1;
+
+                                      _filterStringList[entry.key] =
+                                          !entry.value;
+                                      if (_filterStringList[entry.key]!) {
+                                        _vm.onUserTapAddFilter(
+                                            filter: entry.key);
+                                      } else {
+                                        _vm.onUserTapRemoveFilter(
+                                            filter: entry.key);
+                                      }
+                                      _vm.onUserSearchByNameAndFilterShop(
+                                          searchString: searchController.text,
+                                          pageToLoad: 1);
+                                    });
+                                  },
+                                ),
+                              )
+                              .toList(),
+                          _buildFilterCustomerGroups(width, height),
+                          _buildFilterNoiseGroups(width, height)
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -362,8 +447,7 @@ class _SearchResultViewState extends State<SearchResultView> {
                             style: kfontH1InterBoldBlackColor(),
                           ),
                         ),
-                        sectionBufferWidth(
-                            bufferSection: width * 0.1),
+                        sectionBufferWidth(bufferSection: width * 0.1),
                         Icon(
                           Icons.star,
                           size: constraints.maxWidth * 0.05,
@@ -556,7 +640,8 @@ class _SearchResultViewState extends State<SearchResultView> {
           onFieldSubmitted: (value) {
             //Go to search Result View
             setState(() {
-              _vm.onUserSearchByNameAndFilterShop(value);
+              _vm.onUserSearchByNameAndFilterShop(
+                  searchString: value, pageToLoad: 1);
             });
           },
           focusNode: searchFocusNode,
@@ -569,7 +654,8 @@ class _SearchResultViewState extends State<SearchResultView> {
             suffixIcon: IconButton(
               onPressed: () {
                 setState(() {
-                  _vm.onUserSearchByNameAndFilterShop(searchController.text);
+                  _vm.onUserSearchByNameAndFilterShop(
+                      searchString: searchController.text, pageToLoad: 1);
                 });
                 //Go to search Result View
               },
@@ -595,6 +681,8 @@ class _SearchResultViewState extends State<SearchResultView> {
             onTap: () {
               setState(
                 () {
+                  _currentPage = 1;
+
                   selectCustomerGroup = entry.key;
 
                   // Toggle the selected filter
@@ -617,7 +705,8 @@ class _SearchResultViewState extends State<SearchResultView> {
                   }
 
                   // Perform search with the selected filter
-                  _vm.onUserSearchByNameAndFilterShop(searchController.text);
+                  _vm.onUserSearchByNameAndFilterShop(
+                      searchString: searchController.text, pageToLoad: 1);
                 },
               );
             },
@@ -638,6 +727,8 @@ class _SearchResultViewState extends State<SearchResultView> {
             isSelected: entry.value,
             onTap: () {
               setState(() {
+                _currentPage = 1;
+
                 selectNoise = entry.key;
 
                 // Toggle the selected filter
@@ -659,7 +750,8 @@ class _SearchResultViewState extends State<SearchResultView> {
                 }
 
                 // Perform search with the selected filter
-                _vm.onUserSearchByNameAndFilterShop(searchController.text);
+                _vm.onUserSearchByNameAndFilterShop(
+                    searchString: searchController.text, pageToLoad: 1);
               });
             },
           );

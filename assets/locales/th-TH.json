@@ -27,7 +27,13 @@
     "NEXT_PAGE": "หน้าถัดไป",
     "LOGIN": "เข้าสู่ระบบ",
     "RESET_SETTINGS": "ตั้งค่าใหม่",
-    "BACK_TO_LOGIN_PAGE": "กลับไปยังหน้าล็อคอิน"
+    "BACK_TO_LOGIN_PAGE": "กลับไปยังหน้าล็อคอิน",
+    "GOTO_PROMOTION": "ไปหน้าโปรโมชัน",
+    "USE_CODE": "ใช้โค้ด",
+    "BUTTON_SAVE": "บันทึก",
+    "FEW": "< 2",
+    "MEDIUM": "2 - 7",
+    "MUCH": "> 7"
   },
   "NAVIGATIONBAR": {
     "HOME_NAVIGATION": "หน้าหลัก",
@@ -52,6 +58,38 @@
     "CAFE_CATEGORY": "ประเภทของร้าน",
     "CAFE_RECOMMENDED_FOR_YOU": "แนะนำสำหรับคุณ",
     "CAFE_OTHER": "ร้านอื่นๆ"
+  },
+
+  "SHOP_PAGE_VIEW": {
+    "ALL_SHOP_MENU": "เมนูร้าน",
+    "ALL_SHOP_MENU_DETAIL": "รายละเอียดเมนูร้าน",
+    "LATEST_REVIEW": "รีวิวล่าสุด",
+    "NO_REVIEW": "ไม่มีรีวิว",
+    "ADDING_MY_REVIEW": "เพิ่มรีวิวของฉัน",
+    "FLAVOR_SCORE": "รสชาติ",
+    "PRICE_SCORE": "ราคา",
+    "SERVICE_SCORE": "บริการ",
+    "PLACE_SCORE": "สถานที่",
+    "PARKING_SCORE": "ที่จอดรถ",
+    "WORTHINESS_SCORE": "ความคุ้มค่า"
+  },
+
+  "CUSTOMER_PROMOTION": {
+    "PROMOTION_TITLE": "โค้ดโปรโมชั่น",
+    "PROMOTION_MISSION": "ภารกิจรีวิวเพื่อรับโค้ด",
+    "CLAIM_CODE": "เก็บโค้ด",
+    "CODE_CLAIMED": "โค้ดที่มีอยู่",
+    "HINT_SEARCH_CODE": "ค้นหาโค้ดส่วนลด ( ชื่อร้าน )",
+    "EXPIRED_DATE": "วันหมดอายุ"
+  },
+
+  "CUSTOMER_REVIEW": {
+    "REVIEW_TITLE": "เขียนรีวิว",
+    "SHOP_DROPDOWN_HEADER": "ร้านค้า"
+  },
+
+  "CUSTOMER_BARCODE": {
+    "BACK": "กลับไปยังหน้ารีวิว"
   },
 
   "CUSTOMER_SEARCH_RESULT": {
@@ -95,7 +133,8 @@
   "PROMOTION": {
     "CODE_AVALIABLE": "โค้ดที่แจกอยู่",
     "SCAN_CODE": "สแกนรหัส",
-    "HISTORY_USED": "ประวัติการใช้โค้ด"
+    "HISTORY_USED": "ประวัติการใช้โค้ด",
+    "YOU_HAVE_CODE_AVALIABLE": "คุณมีโค้ดที่ใช้ได้อยู่!"
   },
 
   "CHART": {
@@ -176,6 +215,11 @@
     "LOGIN_FAILED": "รหัสผ่านไม่ถูกต้องหรือไม่พบผู้ใช้นี้",
     "ERROR_LOADING_FAIL": "เกิดข้อผิดพลาดระหว่างโหลดข้อมูล",
     "EMPTY_DATA": "ไม่พบข้อมูล",
-    "SHOP_NAME_EMPTY": "ไม่พบชื่อร้านค้า"
+    "SHOP_NAME_EMPTY": "ไม่พบชื่อร้านค้า",
+    "CLAIM_CODE_SUCCESS": "คุณได้รับโค้ดสำหรับร้านค้า",
+    "CLAIM_CODE_FAIL": "เกิดข้อผิดพลาดในการสำหรับโค้ด",
+    "PLEASE_INSERT_DATA_INFORMATION": "กรุณากรอกข้อมูลให้ครบถ้วน",
+    "PLEASE_SELECT_MENU": "กรุณาเลือกเมนู",
+    "PLEASE_SELECT_DATE": "กรุณาเลือกวันที่"
   }
 }

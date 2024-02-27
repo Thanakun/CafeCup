@@ -46,9 +46,8 @@ class CustomerHomeVM {
 
       // Add the matching shop to the list
       if (matchingShop.iId != -1) matchedShops.add(matchingShop);
-      
+
       // If no matching shop is found, you can print a message or handle it as needed
-      print(matchingShop);
     }
     // Now, 'matchedShops' contains the shops that match the condition or the default value
   }

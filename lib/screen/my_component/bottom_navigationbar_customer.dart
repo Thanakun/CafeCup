@@ -1,4 +1,7 @@
+import 'package:coffee_application/model/login.dart';
 import 'package:coffee_application/screen/customer_home_view.dart';
+import 'package:coffee_application/screen/customer_promotion.dart';
+import 'package:coffee_application/screen/customer_review_view.dart';
 import 'package:coffee_application/screen/logout.dart';
 import 'package:coffee_application/screen/promotion.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -25,7 +28,7 @@ class _CustomerNavigationBarState extends State<CustomerNavigationBar> {
   final Map<String, int> pageNameToIndex = {
     'HOME': 0,
     'REVIEW': 1,
-    'CODE': 2,
+    'PROMOTION': 2,
     'LOGOUT': 3
   };
 
@@ -43,37 +46,41 @@ class _CustomerNavigationBarState extends State<CustomerNavigationBar> {
       switch (index) {
         case 0:
           // Navigate to Home page
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => CustomerHomePageView()),
-          );
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const CustomerHomePageView()),
+              (Route<dynamic> route) => false);
           break;
         case 1:
 
           //TODO REVIEW PAGE
           // Navigate to Promotion page
-          // Navigator.pushReplacement(
-          //   context,
-          //   MaterialPageRoute(builder: (context) => PromotionPage()),
-          // );
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => CustomerReviewPage()),
+              (Route<dynamic> route) => false);
+
           break;
         case 2:
 
           //TODO CODE PAGE
           // Navigate to Analysis page
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => ShopGraphPage()),
-          );
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const CustomerPromotionView()),
+              (Route<dynamic> route) => false);
+
           break;
 
         //TODO LOGOUT PAGE
         case 3:
           // Navigate to Analysis page
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => LogOutPage()),
-          );
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => const LogOutPage()),
+              (Route<dynamic> route) => false);
           break;
       }
     }
@@ -110,7 +117,7 @@ class _CustomerNavigationBarState extends State<CustomerNavigationBar> {
               size: 50,
               shadows: _selectedIndex == pageNameToIndex['HOME']
                   ? [
-                      BoxShadow(
+                      const BoxShadow(
                         color: Color(0x3F000000),
                         blurRadius: 4,
                         offset: Offset(0, 4),
@@ -136,7 +143,7 @@ class _CustomerNavigationBarState extends State<CustomerNavigationBar> {
               size: 50,
               shadows: _selectedIndex == pageNameToIndex['REVIEW']
                   ? [
-                      BoxShadow(
+                      const BoxShadow(
                         color: Color(0x3F000000),
                         blurRadius: 4,
                         offset: Offset(0, 4),
@@ -162,7 +169,7 @@ class _CustomerNavigationBarState extends State<CustomerNavigationBar> {
               size: 50,
               shadows: _selectedIndex == pageNameToIndex['CODE']
                   ? [
-                      BoxShadow(
+                      const BoxShadow(
                         color: Color(0x3F000000),
                         blurRadius: 4,
                         offset: Offset(0, 4),
@@ -188,7 +195,7 @@ class _CustomerNavigationBarState extends State<CustomerNavigationBar> {
               size: 50,
               shadows: _selectedIndex == pageNameToIndex['LOGOUT']
                   ? [
-                      BoxShadow(
+                      const BoxShadow(
                         color: Color(0x3F000000),
                         blurRadius: 4,
                         offset: Offset(0, 4),

@@ -9,14 +9,22 @@ class CustomerShopService {
     _dio = DioApiService();
   }
 
-  Future<List<ShopModel>> getAllShop([Map<String,dynamic>? filter]) async {
+  Future<List<ShopModel>> getAllShop([Map<String, dynamic>? filter]) async {
     try {
-      final response = await _dio.postAuthApi("/shop/get", filter);
-      List<dynamic> responseData = response;
-      List<ShopModel> shops =
-          responseData.map((data) => ShopModel.fromJson(data)).toList();
+      final response = await _dio
+          .postAuthApi("/shop/get", filter, {"page": 1, "pageSize": 500});
 
-      return shops;
+      // Check if "data" is not null and is a List<dynamic>
+      if (response["data"] != null && response["data"] is List<dynamic>) {
+        List<dynamic> responseData = response["data"];
+        List<ShopModel> shops =
+            responseData.map((e) => ShopModel.fromJson(e)).toList();
+
+        return shops;
+      } else {
+        // Handle the case where "data" is null or not of type List<dynamic>
+        return [];
+      }
     } catch (error) {
       rethrow;
     }

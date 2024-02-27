@@ -1,13 +1,22 @@
 import 'dart:io';
 
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:coffee_application/data/widget/add_editing_image.dart';
+import 'package:coffee_application/provider/customer-provider.dart';
+import 'package:coffee_application/provider/shop_provider.dart';
+import 'package:coffee_application/utility/decoration.dart';
+import 'package:coffee_application/viewmodel/register_view_model.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:coffee_application/data/widget/time_picker.dart';
 import 'package:coffee_application/screen/shop_register/shop_register_forth_view.dart';
+import 'package:flutter/widgets.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:coffee_application/screen/my_component/shop_register_statusbar.dart';
 import 'package:coffee_application/utility/my_constant.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 class ShopRegisterThirdView extends StatefulWidget {
   const ShopRegisterThirdView({super.key});
@@ -26,6 +35,8 @@ class _ShopRegisterThirdViewState extends State<ShopRegisterThirdView> {
   int _current = 0;
   final CarouselController _controller = CarouselController();
 
+  late RegisterVM _vm;
+
   Map<int, String> dateIndexMap = {
     0: "จ",
     1: "อ",
@@ -34,6 +45,12 @@ class _ShopRegisterThirdViewState extends State<ShopRegisterThirdView> {
     4: "ศ",
     5: "ส",
     6: "อา"
+  };
+
+  Map<String, bool> selectImageType = {
+    "Shop": true,
+    "Food": false,
+    "Menu": false,
   };
 
   List<bool> isSelectDate = [false, false, false, false, false, false, false];
@@ -49,12 +66,22 @@ class _ShopRegisterThirdViewState extends State<ShopRegisterThirdView> {
   // String closeTimeFormat = "AM";
 
   @override
+  void initState() {
+    super.initState();
+
+    _vm = RegisterVM(
+      customerProvider: context.read<CustomerProvider>(),
+      shopProvider: context.read<ShopProvider>(),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return SafeArea(
         child: Scaffold(
-          resizeToAvoidBottomInset : false,
+      resizeToAvoidBottomInset: false,
       backgroundColor: const Color.fromRGBO(255, 245, 233, 1),
       body: Container(
         decoration: const BoxDecoration(
@@ -66,7 +93,6 @@ class _ShopRegisterThirdViewState extends State<ShopRegisterThirdView> {
         child: LayoutBuilder(builder: (context, constraints) {
           return Container(
             width: width,
-            height: height,
             margin: EdgeInsets.only(
                 left: width * 0.07281,
                 right: width * 0.07281,
@@ -102,37 +128,143 @@ class _ShopRegisterThirdViewState extends State<ShopRegisterThirdView> {
                             right: width * 0.07281,
                             bottom: height * 0.0109),
                         child: Row(children: [
-                          Container(
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                selectImageType["Shop"] = true;
+                                selectImageType["Food"] = false;
+                                selectImageType["Menu"] = false;
+                                _current = 0;
+                              });
+                            },
+                            child: AnimatedContainer(
+                              padding: EdgeInsets.only(
+                                  left: width * 0.03,
+                                  right: width * 0.03,
+                                  top: height * 0.01,
+                                  bottom: height * 0.01),
+                              duration: const Duration(milliseconds: 200),
+                              decoration: selectImageType["Shop"] == true
+                                  ? kdecorationForContainerActiveItem
+                                  : kdecorationForContainerApplication,
                               child: Text(
-                            "รูปร้าน",
-                            style: kfontH3InterBlackColorHalfOpacity(),
-                          )),
-                          Container(
+                                "รูปร้าน",
+                                style: selectImageType["Shop"] == true
+                                    ? kfontH2InterBoldBlackColor()
+                                    : kfontH2InterBlackColorHalfOpacity(),
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                selectImageType["Food"] = true;
+                                selectImageType["Shop"] = false;
+                                selectImageType["Menu"] = false;
+                                _current = 0;
+                              });
+                            },
+                            child: AnimatedContainer(
+                              padding: EdgeInsets.only(
+                                  left: width * 0.03,
+                                  right: width * 0.03,
+                                  top: height * 0.01,
+                                  bottom: height * 0.01),
+                              duration: const Duration(milliseconds: 200),
+                              decoration: selectImageType["Food"] == true
+                                  ? kdecorationForContainerActiveItem
+                                  : kdecorationForContainerApplication,
                               child: Text(
-                            ", อาหาร",
-                            style: kfontH3InterBlackColorHalfOpacity(),
-                          )),
-                          Container(
+                                "อาหาร",
+                                style: selectImageType["Food"] == true
+                                    ? kfontH2InterBoldBlackColor()
+                                    : kfontH2InterBlackColorHalfOpacity(),
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                selectImageType["Menu"] = true;
+                                selectImageType["Food"] = false;
+                                selectImageType["Shop"] = false;
+                                _current = 0;
+                              });
+                            },
+                            child: AnimatedContainer(
+                              padding: EdgeInsets.only(
+                                  left: width * 0.03,
+                                  right: width * 0.03,
+                                  top: height * 0.01,
+                                  bottom: height * 0.01),
+                              duration: const Duration(milliseconds: 200),
+                              decoration: selectImageType["Menu"] == true
+                                  ? kdecorationForContainerActiveItem
+                                  : kdecorationForContainerApplication,
                               child: Text(
-                            ", เมนู",
-                            style: kfontH3InterBlackColorHalfOpacity(),
-                          )),
-                          Spacer(),
-                          _shopImagesFileList!.isNotEmpty
+                                "เมนู",
+                                style: selectImageType["Menu"] == true
+                                    ? kfontH2InterBoldBlackColor()
+                                    : kfontH2InterBlackColorHalfOpacity(),
+                              ),
+                            ),
+                          ),
+                          const Spacer(),
+                          getListImagesFromSelect().isNotEmpty
                               ? GestureDetector(
-                                  child: Container(
-                                      child: Text(
+                                  child: Text(
                                     "แก้ไข / เพิ่ม",
                                     style: kfontH3InterBlackColorHalfOpacity(),
-                                  )),
+                                  ),
                                   onTap: () {
                                     //TODO edit and add image
-                                    selectImage();
-                                    // Navigator.push(
-                                    //     context,
-                                    //     MaterialPageRoute(
-                                    //         builder: (context) =>
-                                    //             const AddEditingImagesList()));
+                                    // selectImage().then((value) {
+                                    //   if (selectImageType["Shop"] == true) {
+                                    //     context
+                                    //         .read<ShopProvider>()
+                                    //         .addShopImageAll(
+                                    //             _shopImagesFileList!);
+                                    //   } else if (selectImageType["Food"] ==
+                                    //       true) {
+                                    //     context
+                                    //         .read<ShopProvider>()
+                                    //         .addFoodImageAll(
+                                    //             _shopImagesFileList!);
+                                    //   } else if (selectImageType["Menu"] ==
+                                    //       true) {
+                                    //     context
+                                    //         .read<ShopProvider>()
+                                    //         .addMenuImageAll(
+                                    //             _shopImagesFileList!);
+                                    //   }
+                                    // });
+
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            AddEditingImagesList(
+                                          listOfImagesOne: context
+                                              .read<ShopProvider>()
+                                              .shop
+                                              .shopImage,
+                                          listOfImagesTwo: context
+                                              .read<ShopProvider>()
+                                              .shop
+                                              .menuImages,
+                                          listOfImagesThree: context
+                                              .read<ShopProvider>()
+                                              .shop
+                                              .foodImages,
+                                          listOfImagesFour: context
+                                              .read<ShopProvider>()
+                                              .shop
+                                              .otherImages,
+                                          callBackFunction:
+                                              callbackSetStateFunction,
+                                        ),
+                                      ),
+                                    );
                                   },
                                 )
                               : Container(),
@@ -141,24 +273,43 @@ class _ShopRegisterThirdViewState extends State<ShopRegisterThirdView> {
                     ],
                   ),
                   CarouselSlider.builder(
-                    itemCount: _shopImagesFileList!.isNotEmpty
-                        ? _shopImagesFileList!.length
+                    itemCount: getListImagesFromSelect().isNotEmpty
+                        ? getListImagesFromSelect().length
                         : 1,
                     options: CarouselOptions(
                         // height: 0,
-                        viewportFraction: 1,
+                        aspectRatio: 16 / 9,
+                        viewportFraction: 0.7,
                         enableInfiniteScroll: false,
-                        scrollPhysics: BouncingScrollPhysics(),
+                        scrollPhysics: const BouncingScrollPhysics(),
                         onPageChanged: (index, reason) {
                           setState(() {
                             _current = index;
                           });
                         }),
                     itemBuilder: (context, index, realIndex) {
-                      return _shopImagesFileList!.isEmpty
+                      return getListImagesFromSelect().isEmpty
                           ? GestureDetector(
                               onTap: () {
-                                selectImage();
+                                selectImage().then((value) {
+                                  List<String> _allImagePath = [];
+                                  _shopImagesFileList!.forEach((element) {
+                                    _allImagePath.add(element.path);
+                                  });
+                                  if (selectImageType["Shop"] == true) {
+                                    context
+                                        .read<ShopProvider>()
+                                        .addShopImageAll(_allImagePath);
+                                  } else if (selectImageType["Food"] == true) {
+                                    context
+                                        .read<ShopProvider>()
+                                        .addFoodImageAll(_allImagePath);
+                                  } else if (selectImageType["Menu"] == true) {
+                                    context
+                                        .read<ShopProvider>()
+                                        .addMenuImageAll(_allImagePath);
+                                  }
+                                });
                               },
                               child: Container(
                                 margin: const EdgeInsets.all(16),
@@ -187,34 +338,11 @@ class _ShopRegisterThirdViewState extends State<ShopRegisterThirdView> {
                               ),
                               child: FittedBox(
                                 fit: BoxFit.fitHeight,
-                                child: Image.file(
-                                    File(_shopImagesFileList![index].path)),
+                                child: Image.file(File(
+                                    getListImagesFromSelect()[index].path)),
                               ),
                             );
                     },
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: _shopImagesFileList!.asMap().entries.map((entry) {
-                      return GestureDetector(
-                        onTap: () => _controller.animateToPage(entry.key),
-                        child: Container(
-                          width: width * 0.0291,
-                          height: height * 0.0131,
-                          margin: EdgeInsets.symmetric(
-                              vertical: height * 0.008,
-                              horizontal: width * 0.0121),
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: (Theme.of(context).brightness ==
-                                          Brightness.dark
-                                      ? Colors.white
-                                      : Colors.black)
-                                  .withOpacity(
-                                      _current == entry.key ? 0.9 : 0.4)),
-                        ),
-                      );
-                    }).toList(),
                   ),
                   sectionBufferHeight(bufferSection: height * 0.0218),
                   headingContainer(header: "วันและเวลาของร้าน"),
@@ -296,7 +424,7 @@ class _ShopRegisterThirdViewState extends State<ShopRegisterThirdView> {
                               style: kfontH1InterBoldBlackColor(),
                             ),
                           ),
-                          Spacer(),
+                          const Spacer(),
                           Container(
                             margin: EdgeInsets.only(right: width * 0.024),
                             child: Icon(Icons.calendar_view_day_outlined,
@@ -356,7 +484,7 @@ class _ShopRegisterThirdViewState extends State<ShopRegisterThirdView> {
                               style: kfontH1InterBoldBlackColor(),
                             ),
                           ),
-                          Spacer(),
+                          const Spacer(),
                           Container(
                             margin: EdgeInsets.only(right: width * 0.024),
                             child: Icon(Icons.calendar_view_day_outlined,
@@ -400,14 +528,15 @@ class _ShopRegisterThirdViewState extends State<ShopRegisterThirdView> {
                               });
                             },
                             child: Container(
-                              padding: EdgeInsets.symmetric(horizontal: 8.0),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8.0),
                               width: width / 4,
                               height: constraints.maxHeight * 0.07,
                               decoration: BoxDecoration(
                                   color: backGroundButton,
                                   border: Border.all(color: brownBorderButton),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(20.0))),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(20.0))),
                               child: Center(
                                 child: Text(
                                   "SKIP",
@@ -445,18 +574,35 @@ class _ShopRegisterThirdViewState extends State<ShopRegisterThirdView> {
                             },
                             child: GestureDetector(
                               onTap: () {
+                                if ((openHour == 0 && openMinute == 0) ||
+                                    (closeHour == 0 && closeMinute == 0) ||
+                                    !isSelectDate.contains(true)) {
+                                  Utility.flushBarErrorMessage(
+                                      message:
+                                          "ERROR_MESSAGE.PLEASE_SELECT_DATE"
+                                              .tr(),
+                                      context: context);
+                                }
+
+                                _vm.shopSignUpThirdPage(
+                                  dateOpen: isSelectDate,
+                                  openTime:
+                                      conCatTimeFormat(openHour, openMinute),
+                                  closeTime:
+                                      conCatTimeFormat(closeHour, closeMinute),
+                                );
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            ShopRegisterForthView()));
+                                            const ShopRegisterForthView()));
                               },
                               child: Container(
                                 padding: EdgeInsets.symmetric(
                                     horizontal: width * 0.0194),
                                 width: width / 1.7,
                                 height: constraints.maxHeight * 0.07,
-                                decoration: BoxDecoration(
+                                decoration: const BoxDecoration(
                                     color: kcolorAcceptButton,
                                     borderRadius: BorderRadius.all(
                                         Radius.circular(20.0))),
@@ -474,17 +620,17 @@ class _ShopRegisterThirdViewState extends State<ShopRegisterThirdView> {
                       Row(
                         children: [
                           GestureDetector(
-                                  onTap: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Container(
-                                    child: Text(
-                                      " < ย้อนกลับ",
-                                      style: kfontH2InterBlackColor(),
-                                    ),
-                                  ),
-                                ),
-                          Spacer(),
+                            onTap: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Container(
+                              child: Text(
+                                " < ย้อนกลับ",
+                                style: kfontH2InterBlackColor(),
+                              ),
+                            ),
+                          ),
+                          const Spacer(),
                           Container(
                             child: Text(
                               "ถัดไป >",
@@ -502,6 +648,33 @@ class _ShopRegisterThirdViewState extends State<ShopRegisterThirdView> {
     ));
   }
 
+  String conCatTimeFormat(int hour, int minute) {
+    String formattedHour = hour.toString().padLeft(2, '0');
+    String formattedMinute = minute.toString().padLeft(2, '0');
+    return "$formattedHour:$formattedMinute";
+  }
+
+  List<XFile> getListImagesFromSelect() {
+    String item =
+        selectImageType.entries.where((entry) => entry.value == true).first.key;
+    List<XFile> listImages = [];
+    if (item == "Shop") {
+      for (String e in context.read<ShopProvider>().shop.shopImage) {
+        listImages.add(XFile(e));
+      }
+    } else if (item == "Food") {
+      for (String e in context.read<ShopProvider>().shop.foodImages) {
+        listImages.add(XFile(e));
+      }
+    } else if (item == "Menu") {
+      for (String e in context.read<ShopProvider>().shop.menuImages) {
+        listImages.add(XFile(e));
+      }
+    }
+
+    return listImages;
+  }
+
   Row timePickerWidget({required String title}) {
     return Row(
       children: [
@@ -509,9 +682,9 @@ class _ShopRegisterThirdViewState extends State<ShopRegisterThirdView> {
           title,
           style: kfontH4InterBlackColor(),
         ),
-        Spacer(),
+        const Spacer(),
         Text(
-          "HH:MM AM/PM",
+          "HH:MM ",
           style: kfontH4InterBlackColor(),
         )
       ],
@@ -709,16 +882,21 @@ class _ShopRegisterThirdViewState extends State<ShopRegisterThirdView> {
     );
   }
 
-  void selectImage() async {
+  Future selectImage() async {
     final List<XFile> selectedImages = await _imagePicker.pickMultiImage();
     if (selectedImages.isNotEmpty) {
       _shopImagesFileList!.clear();
 
-      _shopImagesFileList!.addAll(selectedImages.take(3));
+      _shopImagesFileList!.addAll(selectedImages.take(5));
     } else {
       _shopImagesFileList!.clear();
     }
 
+    setState(() {});
+    return _shopImagesFileList;
+  }
+
+  void callbackSetStateFunction() {
     setState(() {});
   }
 }

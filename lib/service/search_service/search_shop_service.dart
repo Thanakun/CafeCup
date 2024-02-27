@@ -8,11 +8,11 @@ class SearchCustomerService {
     _dio = DioApiService();
   }
 
-  Future<List<ShopModel>> getShopByShopNameAndTag(
-      Map<String, dynamic> data) async {
+  Future<List<ShopModel>> getShopByShopNameAndTag(Map<String, dynamic> data,
+      [Map<String, dynamic>? query]) async {
     try {
-      final response = await _dio.postAuthApi("/shop/get", data);
-      List<dynamic> responseData = response;
+      final response = await _dio.postAuthApi("/shop/get", data, query);
+      List<dynamic> responseData = response["data"];
       List<ShopModel> shops =
           responseData.map((data) => ShopModel.fromJson(data)).toList();
 

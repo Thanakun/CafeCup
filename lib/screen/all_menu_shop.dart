@@ -2,6 +2,8 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:coffee_application/model/menu.dart';
+import 'package:coffee_application/model/shop.dart';
+import 'package:coffee_application/provider/shop_provider.dart';
 import 'package:coffee_application/screen/my_component/buttom_navigationbar_shop.dart';
 import 'package:coffee_application/screen/shop_text_field_form.dart';
 import 'package:coffee_application/utility/decoration.dart';
@@ -13,9 +15,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class AllMenuShopPage extends StatefulWidget {
-  const AllMenuShopPage({super.key});
+  const AllMenuShopPage({
+    super.key,
+  });
 
   @override
   State<AllMenuShopPage> createState() => _AllMenuShopPageState();
@@ -24,34 +29,14 @@ class AllMenuShopPage extends StatefulWidget {
 class _AllMenuShopPageState extends State<AllMenuShopPage> {
   final _formKey = GlobalKey<FormState>();
   final ImagePicker _imagePicker = ImagePicker();
-  File _file = File("Empty");
+  XFile _file = XFile("Empty");
   Uint8List webImage = Uint8List(10);
 
   TextEditingController nameMenu = TextEditingController();
   TextEditingController priceMenu = TextEditingController();
   TextEditingController categoryMenu = TextEditingController();
 
-  final List<String> _itSkills = [
-    "IT",
-    "Programming",
-    "Mediasssssssssssss",
-    "System Analyst",
-    "Pharma",
-    "Pharma1",
-    "Pharma2",
-    "Pharma3",
-    "Pharma4",
-    "Pharma5",
-    "Pharma6",
-    "Pharma7",
-    "Pharma8",
-    "Pharma9",
-    "Pharma0",
-    "Pharma10",
-    "Pharma11",
-    "Pharma12",
-    "Business ExecutiveSSSSSSSSSSSSSSs"
-  ];
+  TextEditingController searchText = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -113,8 +98,28 @@ class _AllMenuShopPageState extends State<AllMenuShopPage> {
                                       child: FittedBox(
                                         fit: BoxFit.fitHeight,
                                         child: kIsWeb
-                                            ? Image.memory(webImage)
-                                            : Image.file(_file),
+                                            ? FutureBuilder(
+                                                future: (_xfileToUnit8(_file)),
+                                                builder: (context, snapshot) {
+                                                  if (!snapshot.hasData) {
+                                                    return _imageContainerForEmptyImage();
+                                                  } else if (snapshot
+                                                          .connectionState ==
+                                                      ConnectionState.waiting) {
+                                                    return _imageContainerForEmptyImage();
+                                                  } else if (snapshot
+                                                              .connectionState ==
+                                                          ConnectionState
+                                                              .done &&
+                                                      snapshot.data != null) {
+                                                    return Image.memory(
+                                                      snapshot.data!,
+                                                    );
+                                                  }
+                                                  return Container();
+                                                },
+                                              )
+                                            : Image.file(File(_file.path)),
                                       ),
                                     ),
                               TextFormField(
@@ -173,8 +178,7 @@ class _AllMenuShopPageState extends State<AllMenuShopPage> {
                                     constraints:
                                         const BoxConstraints(minHeight: 100),
                                     labelText:
-                                        "ALL_SHOP_MENU.LABEL.MENU_NAME.CATEGORY"
-                                            .tr(),
+                                        "ALL_SHOP_MENU.LABEL.CATEGORY".tr(),
                                     labelStyle:
                                         kfontH1InterBlackColorHalfOpacity(),
                                     border: OutlineInputBorder(
@@ -237,7 +241,7 @@ class _AllMenuShopPageState extends State<AllMenuShopPage> {
                                             kdecorationForContainerAcceptButton,
                                         child: Center(
                                           child: Text(
-                                            "BUTTON_SAVE".tr(),
+                                            "BUTTON.BUTTON_SAVE".tr(),
                                             style: kfontH1InterBoldBlackColor(),
                                           ),
                                         ),
@@ -303,28 +307,35 @@ class _AllMenuShopPageState extends State<AllMenuShopPage> {
                       canvasColor: Colors.transparent,
                       shadowColor: Colors.transparent,
                     ),
-                    child: ReorderableListView.builder(
-                      buildDefaultDragHandles: false,
-                      onReorder: (oldIndex, newIndex) {
-                        setState(() {
-                          if (oldIndex < newIndex) {
-                            newIndex -= 1;
-                          }
-                          final String item = _itSkills.removeAt(oldIndex);
-                          _itSkills.insert(newIndex, item);
-                        });
-                      },
-                      shrinkWrap: true,
-                      itemCount: _itSkills.length,
-                      itemBuilder: (context, index) {
-                        final item = _itSkills[index];
+                    child: ListView.builder(
+                      // buildDefaultDragHandles: false,
+                      // onReorder: (oldIndex, newIndex) {
+                      //   setState(() {
+                      //     if (oldIndex < newIndex) {
+                      //       newIndex -= 1;
+                      //     }
+                      //     final Menus item = context
+                      //         .read<ShopProvider>()
+                      //         .removeMenuAt(oldIndex);
 
+                      //     context
+                      //         .read<ShopProvider>()
+                      //         .insertMenuItem(newIndex, item);
+                      //   });
+                      // },
+                      shrinkWrap: true,
+                      itemCount:
+                          context.read<ShopProvider>().filteredMenus.length,
+                      itemBuilder: (context, index) {
+                        late Menus item;
+                        item =
+                            context.read<ShopProvider>().filteredMenus[index];
                         return Dismissible(
                           key: ValueKey(item),
                           direction: DismissDirection.endToStart,
                           onDismissed: (direction) {
                             setState(() {
-                              _itSkills.removeAt(index);
+                              context.read<ShopProvider>().removeMenuAt(index);
                             });
                           },
                           background: Container(
@@ -356,26 +367,8 @@ class _AllMenuShopPageState extends State<AllMenuShopPage> {
                             decoration: kdecorationForContainerActiveItem,
                             child: Row(
                               children: [
-                                Container(
-                                  width: 100,
-                                  height: 100,
-                                  decoration: ShapeDecoration(
-                                    image: const DecorationImage(
-                                      image: AssetImage(americanoImagePath),
-                                      fit: BoxFit.fill,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    shadows: [
-                                      const BoxShadow(
-                                        color: Color(0x3F000000),
-                                        blurRadius: 4,
-                                        offset: Offset(0, 4),
-                                        spreadRadius: 0,
-                                      )
-                                    ],
-                                  ),
+                                _imageContainerForImageFile(
+                                  imageFileToDisplay: XFile(item.image!),
                                 ),
                                 sectionBufferWidth(bufferSection: 20),
                                 Column(
@@ -385,7 +378,7 @@ class _AllMenuShopPageState extends State<AllMenuShopPage> {
                                     Container(
                                       width: 150,
                                       child: Text(
-                                        item,
+                                        item.name!,
                                         overflow: TextOverflow.ellipsis,
                                         style: kfont22w_400black(),
                                       ),
@@ -393,36 +386,35 @@ class _AllMenuShopPageState extends State<AllMenuShopPage> {
                                     Container(
                                       width: 100,
                                       child: Text(
-                                        "กาแฟ",
+                                        item.category!,
                                         overflow: TextOverflow.ellipsis,
                                         style: kfontH3InterBlackColor(),
                                       ),
                                     )
                                   ],
                                 ),
-                                const Spacer(),
+                                // const Spacer(),
                                 Container(
-                                  width: 100,
                                   child: Text(
-                                    formatPrice("100000"),
+                                    formatPrice(item.price!.toString()),
                                     textAlign: TextAlign.end,
                                     overflow: TextOverflow.ellipsis,
                                     style: kfontH1InterBoldBlackColor(),
                                   ),
                                 ),
-                                ReorderableDragStartListener(
-                                  key: ValueKey(item),
-                                  index: index,
-                                  child: Container(
-                                    height: 100,
-                                    width: 50,
-                                    // color: Colors.red,
-                                    child: const Icon(
-                                      Icons.reorder_outlined,
-                                      size: 20,
-                                    ),
-                                  ),
-                                ),
+                                // ReorderableDragStartListener(
+                                //   key: ValueKey(item),
+                                //   index: index,
+                                //   child: Container(
+                                //     height: 100,
+                                //     width: 50,
+                                //     // color: Colors.red,
+                                //     child: const Icon(
+                                //       Icons.delete,
+                                //       size: 20,
+                                //     ),
+                                //   ),
+                                // ),
                               ],
                             ),
                           ),
@@ -436,6 +428,69 @@ class _AllMenuShopPageState extends State<AllMenuShopPage> {
           ),
         ),
       ),
+    );
+  }
+
+  Container _imageContainerForEmptyImage() {
+    return Container(
+      width: 100,
+      height: 100,
+      decoration: ShapeDecoration(
+        image: const DecorationImage(
+          image: AssetImage(americanoImagePath),
+          fit: BoxFit.fill,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        shadows: const [
+          BoxShadow(
+            color: Color(0x3F000000),
+            blurRadius: 4,
+            offset: Offset(0, 4),
+            spreadRadius: 0,
+          )
+        ],
+      ),
+    );
+  }
+
+  Container _imageContainerForImageFile({required XFile imageFileToDisplay}) {
+    return Container(
+      width: 100,
+      height: 100,
+      decoration: ShapeDecoration(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        shadows: const [
+          BoxShadow(
+            color: Color(0x3F000000),
+            blurRadius: 4,
+            offset: Offset(0, 4),
+            spreadRadius: 0,
+          )
+        ],
+      ),
+      child: kIsWeb
+          ? FutureBuilder(
+              future: (_xfileToUnit8(imageFileToDisplay)),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return _imageContainerForEmptyImage();
+                } else if (snapshot.connectionState ==
+                    ConnectionState.waiting) {
+                  return _imageContainerForEmptyImage();
+                } else if (snapshot.connectionState == ConnectionState.done &&
+                    snapshot.data != null) {
+                  return Image.memory(
+                    snapshot.data!,
+                  );
+                }
+                return Container();
+              },
+            )
+          : Image.file(File(imageFileToDisplay.path)),
     );
   }
 
@@ -505,7 +560,8 @@ class _AllMenuShopPageState extends State<AllMenuShopPage> {
           onChanged: (value) {
             setState(
               () {
-                // searchText.text = value;
+                searchText.text = value;
+                context.read<ShopProvider>().filterMenusByName(value);
                 // _searchViewModel.onUserSearchItemFilter(searchText.text);
               },
             );
@@ -520,30 +576,32 @@ class _AllMenuShopPageState extends State<AllMenuShopPage> {
       // Perform the actual submission logic here
       // For example, you can save the menu information to a list
       // or send it to a backend server.
+      Menus menu = Menus(
+        name: nameMenu.text,
+        price: int.parse(priceMenu.text),
+        category: categoryMenu.text.toString(),
+        description: "",
+        image: _file.path,
+      );
 
-      // Menu details
-      String menuName = nameMenu.text;
-      String menuPrice = priceMenu.text;
-      String menuCategory = categoryMenu.text;
-
-      // Assuming you have a class to represent a menu item
-      // Menu newItem = Menu(
-      //   name: menuName,
-      //   price: menuPrice,
-      //   category: menuCategory,
-      //   imagePath: _file.path, // Assuming you want to store the image path
-      // );
-
-      // Add the new menu item to your list or perform any other action
-      // based on your requirements.
-      // For example:
       setState(() {
-        _itSkills.add(menuName);
+        context.read<ShopProvider>().addMenu(menu);
       });
+
+      //clear
+      _file = XFile("Empty");
+      nameMenu.clear();
+      priceMenu.clear();
+      categoryMenu.clear();
 
       // Close the dialog
       Navigator.of(context).pop();
     }
+  }
+
+  Future<Uint8List> _xfileToUnit8(XFile file) async {
+    var f = await file.readAsBytes();
+    return f;
   }
 
   uploadImage(StateSetter setStateDialog) async {
@@ -553,7 +611,7 @@ class _AllMenuShopPageState extends State<AllMenuShopPage> {
       XFile? image = await _picker.pickImage(source: ImageSource.gallery);
 
       if (image != null) {
-        var selected = File(image.path);
+        XFile selected = image;
 
         setStateDialog(() {
           _file = selected;
@@ -569,7 +627,7 @@ class _AllMenuShopPageState extends State<AllMenuShopPage> {
       if (image != null) {
         var f = await image.readAsBytes();
         setStateDialog(() {
-          _file = File(image.path);
+          _file = image;
           webImage = f;
         });
       } else {
@@ -584,7 +642,7 @@ class _AllMenuShopPageState extends State<AllMenuShopPage> {
     final returnedImage =
         await _imagePicker.pickImage(source: ImageSource.gallery);
     setState(() {
-      if (returnedImage != null) _file = File(returnedImage.path);
+      if (returnedImage != null) _file = returnedImage;
     });
     print(returnedImage!.path);
   }

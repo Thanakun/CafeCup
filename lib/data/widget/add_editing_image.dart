@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:coffee_application/utility/decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:coffee_application/utility/my_constant.dart';
 import 'package:image_picker/image_picker.dart';
@@ -28,6 +29,7 @@ class _AddEditingImagesListState extends State<AddEditingImagesList> {
 
   ImagePicker _imagePicker = ImagePicker();
   List<XFile>? _shopImagesFileList = [];
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -67,83 +69,34 @@ class _AddEditingImagesListState extends State<AddEditingImagesList> {
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
-                        Row(
-                          children: [
-                            Container(
-                              margin: EdgeInsets.only(bottom: 30),
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                "รูปภาพร้าน (${widget.listOfImagesOne.length} / ${_maximumImagesAddingPossible} )",
-                                style: kfontH1InterBoldBlackColor(),
-                              ),
-                            ),
-                            const Spacer(),
-                            widget.listOfImagesOne.isNotEmpty
-                                ? GestureDetector(
-                                    onTap: () {
-                                      selectImage(widget.listOfImagesOne);
-                                    },
-                                    child: Container(
-                                      margin: EdgeInsets.only(bottom: 30),
-                                      alignment: Alignment.centerRight,
-                                      child: Text(
-                                        "แก้ไขรูปภาพ",
-                                        style:
-                                            kfontH2InterBlackColorHalfOpacity(),
-                                      ),
-                                    ),
-                                  )
-                                : Container(),
-                          ],
-                        ),
-                        GridView.builder(
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisSpacing: 8.0,
-                                  mainAxisSpacing: 8.0,
-                                  crossAxisCount: 3,
-                                  childAspectRatio: 1),
-                          shrinkWrap: true,
-                          physics: const BouncingScrollPhysics(),
-                          itemCount: widget.listOfImagesOne.isEmpty
-                              ? 1
-                              : widget.listOfImagesOne.length,
-                          itemBuilder: (context, index) {
-                            return widget.listOfImagesOne.isEmpty
-                                ? GestureDetector(
-                                    onTap: () {
-                                      selectImage(widget.listOfImagesOne);
-                                    },
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        border: Border.all(
-                                            color: brownBorderButton),
-                                        color: backGroundButton,
-                                      ),
-                                      width: 90,
-                                      height: 90,
-                                      child: Center(
-                                        child: Text(
-                                          "+",
-                                          style: kfontH1InterBoldBlackColor(),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                : Container(
-                                    margin: EdgeInsets.all(16),
-                                    width: 250,
-                                    height: 150,
-                                    child: FittedBox(
-                                      fit: BoxFit.cover,
-                                      child: Image.file(File(
-                                          widget.listOfImagesOne[index].path)),
-                                    ),
-                                  );
-                          },
-                        ),
+                        _titleSection(
+                            title:
+                                "รูปภาพร้าน (${widget.listOfImagesOne.length} / $_maximumImagesAddingPossible )",
+                            toInsertImageList: widget.listOfImagesOne),
+                        _imageListCarousel(
+                            listOfImages: widget.listOfImagesOne),
+                        sectionBufferHeight(bufferSection: height * 0.015),
+                        _titleSection(
+                            title:
+                                "รูปภาพเมนู(${widget.listOfImagesTwo.length} / $_maximumImagesAddingPossible )",
+                            toInsertImageList: widget.listOfImagesTwo),
+                        _imageListCarousel(
+                            listOfImages: widget.listOfImagesTwo),
+                        sectionBufferHeight(bufferSection: height * 0.015),
+                        _titleSection(
+                            title:
+                                "รูปภาพอาหาร (${widget.listOfImagesThree.length} / $_maximumImagesAddingPossible )",
+                            toInsertImageList: widget.listOfImagesThree),
+                        _imageListCarousel(
+                            listOfImages: widget.listOfImagesThree),
+                        sectionBufferHeight(bufferSection: height * 0.015),
+                        _titleSection(
+                            title:
+                                "รูปภาพอื่นๆ (${widget.listOfImagesFour.length} / $_maximumImagesAddingPossible )",
+                            toInsertImageList: widget.listOfImagesFour),
+                        _imageListCarousel(
+                            listOfImages: widget.listOfImagesFour),
+                        sectionBufferHeight(bufferSection: height * 0.015),
                       ],
                     ),
                   ),
@@ -152,6 +105,83 @@ class _AddEditingImagesListState extends State<AddEditingImagesList> {
             ),
           ),
         ));
+  }
+
+  Row _titleSection(
+      {required String title, required List<XFile> toInsertImageList}) {
+    return Row(
+      children: [
+        Container(
+          margin: EdgeInsets.only(bottom: 30),
+          alignment: Alignment.centerLeft,
+          child: Text(
+            title,
+            style: kfontH1InterBoldBlackColor(),
+          ),
+        ),
+        const Spacer(),
+        toInsertImageList.isNotEmpty
+            ? GestureDetector(
+                onTap: () {
+                  selectImage(toInsertImageList);
+                },
+                child: Container(
+                  margin: EdgeInsets.only(bottom: 30),
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    "แก้ไขรูปภาพ",
+                    style: kfontH2InterBlackColorHalfOpacity(),
+                  ),
+                ),
+              )
+            : Container(),
+      ],
+    );
+  }
+
+  GridView _imageListCarousel({required List<XFile>? listOfImages}) {
+    return GridView.builder(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisSpacing: 8.0,
+          mainAxisSpacing: 8.0,
+          crossAxisCount: 3,
+          childAspectRatio: 0.8),
+      shrinkWrap: true,
+      physics: const BouncingScrollPhysics(),
+      itemCount: listOfImages!.isEmpty ? 1 : listOfImages.length,
+      itemBuilder: (context, index) {
+        return listOfImages.isEmpty
+            ? GestureDetector(
+                onTap: () {
+                  selectImage(listOfImages);
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: brownBorderButton),
+                    color: backGroundButton,
+                  ),
+                  width: 90,
+                  height: 90,
+                  child: Center(
+                    child: Text(
+                      "+",
+                      style: kfontH1InterBoldBlackColor(),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              )
+            : Container(
+                width: 500,
+                height: 500,
+                decoration: kdecorationForContainerActiveItem,
+                child: FittedBox(
+                  child: Image.file(File(listOfImages[index].path)),
+                ),
+              );
+      },
+    );
   }
 
   void selectImage(List givenListImages) async {

@@ -27,7 +27,6 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _confirmPasswordController =
       TextEditingController(); //here select male and female
   final List<String> usersType = ["Shop", "Customer"];
-  List<bool> isSelected = [true, false];
   bool isPasswordVisible = false;
 
   @override
@@ -100,23 +99,32 @@ class _RegisterPageState extends State<RegisterPage> {
                                           MaterialStatePropertyAll(sup3V4)),
                                   onPressed: () {
                                     if (_formKey.currentState!.validate()) {
-                                      // Validation passed, register user
-                                      // registerVM.signUp(
-                                      //   shop: ShopModel(),
-                                      //   customer: CustomerModel(),
-                                      //   userType: selectedType
-                                      // );
-                                      // context.read<CustomerProvider>().username;
-                                      registerVM.signUpFirstPage(
-                                          username: _usernameController.text,
-                                          password: _passwordController.text);
+                                      if (registerVM.userType == "Customer") {
+                                        registerVM.signUpFirstPage(
+                                            username: _usernameController.text,
+                                            password: _passwordController.text);
 
-                                      Navigator.push(
+                                        Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) =>
                                                 const CustomerRegister(),
-                                          ));
+                                          ),
+                                        );
+                                      } else if (registerVM.userType ==
+                                          "Shop") {
+                                        registerVM.signUpFirstPage(
+                                            username: _usernameController.text,
+                                            password: _passwordController.text);
+
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const ShopRegisterView(),
+                                          ),
+                                        );
+                                      }
                                     }
                                   },
                                   child: Text(

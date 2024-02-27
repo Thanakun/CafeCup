@@ -1,111 +1,71 @@
-// import 'dart:ffi';
-// import 'package:intl';
-// import 'package:flutter/foundation.dart';
-// import 'package:google_maps_flutter/google_maps_flutter.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
+class ShopModelResponse {
+  int? status;
+  Metadata? metadata;
+  List<ShopModel>? data;
 
-// class Shop {
-//   int shopId; // auto increment
-//   String shopName;
-//   String shopImagePath;
-//   String shopLocationText;
-//   String shopLocationCoordination;
-//   String shopDescription;
-//   // String shopAvailibleTime;
-//   String shopFoodCategory;
-//   double shopAverageAllScore;
-//   double shopAverageScorePoint;
-//   double shopAverageScorePlace;
-//   double shopAverageScoreService;
-//   int shopMissionId;
-//   bool shopStatusMembership;
-//   List shopPromotionId;
-//   DateTime shopOpenTime;
-//   DateTime shopCloseTime;
+  ShopModelResponse({this.status, this.metadata, this.data});
 
-//   Shop({
-//     required this.shopId,
-//     required this.shopName,
-//     required this.shopImagePath,
-//     required this.shopLocationText,
-//     required this.shopLocationCoordination,
-//     required this.shopDescription,
-//     // required this.shopAvailibleTime,
-//     required this.shopFoodCategory,
-//     required this.shopAverageAllScore,
-//     required this.shopAverageScorePoint,
-//     required this.shopAverageScorePlace,
-//     required this.shopAverageScoreService,
-//     required this.shopMissionId,
-//     required this.shopStatusMembership,
-//     required this.shopOpenTime,
-//     required this.shopCloseTime,
-//     required this.shopPromotionId,
-//   });
+  ShopModelResponse.fromJson(Map<String, dynamic> json) {
+    status = json['status'];
+    metadata = json['metadata'] != null
+        ? new Metadata.fromJson(json['metadata'])
+        : null;
+    if (json['data'] != null) {
+      data = <ShopModel>[];
+      json['data'].forEach((v) {
+        data!.add(new ShopModel.fromJson(v));
+      });
+    }
+  }
 
-//   factory Shop.fromJson(Map<String, dynamic> json) {
-//     return Shop(
-//       shopId: json['shop_id'] as int,
-//       shopName: json['shop_name'] as String,
-//       shopImagePath: json['shop_image'] as String,
-//       shopLocationText: json['shop_location_text'] as String,
-//       shopLocationCoordination: json['shop_loc_coordinates'] as String,
-//       shopDescription: json['shop_description'] as String,
-//       // shopAvailibleTime: json['shop_availible_time'] as String,
-//       shopFoodCategory: json['shop_food_category'] as String,
-//       shopMissionId: json['shop_mission_id'] as int,
-//       shopStatusMembership: json['shop_status_membership'] as bool,
-//       shopOpenTime: DateTime.parse(json['shop_open_time'] as String),
-//       shopCloseTime: DateTime.parse(json['shop_close_time'] as String),
-//       shopPromotionId: (json['pmt_id'] as List<dynamic>).toList(),
-//       shopAverageAllScore: json['shop_score'] as double,
-//       shopAverageScorePlace: json['shop_place'] as double,
-//       shopAverageScoreService: json['shop_service'] as double,
-//       shopAverageScorePoint: json['shop_point'] as double,
-//     );
-//   }
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['status'] = this.status;
+    if (this.metadata != null) {
+      data['metadata'] = this.metadata!.toJson();
+    }
+    if (this.data != null) {
+      data['data'] = this.data!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
 
-//   void updateAverageScoreById(int shopId, double newScorePoint,
-//       double newScorePlace, double newScoreService) {
-//     if (this.shopId == shopId) {
-//       // Update the average scores based on the new values
-//       shopAverageScorePoint = newScorePoint;
-//       shopAverageScorePlace = newScorePlace;
-//       shopAverageScoreService = newScoreService;
+class Metadata {
+  int? totalCount;
+  int? page;
+  int? pageSize;
 
-//       // Recalculate the overall average score
-//       shopAverageAllScore = (shopAverageScorePoint +
-//               shopAverageScorePlace +
-//               shopAverageScoreService) /
-//           3.0;
-//     }
-//   }
+  Metadata({this.totalCount, this.page, this.pageSize});
 
-// String getShopNameById(int shopId){
-//   try {
-//     if(this.shopId == shopId){
-//       return shopName;
-//     }
-//     return;
-//   } catch (e) {
+  Metadata.fromJson(Map<String, dynamic> json) {
+    totalCount = json['totalCount'];
+    page = json['page'];
+    pageSize = json['pageSize'];
+  }
 
-//   }
-
-// }
-// }
-import 'dart:io';
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['totalCount'] = this.totalCount;
+    data['page'] = this.page;
+    data['pageSize'] = this.pageSize;
+    return data;
+  }
+}
 
 class ShopModel {
   int? iId;
   String? username;
   String? password;
   String? name;
+  String? description;
   Address? address;
   List<Menus>? menus;
-  List<File>? shopImages;
-  List<File>? menuImages;
-  List<File>? foodImages;
-  List<File>? otherImages;
+  String? coverImage;
+  List<String>? shopImage;
+  List<String>? menuImages;
+  List<String>? foodImages;
+  List<String>? otherImages;
   List<int>? daysOpen;
   String? timeOpen;
   String? timeClose;
@@ -117,16 +77,22 @@ class ShopModel {
   bool? conferenceRoom;
   bool? toilet;
   bool? smokingZone;
+  String? photoSpots;
   String? noice;
+  String? customerGroup;
+  int? minuteOpen;
+  int? minuteClose;
 
   ShopModel(
       {this.iId,
       this.username,
       this.password,
       this.name,
+      this.description,
       this.address,
       this.menus,
-      this.shopImages,
+      this.coverImage,
+      this.shopImage,
       this.menuImages,
       this.foodImages,
       this.otherImages,
@@ -141,31 +107,11 @@ class ShopModel {
       this.conferenceRoom,
       this.toilet,
       this.smokingZone,
-      this.noice});
-
-  ShopModel.defaultWithIdNegativeOne()
-      : iId = -1,
-        username = null,
-        password = null,
-        name = null,
-        address = null,
-        menus = null,
-        shopImages = null,
-        menuImages = null,
-        foodImages = null,
-        otherImages = null,
-        daysOpen = null,
-        timeOpen = null,
-        timeClose = null,
-        singleSeat = null,
-        doubleSeat = null,
-        largeSeat = null,
-        wifi = null,
-        powerPlugs = null,
-        conferenceRoom = null,
-        toilet = null,
-        smokingZone = null,
-        noice = null;
+      this.photoSpots,
+      this.noice,
+      this.customerGroup,
+      this.minuteOpen,
+      this.minuteClose});
 
   ShopModel.fromJson(Map<String, dynamic> json) {
     iId = json['_id'];
@@ -173,35 +119,35 @@ class ShopModel {
     password = json['password'];
     name = json['name'];
     address =
-        json['address'] != null ? Address.fromJson(json['address']) : null;
+        json['address'] != null ? new Address.fromJson(json['address']) : null;
     if (json['menus'] != null) {
       menus = <Menus>[];
       json['menus'].forEach((v) {
-        menus!.add(Menus.fromJson(v));
+        menus!.add(new Menus.fromJson(v));
       });
     }
     if (json['shopImages'] != null) {
-      shopImages = <File>[];
+      shopImage = <String>[];
       json['shopImages'].forEach((v) {
-        shopImages!.add(File(v.toString()));
+        shopImage!.add(v.fromJson(v));
       });
     }
     if (json['menuImages'] != null) {
-      menuImages = <File>[];
+      menuImages = <String>[];
       json['menuImages'].forEach((v) {
-        menuImages!.add(File(v.toString()));
+        menuImages!.add(v.fromJson(v));
       });
     }
     if (json['foodImages'] != null) {
-      foodImages = <File>[];
+      foodImages = <String>[];
       json['foodImages'].forEach((v) {
-        foodImages!.add(File(v.toString()));
+        foodImages!.add(v.fromJson(v));
       });
     }
     if (json['otherImages'] != null) {
-      otherImages = <File>[];
+      otherImages = <String>[];
       json['otherImages'].forEach((v) {
-        otherImages!.add(File(v.toString()));
+        otherImages!.add(v.fromJson(v));
       });
     }
     daysOpen = json['daysOpen'].cast<int>();
@@ -216,32 +162,27 @@ class ShopModel {
     toilet = json['toilet'];
     smokingZone = json['smokingZone'];
     noice = json['noice'];
+    minuteOpen = json['minuteOpen'];
+    minuteClose = json['minuteClose'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['_id'] = iId;
     data['username'] = username;
     data['password'] = password;
     data['name'] = name;
+    data['description'] = description;
     if (address != null) {
       data['address'] = address!.toJson();
     }
     if (menus != null) {
       data['menus'] = menus!.map((v) => v.toJson()).toList();
     }
-    if (shopImages != null) {
-      data['shopImages'] = shopImages!.map((v) => v.path).toList();
-    }
-    if (menuImages != null) {
-      data['menuImages'] = menuImages!.map((v) => v.path).toList();
-    }
-    if (foodImages != null) {
-      data['foodImages'] = foodImages!.map((v) => v.path).toList();
-    }
-    if (otherImages != null) {
-      data['otherImages'] = otherImages!.map((v) => v.path).toList();
-    }
+    data['coverImage'] = coverImage;
+    data['shopImage'] = shopImage;
+    data['menuImages'] = menuImages;
+    data['foodImages'] = foodImages;
+    data['otherImages'] = otherImages;
     data['daysOpen'] = daysOpen;
     data['timeOpen'] = timeOpen;
     data['timeClose'] = timeClose;
@@ -253,45 +194,82 @@ class ShopModel {
     data['conferenceRoom'] = conferenceRoom;
     data['toilet'] = toilet;
     data['smokingZone'] = smokingZone;
+    data['photoSpots'] = photoSpots;
     data['noice'] = noice;
+    data['customerGroup'] = customerGroup;
     return data;
+  }
+
+  static ShopModel defaultWithIdNegativeOne() {
+    return ShopModel(iId: -1);
   }
 }
 
 class Address {
+  String? country;
+  String? province;
+  String? district;
   String? subDistrict;
-  String? sId;
+  String? road;
+  String? postelCode;
+  String? addressText;
 
-  Address({this.subDistrict, this.sId});
+  Address(
+      {this.country,
+      this.province,
+      this.district,
+      this.subDistrict,
+      this.road,
+      this.postelCode,
+      this.addressText});
 
   Address.fromJson(Map<String, dynamic> json) {
+    country = json['country'];
+    province = json['province'];
+    district = json['district'];
     subDistrict = json['subDistrict'];
-    sId = json['_id'];
+    road = json['road'];
+    postelCode = json['postelCode'];
+    addressText = json['addressText'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
+    data['country'] = country;
+    data['province'] = province;
+    data['district'] = district;
     data['subDistrict'] = subDistrict;
-    data['_id'] = sId;
+    data['road'] = road;
+    data['postelCode'] = postelCode;
+    data['addressText'] = addressText;
     return data;
   }
 }
 
 class Menus {
+  String? name;
+  String? category;
   int? price;
-  String? sId;
+  String? description;
+  String? image;
 
-  Menus({this.price, this.sId});
+  Menus({this.name, this.category, this.price, this.description, this.image});
 
   Menus.fromJson(Map<String, dynamic> json) {
+    name = json['name'];
+    category = json['category'];
     price = json['price'];
-    sId = json['_id'];
+    description = json['description'];
+    image = json['image'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
+    data['name'] = name;
+    data['category'] = category;
     data['price'] = price;
-    data['_id'] = sId;
+    data['description'] = description;
+    data['image'] = image;
     return data;
   }
 }

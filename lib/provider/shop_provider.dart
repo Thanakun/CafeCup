@@ -1,99 +1,273 @@
 import 'package:coffee_application/model/shop.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ShopProvider with ChangeNotifier {
-
-  ShopModel _shop = ShopModel();
+  ShopModel _shop = ShopModel(
+    menus: [],
+    shopImage: [],
+    menuImages: [],
+    foodImages: [],
+    otherImages: [],
+    daysOpen: [],
+    address: Address(),
+    coverImage: null,
+    singleSeat: 0,
+    doubleSeat: 0,
+    largeSeat: 0,
+  );
 
   get shop => _shop;
-  String _username = '';
-  String _password = '';
-  String _name = '';
-  String _description = '';
-  final Map<String, dynamic> _address = {};
-  final List<Map<String, dynamic>> _menus = [];
-  final String _coverImage = '';
-  final List<String> _shopImage = [];
-  final List<String> _menuImages = [];
-  final List<String> _foodImages = [];
-  final List<String> _otherImages = [];
-  final List<int> _daysOpen = [];
-  final String _timeOpen = '';
-  final String _timeClose = '';
-  final int _singleSeat = 0;
-  final int _doubleSeat = 0;
-  final int _largeSeat = 0;
-  final bool _wifi = false;
-  final bool _powerPlugs = false;
-  final bool _conferenceRoom = false;
-  final bool _toilet = false;
-  final bool _smokingZone = false;
-  final String _photoSpots = 'FEW';
-  final String _noise = 'QUIET';
-  final String _customerGroup = 'STUDENT';
-
-  // Getters
-  String get username => _username;
-  String get password => _password;
-  String get name => _name;
-  String get description => _description;
-  Map<String, dynamic> get address => _address;
-  List<Map<String, dynamic>> get menus => _menus;
-  String get coverImage => _coverImage;
-  List<String> get shopImage => _shopImage;
-  List<String> get menuImages => _menuImages;
-  List<String> get foodImages => _foodImages;
-  List<String> get otherImages => _otherImages;
-  List<int> get daysOpen => _daysOpen;
-  String get timeOpen => _timeOpen;
-  String get timeClose => _timeClose;
-  int get singleSeat => _singleSeat;
-  int get doubleSeat => _doubleSeat;
-  int get largeSeat => _largeSeat;
-  bool get wifi => _wifi;
-  bool get powerPlugs => _powerPlugs;
-  bool get conferenceRoom => _conferenceRoom;
-  bool get toilet => _toilet;
-  bool get smokingZone => _smokingZone;
-  String get photoSpots => _photoSpots;
-  String get noise => _noise;
-  String get customerGroup => _customerGroup;
-
+  get filteredMenus => _filteredMenus;
+  List<Menus> _filteredMenus = [];
   // Setters (add validation logic if needed)
   set username(String value) {
-    _username = value;
+    _shop.username = value;
     notifyListeners();
   }
 
   set password(String value) {
-    _password = value;
+    _shop.password = value;
     notifyListeners();
   }
 
   set name(String value) {
-    _name = value;
+    _shop.name = value;
     notifyListeners();
   }
 
   set description(String value) {
-    _description = value;
+    _shop.description = value;
+    notifyListeners();
+  }
+
+  set address(Address value) {
+    _shop.address = value;
+    notifyListeners();
+  }
+
+  set menus(List<Menus> value) {
+    _shop.menus!.clear();
+    _filteredMenus.clear();
+    _filteredMenus.addAll(value);
+    _shop.menus!.addAll(value);
+    notifyListeners();
+  }
+
+  set coverImage(String? value) {
+    // Add validation logic if needed
+    _shop.coverImage = value;
+    notifyListeners();
+  }
+
+  set shopImage(List<String> value) {
+    _shop.shopImage!.clear();
+    _shop.shopImage!.addAll(value);
+    notifyListeners();
+  }
+
+  set menuImages(List<String> value) {
+    _shop.menuImages!.clear();
+    _shop.menuImages!.addAll(value);
+    notifyListeners();
+  }
+
+  set foodImages(List<String> value) {
+    _shop.foodImages!.clear();
+    _shop.foodImages!.addAll(value);
+    notifyListeners();
+  }
+
+  set otherImages(List<String> value) {
+    _shop.otherImages!.clear();
+    _shop.otherImages!.addAll(value);
+    notifyListeners();
+  }
+
+  set daysOpen(List<int> value) {
+    _shop.daysOpen!.clear();
+    _shop.daysOpen!.addAll(value);
+    notifyListeners();
+  }
+
+  set timeOpen(String value) {
+    _shop.timeOpen = value;
+    notifyListeners();
+  }
+
+  set timeClose(String value) {
+    _shop.timeClose = value;
+    notifyListeners();
+  }
+
+  set singleSeat(int value) {
+    _shop.singleSeat = value;
+    notifyListeners();
+  }
+
+  set doubleSeat(int value) {
+    _shop.doubleSeat = value;
+    notifyListeners();
+  }
+
+  set largeSeat(int value) {
+    _shop.largeSeat = value;
+    notifyListeners();
+  }
+
+  set wifi(bool value) {
+    _shop.wifi = value;
+    notifyListeners();
+  }
+
+  set powerPlugs(bool value) {
+    _shop.powerPlugs = value;
+    notifyListeners();
+  }
+
+  set conferenceRoom(bool value) {
+    _shop.conferenceRoom = value;
+    notifyListeners();
+  }
+
+  set toilet(bool value) {
+    _shop.toilet = value;
+    notifyListeners();
+  }
+
+  set smokingZone(bool value) {
+    _shop.smokingZone = value;
+    notifyListeners();
+  }
+
+  set photoSpots(String value) {
+    _shop.photoSpots = value;
+    notifyListeners();
+  }
+
+  set noise(String value) {
+    _shop.noice = value;
+    notifyListeners();
+  }
+
+  set customerGroup(String value) {
+    _shop.customerGroup = value;
     notifyListeners();
   }
 
   // Other setters for the remaining properties
 
   // Methods for managing menus and images
-  void addMenu(Map<String, dynamic> menu) {
-    _menus.add(menu);
+  void addMenu(Menus menu) {
+    _filteredMenus.add(menu);
+    _shop.menus!.add(menu);
     notifyListeners();
   }
 
   void addShopImage(String image) {
-    _shopImage.add(image);
+    _shop.shopImage!.add(image);
+    notifyListeners();
+  }
+
+  void addMenuImage(String image) {
+    _shop.menuImages!.add(image);
+    notifyListeners();
+  }
+
+  void addFoodImage(String image) {
+    _shop.foodImages!.add(image);
+    notifyListeners();
+  }
+
+  void addOtherImage(String image) {
+    _shop.otherImages!.add(image);
+    notifyListeners();
+  }
+
+  void addShopImageAll(List<String> allImages) {
+    _shop.shopImage!.clear();
+    _shop.shopImage!.addAll(allImages);
+    notifyListeners();
+  }
+
+  void addMenuImageAll(List<String> allImages) {
+    _shop.menuImages!.clear();
+
+    _shop.menuImages!.addAll(allImages);
+    notifyListeners();
+  }
+
+  void addFoodImageAll(List<String> allImages) {
+    _shop.foodImages!.clear();
+
+    _shop.foodImages!.addAll(allImages);
+    notifyListeners();
+  }
+
+  void addOtherImageAll(List<String> allImages) {
+    _shop.otherImages!.clear();
+
+    _shop.otherImages!.addAll(allImages);
+    notifyListeners();
+  }
+
+  Menus removeMenuAt(int index) {
+    _shop.menus!.removeAt(index);
+    notifyListeners();
+    return _shop.menus![index];
+  }
+
+  void insertMenuItem(int index, Menus menu) {
+    _shop.menus!.insert(index, menu);
+    notifyListeners();
+  }
+
+  void filterMenusByName(String query) {
+    // Update the list of filtered menus based on the name
+    _filteredMenus = _shop.menus!
+        .where((menu) =>
+            (menu.name!.toLowerCase().contains(query.toLowerCase())) ||
+            (menu.category!.toLowerCase().contains(query.toLowerCase())) ||
+            (menu.price.toString().contains(query)))
+        .toList();
     notifyListeners();
   }
 
   // Other methods for managing images
 
-  // Other methods for managing properties
+  @override
+  String toString() {
+    return '''
+    ShopProvider{
+      shop: $_shop,
+      username: ${_shop.username},
+      password: ${_shop.password},
+      name: ${_shop.name},
+      description: ${_shop.description},
+      address: ${_shop.address},
+      menus: ${_shop.menus},
+      coverImage: ${_shop.coverImage},
+      shopImage: ${_shop.shopImage},
+      menuImages: ${_shop.menuImages},
+      foodImages: ${_shop.foodImages},
+      otherImages: ${_shop.otherImages},
+      daysOpen: ${_shop.daysOpen},
+      timeOpen: ${_shop.timeOpen},
+      timeClose: ${_shop.timeClose},
+      singleSeat: ${_shop.singleSeat},
+      doubleSeat: ${_shop.doubleSeat},
+      largeSeat: ${_shop.largeSeat},
+      wifi: ${_shop.wifi},
+      powerPlugs: ${_shop.powerPlugs},
+      conferenceRoom: ${_shop.conferenceRoom},
+      toilet: ${_shop.toilet},
+      smokingZone: ${_shop.smokingZone},
+      photoSpots: ${_shop.photoSpots},
+      noise: ${_shop.noice},
+      customerGroup: ${_shop.customerGroup},
+      filteredMenus: $_filteredMenus,
+      // Add other properties as needed
+    }
+  ''';
+  }
 }

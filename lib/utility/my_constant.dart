@@ -52,6 +52,8 @@ const Color colorBackGroundNavBar = Color.fromRGBO(185, 148, 112, 1);
 
 const Color colorBackGroundSearchBox = Color.fromRGBO(169, 179, 136, 1);
 
+const Color colorRedBackGroundIcon = Color.fromRGBO(154, 59, 59, 1);
+
 TextStyle kfontNameMenu() => const TextStyle(
       color: fontMenuNameColor,
       fontSize: 22,
@@ -126,6 +128,12 @@ TextStyle kfontH1InterBoldBlackColor() => const TextStyle(
     fontWeight: FontWeight.bold,
     color: Colors.black);
 
+TextStyle kfontH1InterBoldWhiteColor() => const TextStyle(
+    fontStyle: FontStyle.normal,
+    fontSize: 20,
+    fontWeight: FontWeight.bold,
+    color: Colors.white);
+
 TextStyle kfontH1InterWhiteColor() => const TextStyle(
     fontStyle: FontStyle.normal,
     fontSize: 20,
@@ -143,6 +151,12 @@ TextStyle kfontH2InterBoldBlackColor() => const TextStyle(
     fontWeight: FontWeight.bold,
     fontStyle: FontStyle.normal,
     color: Colors.black);
+
+TextStyle kfontH2InterBoldWhiteColor() => const TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+    fontStyle: FontStyle.normal,
+    color: Colors.white);
 
 TextStyle kfontH3InterBlackColor() => const TextStyle(
     fontStyle: FontStyle.normal,

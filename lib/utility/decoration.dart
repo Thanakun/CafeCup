@@ -15,7 +15,9 @@ Decoration kdecorationForContainerActiveBeingSelected = BoxDecoration(
 Decoration kdecorationForContainerApplication = BoxDecoration(
     color: backGroundApplication, borderRadius: BorderRadius.circular(15));
 Decoration kdecorationForContainerDisabled = BoxDecoration(
-    color: Colors.grey.shade400, borderRadius: BorderRadius.circular(15));
+  color: Colors.white60,
+  borderRadius: BorderRadius.circular(15),
+);
 Decoration kdecorationForContainerBackButton = BoxDecoration(
     color: backGroundButton,
     border: Border.all(color: brownBorderButton),
@@ -35,10 +37,35 @@ Decoration kdecorationForContainerSearchBar = BoxDecoration(
   ),
 );
 
+Decoration kdecorationIconContainer = BoxDecoration(
+  shape: BoxShape.circle,
+  color: colorRedBackGroundIcon,
+);
+
+Decoration kdecorationButtonDisableContainer = BoxDecoration(
+  color: Colors.white60,
+  borderRadius: BorderRadius.circular(15),
+  border: Border.all(
+    color: brownBorderButton,
+  )
+);
+
+Decoration kdecorationContainerBrownColor = BoxDecoration(
+  color: colorBackGroundNavBar,
+  borderRadius: BorderRadius.circular(100),
+  border: Border.all(color: brownBorderButton, width: 2),
+);
+
 Decoration kdecorationForContainerbuttonSelectedSearchResultView =
     BoxDecoration(
   color: kYellowSelectedButtonSearchView,
   borderRadius: BorderRadius.circular(15),
+  border: Border.all(color: brownBorderButton, width: 2),
+);
+
+Decoration kdecorationForContainerYellowProgressBar = BoxDecoration(
+  color: kYellowSelectedButtonSearchView,
+  borderRadius: BorderRadius.circular(100),
 );
 
 Decoration kdecorationButtonSelectedOrange = BoxDecoration(

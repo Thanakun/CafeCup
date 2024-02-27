@@ -2,7 +2,13 @@ import 'dart:io';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:coffee_application/data/widget/add_editing_image.dart';
+import 'package:coffee_application/data/widget/skelton_shimmer.dart';
+import 'package:coffee_application/model/customer.dart';
+import 'package:coffee_application/model/promotion.dart';
+import 'package:coffee_application/model/review.dart';
 import 'package:coffee_application/model/shop.dart';
+import 'package:coffee_application/screen/customer_promotion.dart';
+import 'package:coffee_application/screen/my_component/bottom_navigationbar_customer.dart';
 import 'package:coffee_application/utility/decoration.dart';
 import 'package:coffee_application/utility/helper.dart';
 import 'package:coffee_application/utility/my_constant.dart';
@@ -10,7 +16,10 @@ import 'package:coffee_application/viewmodel/customer_shop_view.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shimmer/shimmer.dart';
 
 class CustomerShopView extends StatefulWidget {
   const CustomerShopView({super.key, required this.shopId});
@@ -65,19 +74,11 @@ class _CustomerShopViewState extends State<CustomerShopView> {
   int _current = 0;
   final CarouselController _controller = CarouselController();
 
-  Map<String, dynamic> scoreFilterMapping = {
-    "อาหาร": 4,
-    "บริการ": 5,
-    "สถานที่": 4,
-    "ที่จอดรถ": 4,
-    "เหมาะกับคุณไหม": false,
-  };
-
   @override
   void initState() {
     super.initState();
     _vm = CustomerOnShopVM();
-    _vm.getShopById(id: widget.shopId);
+    _vm.onUserEnterTheShopPage(shopID: widget.shopId);
   }
 
   @override
@@ -87,6 +88,10 @@ class _CustomerShopViewState extends State<CustomerShopView> {
 
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        bottomNavigationBar: const CustomerNavigationBar(
+          pageName: "SHOP",
+        ),
         body: Container(
           decoration: const BoxDecoration(
             image: DecorationImage(
@@ -98,9 +103,7 @@ class _CustomerShopViewState extends State<CustomerShopView> {
               future: _vm.shopModel,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
+                  return shimmerWaitingCarousel(height, width);
                 } else if (snapshot.hasError) {
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -162,13 +165,12 @@ class _CustomerShopViewState extends State<CustomerShopView> {
                         elevation: 0,
                         expandedHeight: 200.0,
                         flexibleSpace: FlexibleSpaceBar(
-                          background: Image(
-                            image: shop.shopImages != null &&
-                                    shop.shopImages!.isNotEmpty
-                                ? AssetImage(shop.shopImages![0].path)
-                                : const AssetImage(imageNotFound),
-                            fit: BoxFit.cover,
-                          ),
+                          background: shop.coverImage == null
+                              ? const Image(
+                                  image: AssetImage(imageNotFound),
+                                  fit: BoxFit.cover,
+                                )
+                              : Image.file(File(shop.coverImage!)),
                         ),
                       ),
                       SliverList(
@@ -494,9 +496,236 @@ class _CustomerShopViewState extends State<CustomerShopView> {
                             return menuCard(width);
                           },
                         ),
-                        // sectionBufferHeight(bufferSection: 30),
-                        headingContainer(header: "รีวิว"),
-                        sectionBufferHeight(),
+                        sectionBufferHeight(bufferSection: 30),
+                        FutureBuilder(
+                            future: _vm.promotionListModel,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return Container();
+                              } else if (snapshot.hasError) {
+                                Center(
+                                    child: Text(
+                                            "ERROR_MESSAGE.ERROR_LOADING_FAIL",
+                                            style: kfont32_400())
+                                        .tr());
+                              } else if (snapshot.connectionState ==
+                                      ConnectionState.done &&
+                                  !snapshot.hasError) {
+                                List<Promotion> customerPromotionShopList =
+                                    snapshot.data!.where(
+                                  (e) {
+                                    return e.iShopId == shop.iId;
+                                  },
+                                ).toList();
+                                print(snapshot.data);
+                                return customerPromotionShopList.isNotEmpty
+                                    ? Container(
+                                        width: width,
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: width * 0.015,
+                                            vertical: height * 0.015),
+                                        margin: EdgeInsets.symmetric(
+                                            horizontal: width * 0.07281),
+                                        decoration: BoxDecoration(
+                                          color: backgroundActiveButton,
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          border: Border.all(
+                                              color: colorRedBackGroundIcon,
+                                              width: 2),
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Expanded(
+                                              flex: 1,
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Container(
+                                                    padding: EdgeInsets.all(
+                                                        width * 0.015),
+                                                    decoration:
+                                                        kdecorationIconContainer,
+                                                    child: Icon(
+                                                        IconlyLight.discount,
+                                                        size: height * 0.035,
+                                                        color: Colors.white),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Expanded(
+                                                flex: 4,
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(
+                                                      right: width * 0.1),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Text(
+                                                        "PROMOTION.YOU_HAVE_CODE_AVALIABLE"
+                                                            .tr(),
+                                                        style:
+                                                            kfontH0InterBlackColor(),
+                                                      ),
+                                                      sectionBufferHeight(
+                                                          bufferSection:
+                                                              height * 0.015),
+                                                      Container(
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                          horizontal:
+                                                              width * 0.015,
+                                                          vertical:
+                                                              height * 0.015,
+                                                        ),
+                                                        decoration:
+                                                            kdecorationForContainerApplication,
+                                                        child: Column(
+                                                          children: [
+                                                            Container(
+                                                              width: double
+                                                                  .infinity,
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .only(
+                                                                left: width *
+                                                                    0.015,
+                                                              ),
+                                                              child: Text(
+                                                                shop.name ??
+                                                                    "ERROR_MESSAGE.SHOP_NAME_EMPTY"
+                                                                        .tr(),
+                                                                style:
+                                                                    kfont26_400(),
+                                                                softWrap: true,
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                                maxLines: 1,
+                                                              ),
+                                                            ),
+                                                            Container(
+                                                              width: double
+                                                                  .infinity,
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .only(
+                                                                left: width *
+                                                                    0.015,
+                                                              ),
+                                                              child: Text(
+                                                                //TODO PROMOTION DETAIL
+                                                                "ลดราคา เครื่องดื่ม 10 บาท",
+                                                                style:
+                                                                    kfontH2InterBoldBlackColor(),
+                                                                softWrap: true,
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                                maxLines: 1,
+                                                              ),
+                                                            ),
+                                                            Container(
+                                                              width: double
+                                                                  .infinity,
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .only(
+                                                                left: width *
+                                                                    0.015,
+                                                              ),
+                                                              child: Text(
+                                                                //TODO PROMOTION DETAIL
+                                                                "วันหมดอายุ: ${Helper.getDisplayTimeDate(customerPromotionShopList[0].dateExpired!)}",
+                                                                style:
+                                                                    kfontH2InterBlackColor(),
+                                                                softWrap: true,
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                                maxLines: 1,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      sectionBufferHeight(
+                                                          bufferSection:
+                                                              height * 0.015),
+                                                      Center(
+                                                        child: GestureDetector(
+                                                          onTap: () {
+                                                            //TODO GO TO PROMOTION PAGE
+                                                            Navigator
+                                                                .pushReplacement(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                              builder:
+                                                                  (context) {
+                                                                return CustomerPromotionView();
+                                                              },
+                                                            ));
+                                                          },
+                                                          child: Container(
+                                                            padding: EdgeInsets
+                                                                .symmetric(
+                                                              horizontal:
+                                                                  width * 0.05,
+                                                              vertical: height *
+                                                                  0.015,
+                                                            ),
+                                                            decoration:
+                                                                kdecorationForContainerAcceptButton,
+                                                            child: Text(
+                                                              "BUTTON.GOTO_PROMOTION",
+                                                              style:
+                                                                  kfontH1InterBoldBlackColor(),
+                                                            ).tr(),
+                                                          ),
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ))
+                                          ],
+                                        ),
+                                      )
+                                    : Container();
+                              }
+                              return Container();
+                            }),
+                        sectionBufferHeight(bufferSection: height * 0.015),
+                        headingContainer(
+                            header: "SHOP_PAGE_VIEW.LATEST_REVIEW".tr()),
+                        sectionBufferHeight(bufferSection: height * 0.015),
+                        Center(
+                          child: GestureDetector(
+                            onTap: () {
+                              //TODO ADD NAVIGATE TO REVIEW PAGE
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: width * 0.05,
+                                  vertical: height * 0.015),
+                              decoration:
+                                  kdecorationForContainerActiveBeingSelected,
+                              child: Text(
+                                "SHOP_PAGE_VIEW.ADDING_MY_REVIEW",
+                                style: kfontH1InterBoldWhiteColor(),
+                              ).tr(),
+                            ),
+                          ),
+                        ),
+                        sectionBufferHeight(bufferSection: height * 0.015),
                         Container(
                           margin: const EdgeInsets.only(
                               left: 30, right: 30, top: 5, bottom: 5),
@@ -536,9 +765,7 @@ class _CustomerShopViewState extends State<CustomerShopView> {
                             ],
                           ),
                         ),
-
                         sectionBufferHeight(bufferSection: 20),
-
                         Container(
                           margin: const EdgeInsets.only(
                               left: 60, right: 60, top: 5, bottom: 5),
@@ -565,115 +792,84 @@ class _CustomerShopViewState extends State<CustomerShopView> {
                           ),
                         ),
                         sectionBufferHeight(bufferSection: 20),
+                        FutureBuilder(
+                          future: Future.wait([
+                            _vm.reviewList,
+                            _vm.customerModel
+                          ] as Iterable<Future>),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Center(
+                                child: Shimmer(
+                                  child: Skeleton(
+                                    width: double.infinity,
+                                    height: height,
+                                  ),
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Colors.grey[300]!,
+                                      Colors.grey[100]!
+                                    ], // Adjust colors as needed
+                                    begin: Alignment(-1, -1),
+                                    end: Alignment(1, 1),
+                                  ),
+                                ),
+                              );
+                            } else if (snapshot.hasError) {
+                              return const Center(
+                                child: Text(
+                                  "ERROR_MESSAGE.ERROR_LOADING_FAIL",
+                                ),
+                              );
+                            } else if (snapshot.connectionState ==
+                                    ConnectionState.done &&
+                                !snapshot.hasError) {
+                              List<ReviewModel> reviewList = snapshot.data![0];
+                              CustomerModel currentCustomer = snapshot.data![1];
 
-                        Container(
-                          margin: const EdgeInsets.only(
-                              left: 15, right: 15, top: 5, bottom: 5),
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: backgroundActiveButton,
-                          ),
-                          child: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Container(
-                                    width: 80,
-                                    height: 80,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                      // color: Colors.red,
-                                    ),
-                                  ),
-                                  Expanded(
-                                      flex: 8,
-                                      child: Container(
-                                        padding: const EdgeInsets.only(
-                                            left: 10,
-                                            right: 10,
-                                            top: 5,
-                                            bottom: 5),
-                                        height: 80,
-                                        // color: Colors.green,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Container(
-                                              child: Text("คุณ ชานน",
-                                                  style:
-                                                      kfontH3InterBlackColor()),
-                                            ),
-                                            sectionBufferHeight(),
-                                            Container(
-                                              child: Text("รีวิว 20 ครั้ง",
-                                                  style:
-                                                      kfontH3InterBlackColor()),
-                                            )
-                                          ],
-                                        ),
-                                      ))
-                                ],
-                              ),
-                              sectionBufferHeight(bufferSection: 10),
-                              ...scoreFilterMapping.entries.map((e) {
-                                return scoreReviewSection(
-                                    title: e.key, score: e.value);
-                              }),
-                              sectionBufferHeight(bufferSection: 30),
-                              menuPriceReviewSection(),
-                              sectionBufferHeight(bufferSection: 10),
-                              menuPriceReviewSection(),
-                              sectionBufferHeight(bufferSection: 30),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    flex: 5,
-                                    child: Container(
-                                      padding: const EdgeInsets.all(20),
-                                      decoration: const BoxDecoration(
-                                          color: Colors.white),
-                                      height: 125,
-                                      child: SingleChildScrollView(
-                                        child: Text(
-                                          "อร่อยดีนะครับ แต่อเมริกาโน่ปกติเขาจะไม่มีสั่งหวานน้อยนะครับ เพราะมันต้องไม่หวานเลย",
-                                          style: kfontH3InterBlackColor(),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  sectionBufferWidth(bufferSection: 10),
-                                  Expanded(
-                                    flex: 3,
-                                    child: Container(
-                                      height: 125,
-                                      decoration: ShapeDecoration(
-                                        image: const DecorationImage(
-                                          image: AssetImage(americanoImagePath),
-                                          fit: BoxFit.fill,
-                                        ),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        shadows: [
-                                          const BoxShadow(
-                                            color: Color(0x3F000000),
-                                            blurRadius: 4,
-                                            offset: Offset(0, 4),
-                                            spreadRadius: 0,
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
+                              List<ReviewModel> displayList;
+
+                              if (filterTimelineMap["Most Recent"]!) {
+                                // Sort in descending order based on timestamp
+                                displayList = List.from(reviewList);
+                                displayList.sort((a, b) =>
+                                    b.timestamp!.compareTo(a.timestamp!));
+                                displayList = displayList.take(5).toList();
+                              } else if (filterTimelineMap["Oldest"]!) {
+                                // Sort in ascending order based on timestamp
+                                displayList = List.from(reviewList);
+                                displayList.sort((a, b) =>
+                                    a.timestamp!.compareTo(b.timestamp!));
+                                if (displayList.length > 5) {
+                                  displayList = displayList
+                                      .skip(displayList.length - 5)
+                                      .toList();
+                                }
+                              } else {
+                                // Handle other cases or set displayList to the original list
+                                displayList = List.from(reviewList);
+                              }
+
+                              return Column(
+                                children: displayList.map((review) {
+                                  return containerReviewListCard(
+                                    reviewerName: currentCustomer.name ?? "",
+                                    flavourScore: review.flavour ?? 0,
+                                    placeScore: review.place ?? 0,
+                                    serviceScore: review.service ?? 0,
+                                    parkingScore: review.parking ?? 0,
+                                    worthinessScore: review.worthiness ?? 0,
+                                    comment: review.comment ?? "",
+                                    timestamp: review.timestamp ?? "",
+                                    menuID: review.iMenuId ?? 0,
+                                  );
+                                }).toList(),
+                              );
+                            } else {
+                              return Container();
+                            }
+                          },
                         )
                       ]))
                     ],
@@ -682,6 +878,169 @@ class _CustomerShopViewState extends State<CustomerShopView> {
                 return Container();
               }),
         ),
+      ),
+    );
+  }
+
+  Container containerReviewListCard(
+      {required String reviewerName,
+      required int flavourScore,
+      required int placeScore,
+      required int serviceScore,
+      required int parkingScore,
+      required int worthinessScore,
+      required String comment,
+      required String timestamp,
+      required int menuID}) {
+    return Container(
+      margin: const EdgeInsets.only(left: 15, right: 15, top: 5, bottom: 5),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        color: backgroundActiveButton,
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 80,
+                height: 80,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  // color: Colors.red,
+                ),
+              ),
+              Expanded(
+                  flex: 8,
+                  child: Container(
+                    padding: const EdgeInsets.only(
+                        left: 10, right: 10, top: 5, bottom: 5),
+                    height: 80,
+                    // color: Colors.green,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          child: Text(reviewerName,
+                              style: kfontH3InterBlackColor()),
+                        ),
+                        sectionBufferHeight(),
+                        Container(
+                          child: Text("${Helper.getDisplayTimeDate(timestamp)}",
+                              style: kfontH3InterBlackColor()),
+                        )
+                      ],
+                    ),
+                  ))
+            ],
+          ),
+          sectionBufferHeight(bufferSection: 10),
+          reviewSectionValueScore(
+              scoreTitle: "SHOP_PAGE_VIEW.FLAVOR_SCORE".tr(),
+              score: flavourScore),
+          reviewSectionValueScore(
+              scoreTitle: "SHOP_PAGE_VIEW.PLACE_SCORE".tr(), score: placeScore),
+          reviewSectionValueScore(
+              scoreTitle: "SHOP_PAGE_VIEW.SERVICE_SCORE".tr(),
+              score: serviceScore),
+          reviewSectionValueScore(
+              scoreTitle: "SHOP_PAGE_VIEW.PARKING_SCORE".tr(),
+              score: parkingScore),
+          reviewSectionValueScore(
+              scoreTitle: "SHOP_PAGE_VIEW.WORTHINESS_SCORE".tr(),
+              score: worthinessScore),
+          sectionBufferHeight(bufferSection: 30),
+          menuPriceReviewSection(),
+          sectionBufferHeight(bufferSection: 30),
+          Row(
+            children: [
+              Expanded(
+                flex: 5,
+                child: Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      color: Colors.white),
+                  height: 125,
+                  child: SingleChildScrollView(
+                    child: Text(
+                      comment,
+                      style: kfontH3InterBlackColor(),
+                    ),
+                  ),
+                ),
+              ),
+              sectionBufferWidth(bufferSection: 10),
+              Expanded(
+                flex: 3,
+                child: Container(
+                  height: 125,
+                  decoration: ShapeDecoration(
+                    image: const DecorationImage(
+                      image: AssetImage(americanoImagePath),
+                      fit: BoxFit.fill,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    shadows: [
+                      const BoxShadow(
+                        color: Color(0x3F000000),
+                        blurRadius: 4,
+                        offset: Offset(0, 4),
+                        spreadRadius: 0,
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  Container reviewSectionValueScore({required scoreTitle, required int score}) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10, top: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            width: 250,
+            height: 60,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  scoreTitle,
+                  style: kfont26_400(),
+                )),
+          ),
+          const Spacer(),
+          Container(
+            width: 60,
+            height: 60,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Align(
+              alignment: Alignment.center,
+              child: Text(
+                score.toString(),
+                style: kfontH0InterBlackColor(),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -728,64 +1087,15 @@ class _CustomerShopViewState extends State<CustomerShopView> {
               ),
             ),
           ),
-          const Spacer(
-            flex: 2,
-          ),
+          const Spacer(),
           Flexible(
-            flex: 3,
+            flex: 2,
             child: Container(
               child: Text(
                 "ราคา 80 บาท",
                 style: kfontH1Inter_400BlackColor(),
                 overflow: TextOverflow.ellipsis,
               ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Container scoreReviewSection(
-      {required String title, required dynamic score}) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 10, top: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            width: 250,
-            height: 60,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Align(
-                alignment: Alignment.center,
-                child: Text(
-                  title,
-                  style: kfont26_400(),
-                )),
-          ),
-          const Spacer(),
-          Container(
-            width: 60,
-            height: 60,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Align(
-              alignment: Alignment.center,
-              child: score.runtimeType == bool
-                  ? (score
-                      ? const Icon(Icons.sentiment_satisfied_outlined)
-                      : const Icon(Icons.sentiment_dissatisfied_outlined))
-                  : Text(
-                      score.toString(),
-                      style: kfontH0InterBlackColor(),
-                    ),
             ),
           ),
         ],
@@ -991,6 +1301,155 @@ class _CustomerShopViewState extends State<CustomerShopView> {
     if (condition) {
       categoryWidgets.add(containerCategoryBox(categoryName: categoryName));
     }
+  }
+
+  Shimmer shimmerWaitingCarousel(double height, double width) {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey.shade300,
+      highlightColor: Colors.grey.shade100,
+      child: Column(
+        children: [
+          Container(
+            width: width,
+            height: height * 0.2,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: Colors.grey,
+            ),
+          ),
+          sectionBufferHeight(bufferSection: height * 0.05),
+          Align(
+            alignment: Alignment.center,
+            child: Container(
+              width: width * 0.5,
+              height: height * 0.075,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                color: Colors.grey,
+              ),
+            ),
+          ),
+          sectionBufferHeight(bufferSection: height * 0.025),
+          Container(
+            width: width * 0.9,
+            height: height * 0.15,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: Colors.grey,
+            ),
+          ),
+          sectionBufferHeight(bufferSection: height * 0.025),
+          Container(
+            width: width * 0.9,
+            height: height * 0.15,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: Colors.grey,
+            ),
+          ),
+          sectionBufferHeight(bufferSection: height * 0.02),
+          Wrap(
+            alignment: WrapAlignment.start,
+            spacing: 5,
+            runSpacing: 5,
+            children: [
+              Container(
+                width: width * 0.25,
+                height: height * 0.04,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: Colors.grey,
+                ),
+              ),
+              Container(
+                width: width * 0.25,
+                height: height * 0.04,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: Colors.grey,
+                ),
+              ),
+              Container(
+                width: width * 0.25,
+                height: height * 0.04,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: Colors.grey,
+                ),
+              ),
+              Container(
+                width: width * 0.25,
+                height: height * 0.04,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: Colors.grey,
+                ),
+              ),
+              Container(
+                width: width * 0.25,
+                height: height * 0.04,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: Colors.grey,
+                ),
+              ),
+              Container(
+                width: width * 0.25,
+                height: height * 0.04,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: Colors.grey,
+                ),
+              ),
+            ],
+          ),
+          sectionBufferHeight(bufferSection: height * 0.025),
+          Container(
+            margin: EdgeInsets.only(left: width * 0.05),
+            alignment: Alignment.centerLeft,
+            child: Wrap(
+              alignment: WrapAlignment.start,
+              spacing: 5,
+              runSpacing: 5,
+              children: [
+                Container(
+                  width: width * 0.25,
+                  height: height * 0.1,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    color: Colors.grey,
+                  ),
+                ),
+                Container(
+                  width: width * 0.25,
+                  height: height * 0.1,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    color: Colors.grey,
+                  ),
+                ),
+                Container(
+                  width: width * 0.25,
+                  height: height * 0.1,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    color: Colors.grey,
+                  ),
+                ),
+                Container(
+                  width: width * 0.25,
+                  height: height * 0.1,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 // SingleChildScrollView(

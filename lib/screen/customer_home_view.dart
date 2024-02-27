@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:coffee_application/data/widget/skelton_shimmer.dart';
 import 'package:coffee_application/model/customer_recommendation.dart';
 import 'package:coffee_application/model/shop.dart';
+import 'package:coffee_application/screen/customer_shop_view.dart';
 import 'package:coffee_application/screen/login.dart';
 import 'package:coffee_application/screen/my_component/bottom_navigationbar_customer.dart';
 import 'package:coffee_application/screen/customer_search_view.dart';
@@ -8,9 +12,11 @@ import 'package:coffee_application/utility/decoration.dart';
 import 'package:coffee_application/utility/my_constant.dart';
 import 'package:coffee_application/viewmodel/customer_home_view_model.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shimmer/shimmer.dart';
 
 class CustomerHomePageView extends StatefulWidget {
   const CustomerHomePageView({super.key});
@@ -77,11 +83,6 @@ class _CustomerHomePageViewState extends State<CustomerHomePageView> {
                           ),
                         ),
                         sectionBufferHeight(bufferSection: 16),
-                        //Create Carousel Shop Cafe here
-                        // _futureListCarousel(
-                        //     height: height,
-                        //     width: width,
-                        //     future: _vm.listAllShopFuture),
                         FutureBuilder(
                           future: Future.wait([
                             _vm.listAllShopFuture,
@@ -90,9 +91,7 @@ class _CustomerHomePageViewState extends State<CustomerHomePageView> {
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
-                              return const Center(
-                                child: CircularProgressIndicator(),
-                              );
+                              return shimmerWaitingCarousel(height, width);
                             } else if (snapshot.hasError) {
                               Text(
                                 "ERROR_MESSAGE.ERROR_LOADING_FAIL",
@@ -105,7 +104,7 @@ class _CustomerHomePageViewState extends State<CustomerHomePageView> {
                                   snapshot.data![0] as List<ShopModel>,
                                   snapshot.data![1]
                                       as List<CustomerRecommendation>);
-                              print("Hello World");
+
                               return _carouselShopItem(
                                   height, _vm.matchedShops, width);
                             }
@@ -149,7 +148,6 @@ class _CustomerHomePageViewState extends State<CustomerHomePageView> {
                           ),
                         ),
                         sectionBufferHeight(bufferSection: 16),
-
                         _futureListCarousel(
                             height: height,
                             width: width,
@@ -179,6 +177,193 @@ class _CustomerHomePageViewState extends State<CustomerHomePageView> {
     );
   }
 
+  Shimmer shimmerWaitingCarousel(double height, double width) {
+    return Shimmer.fromColors(
+        baseColor: Colors.grey.shade300,
+        highlightColor: Colors.grey.shade100,
+        child: CarouselSlider(
+          options: CarouselOptions(
+            padEnds: false,
+            height: height * 0.25,
+            enableInfiniteScroll: false,
+            viewportFraction: 0.77,
+            aspectRatio: 2.0,
+            initialPage: 0,
+          ),
+          items: [
+            Container(
+              margin: EdgeInsets.only(right: width * 0.05),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(
+                      bottom: height * 0.01,
+                    ),
+                    width: width * 0.8,
+                    height: height * 0.14,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: Colors.grey),
+                  ),
+                  LayoutBuilder(builder: (context, constraints) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(
+                            bottom: height * 0.01,
+                          ),
+                          width: constraints.maxWidth * 0.52,
+                          height: height * 0.01,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              color: Colors.grey),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(
+                            bottom: height * 0.01,
+                          ),
+                          width: constraints.maxWidth * 0.3,
+                          height: height * 0.01,
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(
+                            bottom: height * 0.01,
+                          ),
+                          width: constraints.maxWidth * 0.15,
+                          height: height * 0.01,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              color: Colors.grey),
+                        ),
+                      ],
+                    );
+                  }),
+                  LayoutBuilder(builder: (context, constraints) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(
+                            bottom: height * 0.01,
+                          ),
+                          width: constraints.maxWidth * 0.42,
+                          height: height * 0.01,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              color: Colors.grey),
+                        ),
+                      ],
+                    );
+                  }),
+                  LayoutBuilder(builder: (context, constraints) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(
+                            bottom: height * 0.01,
+                          ),
+                          width: constraints.maxWidth * 0.32,
+                          height: height * 0.01,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              color: Colors.grey),
+                        ),
+                      ],
+                    );
+                  }),
+                ],
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  margin: EdgeInsets.only(
+                    bottom: height * 0.01,
+                  ),
+                  width: width * 0.8,
+                  height: height * 0.14,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      color: Colors.grey),
+                ),
+                LayoutBuilder(builder: (context, constraints) {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(
+                          bottom: height * 0.01,
+                        ),
+                        width: constraints.maxWidth * 0.52,
+                        height: height * 0.01,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            color: Colors.grey),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(
+                          bottom: height * 0.01,
+                        ),
+                        width: constraints.maxWidth * 0.3,
+                        height: height * 0.01,
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(
+                          bottom: height * 0.01,
+                        ),
+                        width: constraints.maxWidth * 0.15,
+                        height: height * 0.01,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            color: Colors.grey),
+                      ),
+                    ],
+                  );
+                }),
+                LayoutBuilder(builder: (context, constraints) {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(
+                          bottom: height * 0.01,
+                        ),
+                        width: constraints.maxWidth * 0.42,
+                        height: height * 0.01,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            color: Colors.grey),
+                      ),
+                    ],
+                  );
+                }),
+                LayoutBuilder(builder: (context, constraints) {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(
+                          bottom: height * 0.01,
+                        ),
+                        width: constraints.maxWidth * 0.32,
+                        height: height * 0.01,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            color: Colors.grey),
+                      ),
+                    ],
+                  );
+                }),
+              ],
+            ),
+          ],
+        ));
+  }
+
   FutureBuilder<List<ShopModel>> _futureListCarousel(
       {required double height,
       required double width,
@@ -187,9 +372,7 @@ class _CustomerHomePageViewState extends State<CustomerHomePageView> {
       future: future as Future<List<ShopModel>>,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
+          return shimmerWaitingCarousel(height, width);
         } else if (snapshot.hasError) {
           return Text(
             "ERROR_MESSAGE.ERROR_LOADING_FAIL",
@@ -216,9 +399,6 @@ class _CustomerHomePageViewState extends State<CustomerHomePageView> {
           initialPage: 0,
           onPageChanged: (index, reason) {
             _current = index;
-            print(_current);
-            print(index);
-            ;
           }),
       itemCount: data.length,
       itemBuilder: (context, index, realIndex) {
@@ -241,97 +421,114 @@ class _CustomerHomePageViewState extends State<CustomerHomePageView> {
     );
   }
 
-  Column _shopSection(
+  Widget _shopSection(
       double height, double width, ShopModel shop, BoxConstraints constraints) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _imageShop(height, width, shop),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CustomerShopView(
+                shopId: shop.iId!,
+              ),
+            ));
+      },
+      child: Container(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              width: constraints.maxWidth * 0.6,
-              child: Text(
-                shop.name!,
-                softWrap: true,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: kfontH1InterBoldBlackColor(),
-              ),
-            ),
-            Container(
-              alignment: Alignment.topCenter,
-              width: constraints.maxWidth * 0.1,
-              child: const Icon(
-                Icons.star,
-                size: 30,
-                color: Colors.amber,
-              ),
-            ),
-            Container(
-              alignment: Alignment.topRight,
-
-              width: constraints.maxWidth * 0.25,
-
-              margin: EdgeInsets.only(top: constraints.maxHeight * 0.01),
-              //TODO SHOP SCORE AND TOTAL REVIEW
-              child: FittedBox(
+            shop.coverImage == null
+                ? _imageShopForNullImage(height, width)
+                : _imageShopForimage(height, width, shop),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: constraints.maxWidth * 0.6,
                   child: Text(
-                "4.7 (5000)",
-                style: kfontH2InterBoldBlackColor(),
-              )),
+                    shop.name!,
+                    softWrap: true,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: kfontH1InterBoldBlackColor(),
+                  ),
+                ),
+                Container(
+                  alignment: Alignment.topCenter,
+                  width: constraints.maxWidth * 0.1,
+                  child: const Icon(
+                    Icons.star,
+                    size: 30,
+                    color: Colors.amber,
+                  ),
+                ),
+                Container(
+                  alignment: Alignment.topRight,
+
+                  width: constraints.maxWidth * 0.25,
+
+                  margin: EdgeInsets.only(top: constraints.maxHeight * 0.01),
+                  //TODO SHOP SCORE AND TOTAL REVIEW
+                  child: FittedBox(
+                      child: Text(
+                    "4.7 (5000)",
+                    style: kfontH2InterBoldBlackColor(),
+                  )),
+                )
+              ],
+            ),
+            Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Flexible(
+                    child: Container(
+                      padding:
+                          EdgeInsets.only(right: constraints.maxWidth * 0.05),
+                      width: constraints.maxWidth * 0.9,
+                      child: Text(
+                        "\$\$\$ ${shop.wifi! ? "• Wifi" : ""} • ${shop.noice} ${shop.conferenceRoom! ? "• มีห้องประชุม" : ""} ${shop.powerPlugs! ? "• ปลั๊ก" : ""} ${shop.smokingZone! ? "• สูบบุหรี่" : ""} ${shop.toilet! ? "• ห้องน้ำ" : ""}",
+                        softWrap: true,
+                        style: kfontH2InterBoldBlackColor(),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Row(
+              children: [
+                Container(
+                  margin: EdgeInsets.only(right: constraints.maxWidth * 0.02),
+                  child: Icon(
+                    Icons.access_time_rounded,
+                    size: constraints.maxHeight * 0.08,
+                    color: Colors.black,
+                  ),
+                ),
+                Container(
+                    child: Text(
+                  shop.timeOpen!,
+                  style: kfontH2InterBoldBlackColor(),
+                )),
+                Container(
+                    child: Text(
+                  " - ${shop.timeClose}",
+                  style: kfontH2InterBoldBlackColor(),
+                ))
+              ],
             )
           ],
         ),
-        Container(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Flexible(
-                child: Container(
-                  padding: EdgeInsets.only(right: constraints.maxWidth * 0.05),
-                  width: constraints.maxWidth * 0.9,
-                  child: Text(
-                    "\$\$\$ ${shop.wifi! ? "• Wifi" : ""} • ${shop.noice} ${shop.conferenceRoom! ? "• มีห้องประชุม" : ""} ${shop.powerPlugs! ? "• ปลั๊ก" : ""} ${shop.smokingZone! ? "• สูบบุหรี่" : ""} ${shop.toilet! ? "• ห้องน้ำ" : ""}",
-                    softWrap: true,
-                    style: kfontH2InterBoldBlackColor(),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        Row(
-          children: [
-            Container(
-              margin: EdgeInsets.only(right: constraints.maxWidth * 0.02),
-              child: Icon(
-                Icons.access_time_rounded,
-                size: constraints.maxHeight * 0.08,
-                color: Colors.black,
-              ),
-            ),
-            Container(
-                child: Text(
-              shop.timeOpen!,
-              style: kfontH2InterBoldBlackColor(),
-            )),
-            Container(
-                child: Text(
-              " - ${shop.timeClose}",
-              style: kfontH2InterBoldBlackColor(),
-            ))
-          ],
-        )
-      ],
+      ),
     );
   }
 
-  Container _imageShop(double height, double width, ShopModel shop) {
+  Container _imageShopForNullImage(
+      double height, double width) {
     return Container(
       margin: EdgeInsets.only(
         bottom: height * 0.01,
@@ -355,12 +552,38 @@ class _CustomerHomePageViewState extends State<CustomerHomePageView> {
           )
         ],
         image: DecorationImage(
-          image: shop.shopImages != null && shop.shopImages!.isNotEmpty
-              ? NetworkImage(shop.shopImages![0].path) as ImageProvider<Object>
-              : const AssetImage(shopCoverImagePath) as ImageProvider<Object>,
+          image: const AssetImage(shopCoverImagePath) as ImageProvider<Object>,
           fit: BoxFit.cover,
         ),
       ),
+    );
+  }
+
+  Container _imageShopForimage(double height, double width, ShopModel shop) {
+    return Container(
+      margin: EdgeInsets.only(
+        bottom: height * 0.01,
+      ),
+      width: width,
+      height: height * 0.14,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.5),
+            spreadRadius: 2,
+            blurRadius: 1,
+            offset: const Offset(0, 3),
+          ),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.7),
+            spreadRadius: 2,
+            blurRadius: 1,
+            offset: const Offset(0, -3),
+          )
+        ],
+      ),
+      child: Image.file(File(shop.coverImage!)),
     );
   }
 

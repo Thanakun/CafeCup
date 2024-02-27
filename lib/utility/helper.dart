@@ -320,13 +320,13 @@ class Helper {
 
     List<String> daysOfWeek = isThai
         ? [
-          "อา",
-          "จ",
-          "อ",
-          "พ",
-          "พฤ",
-          "ศ",
-          "ส",
+            "อา",
+            "จ",
+            "อ",
+            "พ",
+            "พฤ",
+            "ศ",
+            "ส",
           ]
         : [
             "Sunday",
@@ -385,25 +385,25 @@ class Helper {
     if (daysOpen.isEmpty) {
       return isThai ? "ปิดทุกวัน" : "Closed all week";
     }
-  List<String> daysOfWeek = isThai
-      ? [
-          "อา",
-          "จ",
-          "อ",
-          "พ",
-          "พฤ",
-          "ศ",
-          "ส",
-        ]
-      : [
-          "Sunday",
-          "Monday",
-          "Tuesday",
-          "Wednesday",
-          "Thursday",
-          "Friday",
-          "Saturday",
-        ];
+    List<String> daysOfWeek = isThai
+        ? [
+            "อา",
+            "จ",
+            "อ",
+            "พ",
+            "พฤ",
+            "ศ",
+            "ส",
+          ]
+        : [
+            "Sunday",
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+          ];
 
     String displayDayOfWeek = "";
     int startRange = -1;
@@ -449,4 +449,14 @@ class Helper {
     return displayDayOfWeek;
   }
 
+  static String getDisplayTimeDate(String dateTime) {
+    return DateFormat("dd/MM/yy").format(DateTime.parse(dateTime));
+  }
+
+  static bool compareDateTimeNow(String dateTime) {
+    DateTime now = DateTime.now();
+    DateTime dateTimeNow = DateTime.parse(dateTime);
+
+    return dateTimeNow.isBefore(now);
+  }
 }

@@ -1,4 +1,6 @@
+import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:coffee_application/screen/customer_home_view.dart';
+import 'package:coffee_application/screen/shop_information.dart';
 import 'package:coffee_application/service/auth-service/auth-service.dart';
 import 'package:coffee_application/utility/helper.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -22,6 +24,7 @@ class LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   String _username = '', _passowrd = '';
+  final List<String> usersType = ["Shop", "Customer"];
 
   AuthService authService = AuthService();
 
@@ -78,6 +81,7 @@ class LoginPageState extends State<LoginPage> {
                       horizontal: width * 0.0364, vertical: 0.01639),
                   child: Column(
                     children: <Widget>[
+                      toggleUserType(height: height, width: width),
                       Container(
                         padding: const EdgeInsets.all(2),
                         decoration: BoxDecoration(
@@ -163,66 +167,76 @@ class LoginPageState extends State<LoginPage> {
                         height: height * 0.0327,
                       ),
                       TextButton(
-                        child: Container(
-                          height: height * 0.055,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              gradient: const LinearGradient(colors: [
-                                Color.fromRGBO(234, 191, 128, 1),
-                                Color.fromRGBO(234, 191, 128, 0.6)
-                              ])),
-                          child: Center(
-                            child: Text(
-                              "BUTTON.LOGIN".tr(),
-                              style: const TextStyle(
-                                  fontFamily: "THSarabun",
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                              textAlign: TextAlign.center,
+                          child: Container(
+                            height: height * 0.055,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                gradient: const LinearGradient(colors: [
+                                  Color.fromRGBO(234, 191, 128, 1),
+                                  Color.fromRGBO(234, 191, 128, 0.6)
+                                ])),
+                            child: Center(
+                              child: Text(
+                                "BUTTON.LOGIN".tr(),
+                                style: const TextStyle(
+                                    fontFamily: "THSarabun",
+                                    fontSize: 25,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
+                                textAlign: TextAlign.center,
+                              ),
                             ),
                           ),
-                        ),
-                        onPressed: () async {
-                          if (_usernameController.text.isEmpty &&
-                              _passwordController.text.isEmpty) {
-                            Utility.flushBarErrorMessage(
-                              message:
-                                  "LOGIN.PLEASE_ASSIGN_USERNAME_PASSWORD".tr(),
-                              context: context,
-                            );
-                          }
+                          onPressed: () async {
+                            if (_usernameController.text.isEmpty &&
+                                _passwordController.text.isEmpty) {
+                              Utility.flushBarErrorMessage(
+                                message: "LOGIN.PLEASE_ASSIGN_USERNAME_PASSWORD"
+                                    .tr(),
+                                context: context,
+                              );
+                            }
 
-                          if (_usernameController.text.isEmpty) {
-                            Utility.flushBarErrorMessage(
-                                message: "LOGIN.PLEASE_ENTER_USERNAME".tr(),
-                                context: context);
-                          }
+                            if (_usernameController.text.isEmpty) {
+                              Utility.flushBarErrorMessage(
+                                  message: "LOGIN.PLEASE_ENTER_USERNAME".tr(),
+                                  context: context);
+                            }
 
-                          if (_passwordController.text.isEmpty) {
-                            Utility.flushBarErrorMessage(
-                                message: "LOGIN.PLEASE_ENTER_PASSWORD".tr(),
-                                context: context);
-                          }
-                          _username = _usernameController.text;
-                          _passowrd = _passwordController.text;
-                          bool isLoginSuccess =
-                              await authService.login(_username, _passowrd);
+                            if (_passwordController.text.isEmpty) {
+                              Utility.flushBarErrorMessage(
+                                  message: "LOGIN.PLEASE_ENTER_PASSWORD".tr(),
+                                  context: context);
+                            }
+                            _username = _usernameController.text;
+                            _passowrd = _passwordController.text;
+                            bool isLoginSuccess =
+                                await authService.login(_username, _passowrd);
 
-                          if (isLoginSuccess) {
-                            Navigator.of(context)
-                                .pushAndRemoveUntil(MaterialPageRoute(
-                              builder: (context) =>
-                                  const CustomerHomePageView(),
-                            ), (route) => false);
-                          } else {
-                            print(isLoginSuccess);
-                            Utility.flushBarErrorMessage(
-                                message: "ERROR_MESSAGE.LOGIN_FAILED".tr(),
-                                context: context);
-                          }
-                        },
-                      ),
+                            if (isLoginSuccess) {
+                              print("authService.userType");
+                              print(authService.userType);
+                              if (authService.userType == usersType[1]) {
+                                Navigator.of(context).pushAndRemoveUntil(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const CustomerHomePageView(),
+                                    ),
+                                    (route) => false);
+                              } else if (authService.userType == usersType[0]) {
+                                Navigator.of(context).pushAndRemoveUntil(
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const ShopInformationPage()),
+                                    (route) => false);
+                              } else {
+                                print(isLoginSuccess);
+                                Utility.flushBarErrorMessage(
+                                    message: "ERROR_MESSAGE.LOGIN_FAILED".tr(),
+                                    context: context);
+                              }
+                            }
+                          }),
                       sectionBufferHeight(bufferSection: 10),
                       TextButton(
                         child: Text(
@@ -248,6 +262,86 @@ class LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  Widget toggleUserType({required height, required width}) {
+    return AnimatedToggleSwitch.size(
+      current: authService.userType,
+      values: usersType,
+      iconOpacity: 1,
+      height: height * 0.08196,
+      indicatorSize: Size.fromWidth(width * 0.2427),
+      iconAnimationType: AnimationType.onHover,
+      styleAnimationType: AnimationType.onHover,
+      iconBuilder: (value) => Center(
+        child: RichText(
+          textAlign: TextAlign.center,
+          text: TextSpan(
+            children: value == usersType[0]
+                ? [
+                    WidgetSpan(
+                      child: Icon(
+                        Icons.local_cafe_outlined,
+                        color: authService.userType == usersType[0]
+                            ? Colors.white
+                            : Colors.black,
+                        shadows: const [
+                          Shadow(
+                            blurRadius: 0.5,
+                            color: Colors.black,
+                          )
+                        ],
+                      ),
+                    ),
+                  ]
+                : [
+                    WidgetSpan(
+                      child: Icon(
+                        Icons.supervised_user_circle,
+                        // color: Colors.white,
+                        color: authService.userType == usersType[1]
+                            ? Colors.white
+                            : Colors.black,
+                        shadows: const [
+                          Shadow(
+                            blurRadius: 0.5,
+                            color: Colors.black,
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
+          ),
+        ),
+      ),
+      style: const ToggleStyle(
+        borderColor: Colors.transparent,
+      ),
+      borderWidth: 5.0,
+      styleBuilder: (i) {
+        final color = colorBuilder(i);
+        return ToggleStyle(
+          backgroundColor: color.withOpacity(0.3),
+          indicatorColor: color,
+        );
+      },
+      onChanged: (i) {
+        setState(() => authService.userType = i);
+      },
+    );
+  }
+
+  Color colorBuilder(String value) {
+    switch (value) {
+      case "Customer":
+        return backgroundActiveButton;
+      // break;
+      case "Shop":
+        return fontMenuNameColor;
+      // break;
+      default:
+        return Colors.red;
+    }
   }
 
   SizedBox logoApplication() {
