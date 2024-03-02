@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:coffee_application/hive/boxes.dart';
 import 'package:coffee_application/model/customer.dart';
-import 'package:coffee_application/model/promotion.dart';
+import 'package:coffee_application/model/response/promotion.dart';
 import 'package:coffee_application/model/review.dart';
 import 'package:coffee_application/model/shop.dart';
 import 'package:coffee_application/service/customer/customer_shop_service.dart';

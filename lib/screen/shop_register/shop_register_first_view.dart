@@ -2226,6 +2226,21 @@ class _ShopRegisterViewState extends State<ShopRegisterView> {
                           ),
                         ),
                       ),
+                    ),
+                    Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Container(
+                            child: Text(
+                              " < ย้อนกลับ",
+                              style: kfontH2InterBlackColor(),
+                            ),
+                          ),
+                        ),
+                      ],
                     )
                   ],
                 ),

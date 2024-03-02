@@ -1,6 +1,7 @@
 import 'package:coffee_application/data/widget/button_selection_animate.dart';
 import 'package:coffee_application/provider/customer-provider.dart';
 import 'package:coffee_application/provider/shop_provider.dart';
+import 'package:coffee_application/screen/shop_register/shop_register_success_view.dart';
 import 'package:coffee_application/viewmodel/register_view_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +22,7 @@ enum CustomerGroup {
   STUDENT,
   OFFICE_WORKER,
   TOURIST,
-  DIGITAL_NOMAD,
+  DIGITAL_NORMAD,
   TAKEAWAY,
 }
 
@@ -470,19 +471,30 @@ class _ShopRegisterForthViewState extends State<ShopRegisterForthView> {
                                           cafeShopStyle: cafeShopStyle,
                                           cafeNoiseLevel: cafeNoiseType);
 
-                                      _vm.signUp(
-                                          shop:
-                                              context.read<ShopProvider>().shop,
-                                          customer: context
-                                              .read<CustomerProvider>()
-                                              .customer,
-                                          userType: "Shop");
-                                      setState(() {});
-                                      // Navigator.push(
-                                      //     context,
-                                      //     MaterialPageRoute(
-                                      //         builder: (context) =>
-                                      //             const ShopInformationPage()));
+                                      setState(() {
+                                        _vm
+                                            .signUp(
+                                                shop: context
+                                                    .read<ShopProvider>()
+                                                    .shop,
+                                                customer: context
+                                                    .read<CustomerProvider>()
+                                                    .customer,
+                                                userType: "Shop")
+                                            .then((value) {
+                                          if (!value) {
+                                            return Utility.flushBarErrorMessage(
+                                                message: "User Name Already In use",
+                                                context: context);
+                                          } else {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const ShopRegisterEvaluated()));
+                                          }
+                                        });
+                                      });
                                     },
                                     child: Container(
                                       padding:

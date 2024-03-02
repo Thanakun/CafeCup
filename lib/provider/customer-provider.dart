@@ -38,6 +38,7 @@ class CustomerProvider with ChangeNotifier {
   }
 
   set tags(List<Tags> value) {
+    _customer.tags!.clear();
     _customer.tags = value;
     notifyListeners();
   }
@@ -65,6 +66,7 @@ class CustomerProvider with ChangeNotifier {
 
   void addAllTag(List<Map<String, String>> listTag) {
     _customer.tags ??= [];
+    _customer.tags!.clear();
 
     for (var e in listTag) {
       print("e");
@@ -90,12 +92,12 @@ class CustomerProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Gender? _convertStringToGender(String value) {
+  String? _convertStringToGender(String value) {
     switch (value.toLowerCase()) {
       case 'male':
-        return Gender.MALE;
+        return Gender.MALE.name;
       case 'female':
-        return Gender.FEMALE;
+        return Gender.FEMALE.name;
       default:
         return null; // Handle unknown values appropriately
     }

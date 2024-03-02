@@ -1,6 +1,6 @@
 class CustomerRecommendation {
   int? iShopID;
-  int? score;
+  double? score;
 
   CustomerRecommendation({this.iShopID, this.score});
 

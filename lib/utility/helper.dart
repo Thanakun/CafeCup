@@ -227,6 +227,22 @@ class Helper {
     return null; // Return null for successful validation
   }
 
+    static String? validateDateLimitCode(String? value) {
+    String patttern = r'^\d{1,2}$'; // Regex pattern for 1 to 5 digits
+    RegExp regExp = RegExp(patttern);
+    if (value == null || value.isEmpty) {
+      return tr('VALIDATE.VALIDATE_PICK_RANGE.EMPTY');
+    } else if (!regExp.hasMatch(value)) {
+      return tr('VALIDATE.VALIDATE_PICK_RANGE.INVALID');
+    } else {
+      int price = int.tryParse(value)!;
+      if (price < 0 || price > 99) {
+        return tr('VALIDATE.VALIDATE_PICK_RANGE.OUT_OF_RANGE');
+      }
+    }
+    return null; // Return null for successful validation
+  }
+
   static String? validateUsername(String? username) {
     if (username == null || username.isEmpty) {
       return tr('VALIDATE.VALIDATE_USERNAME.EMPTY');
@@ -451,6 +467,9 @@ class Helper {
 
   static String getDisplayTimeDate(String dateTime) {
     return DateFormat("dd/MM/yy").format(DateTime.parse(dateTime));
+  }
+static String getDisplayTimeDateTime(String dateTime) {
+    return DateFormat("HH:MM : dd/MM/yy").format(DateTime.parse(dateTime));
   }
 
   static bool compareDateTimeNow(String dateTime) {

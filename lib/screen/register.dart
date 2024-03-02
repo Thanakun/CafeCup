@@ -3,12 +3,15 @@ import 'package:coffee_application/model/customer.dart';
 import 'package:coffee_application/provider/customer-provider.dart';
 import 'package:coffee_application/provider/shop_provider.dart';
 import 'package:coffee_application/screen/customer_register_view.dart';
+import 'package:coffee_application/screen/login.dart';
+import 'package:coffee_application/utility/decoration.dart';
 import 'package:coffee_application/viewmodel/register_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:coffee_application/data/widget/background_logo.dart';
 import 'package:coffee_application/model/shop.dart';
 import 'package:coffee_application/screen/shop_register/shop_register_first_view.dart';
 import 'package:coffee_application/utility/my_constant.dart';
+import 'package:flutter/widgets.dart';
 import 'dart:async';
 
 import 'package:provider/provider.dart';
@@ -72,13 +75,6 @@ class _RegisterPageState extends State<RegisterPage> {
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Container(
-                              margin: EdgeInsets.only(bottom: height * 0.0437),
-                              child: Text(
-                                "REGISTER",
-                                style: kfontH0InterBlackColor(),
-                              ),
-                            ),
                             toggleUserType(height: height, width: width),
                             SizedBox(height: height * 0.0218),
                             SizedBox(height: height * 0.0174),
@@ -123,7 +119,11 @@ class _RegisterPageState extends State<RegisterPage> {
                                             builder: (context) =>
                                                 const ShopRegisterView(),
                                           ),
-                                        );
+                                        ).then((value) {
+                                          context
+                                              .read<ShopProvider>()
+                                              .clearWhenEnteringShopRegister();
+                                        });
                                       }
                                     }
                                   },
@@ -134,6 +134,30 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
                               ),
                             ),
+                            SizedBox(height: height * 0.0437),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const LoginPage(),
+                                  ),
+                                  (route) => false,
+                                );
+                              },
+                              child: Container(
+                                width: width * 0.5,
+                                alignment: Alignment.center,
+                                padding: EdgeInsets.symmetric(
+                                    // horizontal: width * 0.0242,
+                                    vertical: height * 0.0218),
+                                decoration: kdecorationForContainerBackButton,
+                                child: Text(
+                                  "Already have an account?",
+                                  style: kfontH2InterBlackColor(),
+                                ),
+                              ),
+                            )
                           ],
                         ),
                       ],

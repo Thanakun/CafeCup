@@ -1,8 +1,11 @@
+import 'package:coffee_application/model/response/pie_graph_response.dart';
+import 'package:coffee_application/viewmodel/pie_chart_view_model.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:coffee_application/data/widget/sliver_multipleline_appbar.dart';
 import 'package:coffee_application/utility/my_constant.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class PieChartPage extends StatefulWidget {
@@ -13,28 +16,28 @@ class PieChartPage extends StatefulWidget {
 }
 
 class _PieChartPageState extends State<PieChartPage> {
-  String selectedYearQuarter = "2022"; // Set a default year
+  String selectedYearQuarter = "2024"; // Set a default year
   String selectedQuarter = "Q1"; // Set a default quarter
 
-  String selectedYear = "2022"; // Set a default year
+  String selectedYear = "2024"; // Set a default year
 
-  String selectedYearMonth = "2022"; // Set a default year
-  String selectMonthString = "December";
+  String selectedYearMonth = "2024"; // Set a default year
+  String selectMonthString = "DECEMBER";
 
-  List<String> selectMonthList = [
-    "January",
-    "Febuary",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December"
-  ];
+  Map<String, dynamic> selectMonthList = {
+    "JANUARY": 1,
+    "FEBRUARY": 2,
+    "MARCH": 3,
+    "APRIL": 4,
+    "MAY": 5,
+    "JUNE": 6,
+    "JULY": 7,
+    "AUGUST": 8,
+    "SEPTEMBER": 9,
+    "OCTOBER": 10,
+    "NOVEMBER": 11,
+    "DECEMBER": 12
+  };
   List<String> selectDataDateTypeList = [
     "All Time",
     "Quarter",
@@ -51,21 +54,30 @@ class _PieChartPageState extends State<PieChartPage> {
     "2023",
     "2024"
   ];
-  List<String> listOfQuarter = ["Q1", "Q2", "Q3", "Q4"];
+  Map<String, int> listOfQuarter = {"Q1": 1, "Q2": 2, "Q3": 3, "Q4": 4};
 
   String selectDayOfWeek = "ALL";
-  List<String> listDateInWeek = [
-    "ALL",
-    "SUN",
-    "MON",
-    "TUE",
-    "WED",
-    "THU",
-    "FRI",
-    "SAT"
-  ];
+  Map<String, dynamic> listDateInWeek = {
+    "ALL": null,
+    "SUN": 1,
+    "MON": 2,
+    "TUE": 3,
+    "WED": 4,
+    "THU": 5,
+    "FRI": 6,
+    "SAT": 7
+  };
 
   double allTimeHeight = 0;
+
+  late final PieChartVM _vm;
+
+  @override
+  void initState() {
+    super.initState();
+    _vm = PieChartVM();
+    _vm.getPieChartData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -113,13 +125,15 @@ class _PieChartPageState extends State<PieChartPage> {
                                 selectDateType = "All Time";
                                 setState(() {
                                   allTimeHeight = 100;
+                                  _vm.getPieChartData();
+                                  setState(() {});
                                 });
                               },
                               child: AnimatedContainer(
-                                duration: const Duration(milliseconds: 500),
+                                duration: Duration(milliseconds: 500),
                                 height:
                                     allTimeHeight == 0 ? 100 : allTimeHeight,
-                                padding: const EdgeInsets.all(15),
+                                padding: EdgeInsets.all(15),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   color: selectDateType == "All Time"
@@ -134,7 +148,7 @@ class _PieChartPageState extends State<PieChartPage> {
                                 ),
                                 child: Center(
                                   child: Text(
-                                    "All Time",
+                                    "CHART.FILTER.ALL_TIME".tr(),
                                     style: kfont22w_400black(),
                                   ),
                                 ),
@@ -148,12 +162,21 @@ class _PieChartPageState extends State<PieChartPage> {
                               onTap: () {
                                 // Handle the tap for the "Quarter" section
                                 selectDateType = "Quarter";
+
                                 setState(() {
+                                  MapEntry<String, int>? matchingEntry =
+                                      listOfQuarter.entries.firstWhere(
+                                    (entry) => entry.key == selectedQuarter,
+                                  );
+
+                                  _vm.getPieChartData(
+                                      int.parse(selectedYearQuarter),
+                                      matchingEntry.value);
                                   allTimeHeight = 100;
                                 });
                               },
                               child: AnimatedContainer(
-                                duration: const Duration(milliseconds: 500),
+                                duration: Duration(milliseconds: 500),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   color: selectDateType == "Quarter"
@@ -166,11 +189,11 @@ class _PieChartPageState extends State<PieChartPage> {
                                       ? null
                                       : selectButtonColor.withOpacity(0.4),
                                 ),
-                                padding: const EdgeInsets.all(15),
+                                padding: EdgeInsets.all(15),
                                 child: Column(children: [
                                   Center(
                                     child: Text(
-                                      "Quarter",
+                                      "CHART.FILTER.QUARTER".tr(),
                                       style: kfont22w_400black(),
                                     ),
                                   ),
@@ -184,7 +207,7 @@ class _PieChartPageState extends State<PieChartPage> {
                                           customButton: Container(
                                             width: 80,
                                             height: 30,
-                                            padding: const EdgeInsets.only(
+                                            padding: EdgeInsets.only(
                                                 left: 5, right: 5),
                                             decoration: BoxDecoration(
                                                 borderRadius:
@@ -193,8 +216,8 @@ class _PieChartPageState extends State<PieChartPage> {
                                             child: Row(
                                               children: [
                                                 Text(selectedYearQuarter),
-                                                const Spacer(),
-                                                const Icon(
+                                                Spacer(),
+                                                Icon(
                                                   Icons.arrow_drop_down_rounded,
                                                   color: selectButtonColor,
                                                 )
@@ -212,8 +235,20 @@ class _PieChartPageState extends State<PieChartPage> {
                                           onChanged: selectDateType == "Quarter"
                                               ? (String? newValue) {
                                                   setState(() {
+                                                    MapEntry<String, int>?
+                                                        matchingEntry =
+                                                        listOfQuarter.entries
+                                                            .firstWhere(
+                                                      (entry) =>
+                                                          entry.key ==
+                                                          selectedQuarter,
+                                                    );
                                                     selectedYearQuarter =
                                                         newValue!;
+                                                    _vm.getPieChartData(
+                                                        int.parse(
+                                                            selectedYearQuarter),
+                                                        matchingEntry.value);
                                                   });
                                                 }
                                               : null,
@@ -224,7 +259,7 @@ class _PieChartPageState extends State<PieChartPage> {
                                           customButton: Container(
                                             width: 60,
                                             height: 30,
-                                            padding: const EdgeInsets.only(
+                                            padding: EdgeInsets.only(
                                                 left: 5, right: 5),
                                             decoration: BoxDecoration(
                                                 borderRadius:
@@ -233,8 +268,8 @@ class _PieChartPageState extends State<PieChartPage> {
                                             child: Row(
                                               children: [
                                                 Text(selectedQuarter),
-                                                const Spacer(),
-                                                const Icon(
+                                                Spacer(),
+                                                Icon(
                                                   Icons.arrow_drop_down_rounded,
                                                   color: selectButtonColor,
                                                 )
@@ -243,17 +278,37 @@ class _PieChartPageState extends State<PieChartPage> {
                                           ),
                                           onMenuStateChange: null,
                                           value: selectedQuarter,
-                                          items: listOfQuarter
-                                              .map((String quarter) {
-                                            return DropdownMenuItem<String>(
-                                              value: quarter,
-                                              child: Text(quarter),
-                                            );
-                                          }).toList(),
+                                          items: listOfQuarter.entries
+                                              .map<DropdownMenuItem<String>>(
+                                                (MapEntry<String, int> entry) =>
+                                                    DropdownMenuItem<String>(
+                                                  value: entry.key,
+                                                  child: FittedBox(
+                                                    child: Text(
+                                                      ' ${entry.key}',
+                                                      style:
+                                                          kfont22w_400black(),
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                              .toList(),
                                           onChanged: selectDateType == "Quarter"
                                               ? (String? newValue) {
                                                   setState(() {
                                                     selectedQuarter = newValue!;
+                                                    MapEntry<String, int>?
+                                                        matchingEntry =
+                                                        listOfQuarter.entries
+                                                            .firstWhere(
+                                                      (entry) =>
+                                                          entry.key ==
+                                                          selectedQuarter,
+                                                    );
+                                                    _vm.getPieChartData(
+                                                        int.parse(
+                                                            selectedYearQuarter),
+                                                        matchingEntry.value);
                                                   });
                                                 }
                                               : null,
@@ -276,14 +331,15 @@ class _PieChartPageState extends State<PieChartPage> {
                               onTap: () {
                                 selectDateType = "Year";
                                 setState(() {
+                                  _vm.getPieChartData(int.parse(selectedYear));
                                   allTimeHeight = 100;
                                 });
                               },
                               child: AnimatedContainer(
-                                duration: const Duration(milliseconds: 500),
+                                duration: Duration(milliseconds: 500),
                                 height:
                                     allTimeHeight == 0 ? 100 : allTimeHeight,
-                                padding: const EdgeInsets.all(15),
+                                padding: EdgeInsets.all(15),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   color: selectDateType == "Year"
@@ -300,7 +356,7 @@ class _PieChartPageState extends State<PieChartPage> {
                                   children: [
                                     Center(
                                       child: Text(
-                                        "Year",
+                                        "CHART.FILTER.YEAR".tr(),
                                         style: kfont22w_400black(),
                                       ),
                                     ),
@@ -310,7 +366,7 @@ class _PieChartPageState extends State<PieChartPage> {
                                         customButton: Container(
                                           width: 80,
                                           height: 30,
-                                          padding: const EdgeInsets.only(
+                                          padding: EdgeInsets.only(
                                               left: 5, right: 5),
                                           decoration: BoxDecoration(
                                               borderRadius:
@@ -318,16 +374,16 @@ class _PieChartPageState extends State<PieChartPage> {
                                               color: backGroundApplication),
                                           child: Row(
                                             children: [
-                                              Text(selectedYearQuarter),
-                                              const Spacer(),
-                                              const Icon(
+                                              Text(selectedYear),
+                                              Spacer(),
+                                              Icon(
                                                 Icons.arrow_drop_down_rounded,
                                                 color: selectButtonColor,
                                               )
                                             ],
                                           ),
                                         ),
-                                        value: selectedYearQuarter,
+                                        value: selectedYear,
                                         items: listOfYear.map((String year) {
                                           return DropdownMenuItem<String>(
                                             value: year,
@@ -337,8 +393,9 @@ class _PieChartPageState extends State<PieChartPage> {
                                         onChanged: selectDateType == "Year"
                                             ? (String? newValue) {
                                                 setState(() {
-                                                  selectedYearQuarter =
-                                                      newValue!;
+                                                  selectedYear = newValue!;
+                                                  _vm.getPieChartData(
+                                                      int.parse(selectedYear));
                                                 });
                                               }
                                             : null,
@@ -354,14 +411,22 @@ class _PieChartPageState extends State<PieChartPage> {
                             flex: 280,
                             child: GestureDetector(
                               onTap: () {
-                                // Handle the tap for the "Quarter" section
                                 selectDateType = "Month";
                                 setState(() {
+                                  MapEntry<String, dynamic>? matchingEntry =
+                                      selectMonthList.entries.firstWhere(
+                                    (entry) => entry.key == selectMonthString,
+                                  );
+
+                                  _vm.getPieChartData(
+                                      int.parse(selectedYearMonth),
+                                      null,
+                                      matchingEntry.value);
                                   allTimeHeight = 100;
                                 });
                               },
                               child: AnimatedContainer(
-                                duration: const Duration(milliseconds: 500),
+                                duration: Duration(milliseconds: 500),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   color: selectDateType == "Month"
@@ -374,11 +439,11 @@ class _PieChartPageState extends State<PieChartPage> {
                                       ? null
                                       : selectButtonColor.withOpacity(0.4),
                                 ),
-                                padding: const EdgeInsets.all(15),
+                                padding: EdgeInsets.all(15),
                                 child: Column(children: [
                                   Center(
                                     child: Text(
-                                      "Month",
+                                      "CHART.FILTER.MONTH".tr(),
                                       style: kfont22w_400black(),
                                     ),
                                   ),
@@ -391,7 +456,7 @@ class _PieChartPageState extends State<PieChartPage> {
                                           customButton: Container(
                                             width: 125,
                                             height: 30,
-                                            padding: const EdgeInsets.only(
+                                            padding: EdgeInsets.only(
                                                 left: 5, right: 5),
                                             decoration: BoxDecoration(
                                                 borderRadius:
@@ -399,9 +464,11 @@ class _PieChartPageState extends State<PieChartPage> {
                                                 color: backGroundApplication),
                                             child: Row(
                                               children: [
-                                                Text(selectMonthString),
-                                                const Spacer(),
-                                                const Icon(
+                                                Text(
+                                                    "CHART.MONTH.$selectMonthString"
+                                                        .tr()),
+                                                Spacer(),
+                                                Icon(
                                                   Icons.arrow_drop_down_rounded,
                                                   color: selectButtonColor,
                                                 )
@@ -410,18 +477,42 @@ class _PieChartPageState extends State<PieChartPage> {
                                           ),
                                           onMenuStateChange: null,
                                           value: selectMonthString,
-                                          items: selectMonthList
-                                              .map((String month) {
-                                            return DropdownMenuItem<String>(
-                                              value: month,
-                                              child: Text(month),
-                                            );
-                                          }).toList(),
+                                          items: selectMonthList.entries
+                                              .map<DropdownMenuItem<String>>(
+                                                (MapEntry<String, dynamic>
+                                                        entry) =>
+                                                    DropdownMenuItem<String>(
+                                                  value: entry.key,
+                                                  child: FittedBox(
+                                                    child: Text(
+                                                      "${"CHART.MONTH.${entry.key}".tr()}",
+                                                      maxLines: 1,
+                                                      style:
+                                                          kfontH2InterBoldBlackColor(),
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                              .toList(),
                                           onChanged: selectDateType == "Month"
                                               ? (String? newValue) {
                                                   setState(() {
                                                     selectMonthString =
                                                         newValue!;
+                                                    MapEntry<String, dynamic>?
+                                                        matchingEntry =
+                                                        selectMonthList.entries
+                                                            .firstWhere(
+                                                      (entry) =>
+                                                          entry.key ==
+                                                          selectMonthString,
+                                                    );
+
+                                                    _vm.getPieChartData(
+                                                        int.parse(
+                                                            selectedYearMonth),
+                                                        null,
+                                                        matchingEntry.value);
                                                   });
                                                 }
                                               : null,
@@ -431,9 +522,9 @@ class _PieChartPageState extends State<PieChartPage> {
                                       DropdownButtonHideUnderline(
                                         child: DropdownButton2<String>(
                                           customButton: Container(
-                                            width: 100,
+                                            width: 72,
                                             height: 30,
-                                            padding: const EdgeInsets.only(
+                                            padding: EdgeInsets.only(
                                                 left: 5, right: 5),
                                             decoration: BoxDecoration(
                                                 borderRadius:
@@ -442,7 +533,7 @@ class _PieChartPageState extends State<PieChartPage> {
                                             child: Row(
                                               children: [
                                                 Text(selectedYearMonth),
-                                                const Icon(
+                                                Icon(
                                                   Icons.arrow_drop_down_rounded,
                                                   color: selectButtonColor,
                                                 )
@@ -461,6 +552,20 @@ class _PieChartPageState extends State<PieChartPage> {
                                                   setState(() {
                                                     selectedYearMonth =
                                                         newValue!;
+                                                    MapEntry<String, dynamic>?
+                                                        matchingEntry =
+                                                        selectMonthList.entries
+                                                            .firstWhere(
+                                                      (entry) =>
+                                                          entry.key ==
+                                                          selectMonthString,
+                                                    );
+
+                                                    _vm.getPieChartData(
+                                                        int.parse(
+                                                            selectedYearMonth),
+                                                        null,
+                                                        matchingEntry.value);
                                                   });
                                                 }
                                               : null,
@@ -480,59 +585,101 @@ class _PieChartPageState extends State<PieChartPage> {
                         style: kfontH2InterBlackColor(),
                       ),
                       sectionBufferHeight(),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: selectButtonColor,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: Row(
-                          children: [
-                            containerSelectDate(listDateInWeek[0],
-                                selectDayOfWeek == listDateInWeek[0]),
-                            containerSelectDate(listDateInWeek[1],
-                                selectDayOfWeek == listDateInWeek[1]),
-                            containerSelectDate(listDateInWeek[2],
-                                selectDayOfWeek == listDateInWeek[2]),
-                            containerSelectDate(listDateInWeek[3],
-                                selectDayOfWeek == listDateInWeek[3]),
-                            containerSelectDate(listDateInWeek[4],
-                                selectDayOfWeek == listDateInWeek[4]),
-                            containerSelectDate(listDateInWeek[5],
-                                selectDayOfWeek == listDateInWeek[5]),
-                            containerSelectDate(listDateInWeek[6],
-                                selectDayOfWeek == listDateInWeek[6]),
-                            containerSelectDate(listDateInWeek[7],
-                                selectDayOfWeek == listDateInWeek[7]),
-                          ],
-                        ),
-                      ),
-                      sectionBufferHeight(bufferSection: 20),
-                      Center(
-                          child: Container(
-                              child: SfCircularChart(series: <CircularSeries>[
-                        // Render pie chart
-                        PieSeries<ChartData, String>(
-                            dataLabelSettings:
-                                const DataLabelSettings(isVisible: true),
-                            strokeWidth: 1,
-                            strokeColor: Colors.black,
-                            dataSource: chartData,
-                            pointColorMapper: (ChartData data, _) => data.color,
-                            xValueMapper: (ChartData data, _) => data.x,
-                            yValueMapper: (ChartData data, _) => data.y)
-                      ]))),
-                      Center(
-                        child: Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                color: selectButtonColor.withOpacity(0.5)),
-                            alignment: Alignment.center,
-                            padding: const EdgeInsets.all(30),
-                            child: Text(
-                              "กราฟแสดงอันดับคะแนนของร้านในหมวด บรรยากาศ ในเดือนกุมภาภันธ์ 2022",
-                              style: kfontH2InterBlackColor(),
-                              textAlign: TextAlign.center,
-                            )),
+                      FutureBuilder(
+                        future: _vm.pieChartData,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Shimmer.fromColors(
+                              baseColor: Colors.grey.shade300,
+                              highlightColor: Colors.grey.shade100,
+                              child: Container(),
+                            );
+                          } else if (snapshot.hasError) {
+                            print(snapshot.error);
+                            return Text(
+                              "ERROR_MESSAGE.ERROR_LOADING_FAIL".tr(),
+                            );
+                          } else if (snapshot.hasData &&
+                              snapshot.data != null &&
+                              snapshot.connectionState ==
+                                  ConnectionState.done) {
+                            PieChartGraphResponse pieChartData = snapshot.data!;
+                            return Column(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: selectButtonColor,
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      ...listDateInWeek.entries.map((entry) {
+                                        return containerSelectDate(
+                                          entry.key,
+                                          selectDayOfWeek == entry.key,
+                                        );
+                                      }).toList(),
+                                    ],
+                                  ),
+                                ),
+                                sectionBufferHeight(bufferSection: 20),
+                                Center(
+                                    child: SfCircularChart(
+                                        onDataLabelRender: (dataLabelArgs) {
+                                          dataLabelArgs.textStyle =
+                                              kfont26Bold_400();
+                                        },
+                                        legend: Legend(
+                                            isVisible: true,
+                                            textStyle:
+                                                kfontH1InterBoldBlackColor()),
+                                        series: <CircularSeries>[
+                                      // Render pie chart
+                                      PieSeries<PieChartData, String>(
+                                          explode: true,
+                                          explodeAll: true,
+                                          explodeOffset: '10%',
+                                          strokeWidth: 1.5,
+                                          strokeColor:
+                                              Colors.black.withOpacity(0.5),
+                                          dataLabelSettings: DataLabelSettings(
+                                              isVisible: true,
+                                              labelPosition:
+                                                  ChartDataLabelPosition
+                                                      .outside),
+                                          // legendIconType: LegendIconType.circle,
+                                          dataSource: pieDataTOgraphData(
+                                              pieChartData.data ?? []),
+                                          pointColorMapper:
+                                              (PieChartData data, _) =>
+                                                  data.color,
+                                          xValueMapper:
+                                              (PieChartData data, _) => data.x,
+                                          yValueMapper:
+                                              (PieChartData data, _) => data.y)
+                                    ])),
+                                Center(
+                                  child: Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          color: selectButtonColor
+                                              .withOpacity(0.5)),
+                                      alignment: Alignment.center,
+                                      padding: EdgeInsets.all(30),
+                                      child: Text(
+                                        "กราฟแสดงจำนวนลูกค้าเฉลี่ยใน วันจันทร์ ตลอดระยะเวลาที่ผ่านมาเฉลี่ยตลอด \n \n วันคิดเป็น 30 คน/ชั่วโมงในช่วงพีคมีลูกค้า 80 คน/ชั่วโมง",
+                                        style: kfontH2InterBlackColor(),
+                                        textAlign: TextAlign.center,
+                                      )),
+                                ),
+                              ],
+                            );
+                          } else {
+                            return Container();
+                          }
+                        },
                       )
                     ],
                   ),
@@ -549,9 +696,41 @@ class _PieChartPageState extends State<PieChartPage> {
     return Expanded(
       child: GestureDetector(
         onTap: () {
-          setState(() {
-            selectDayOfWeek = title;
-          });
+          setState(
+            () {
+              selectDayOfWeek = title;
+              MapEntry<String, dynamic>? matchingEntry =
+                  listDateInWeek.entries.firstWhere(
+                (entry) => entry.key == selectDayOfWeek,
+              );
+              var selectedValue =
+                  matchingEntry.value == "" ? null : matchingEntry.value;
+
+              if (selectDateType == "All Time") {
+                _vm.getPieChartData(null, null, null, selectedValue);
+              } else if (selectDateType == "Quarter") {
+                MapEntry<String, int>? matchingQuarter =
+                    listOfQuarter.entries.firstWhere(
+                  (entry) => entry.key == selectedQuarter,
+                );
+                _vm.getPieChartData(int.parse(selectedYearQuarter),
+                    matchingQuarter.value, null, selectedValue);
+              } else if (selectDateType == "Month") {
+                MapEntry<String, dynamic>? matchingMonth =
+                    selectMonthList.entries.firstWhere(
+                  (entry) => entry.key == selectMonthString,
+                );
+                _vm.getPieChartData(
+                  int.parse(selectedYearMonth),
+                  null,
+                  matchingMonth.value,
+                );
+              } else if (selectDateType == "Year") {
+                _vm.getPieChartData(
+                    int.parse(selectedYear), null, null, selectedValue);
+              }
+            },
+          );
         },
         child: Column(
           children: [
@@ -590,17 +769,35 @@ class _PieChartPageState extends State<PieChartPage> {
     );
   }
 
-  final List<ChartData> chartData = [
-    ChartData('David', 25),
-    ChartData('Steve', 38),
-    ChartData('Jack', 34),
-    ChartData('Others', 52)
-  ];
+  List<PieChartData> pieDataTOgraphData(
+    List<Data> pieChartData,
+  ) {
+    List<PieChartData> graphData = [];
+    for (int i = 0; i < pieChartData.length; i++) {
+      if (pieChartData[i].sId == null) {
+        graphData.add(PieChartData("GRAPH.NOT_SPECIFIC".tr(),
+            pieChartData[i].count ?? 0, Colors.grey));
+      } else if (pieChartData[i].sId == "UNDER_22") {
+        graphData.add(PieChartData("GRAPH.UNDER_22".tr(),
+            pieChartData[i].count ?? 0, Color.fromARGB(255, 64, 26, 170)));
+      } else if (pieChartData[i].sId == "23_TO_40") {
+        graphData.add(PieChartData("GRAPH.23_TO_40".tr(),
+            pieChartData[i].count ?? 0, Color.fromARGB(255, 0, 255, 0)));
+      } else if (pieChartData[i].sId == "41_TO_60") {
+        graphData.add(PieChartData("GRAPH.41_TO_60".tr(),
+            pieChartData[i].count ?? 0, Color.fromARGB(255, 255, 208, 0)));
+      } else if (pieChartData[i].sId == "AFTER_61") {
+        PieChartData("GRAPH.AFTER_61".tr(), pieChartData[i].count ?? 0,
+            Color.fromARGB(255, 255, 0, 0));
+      }
+    }
+    return graphData;
+  }
 }
 
-class ChartData {
-  ChartData(this.x, this.y, [this.color]);
+class PieChartData {
+  PieChartData(this.x, this.y, [this.color]);
   final String x;
-  final double y;
+  final int y;
   final Color? color;
 }

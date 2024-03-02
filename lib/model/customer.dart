@@ -4,7 +4,7 @@ class CustomerModel {
   String? username;
   String? password;
   String? name;
-  Gender? gender;
+  String? gender;
   String? age;
   String? occupation;
   List<Favourites>? favourites;
@@ -24,12 +24,7 @@ class CustomerModel {
     username = json['username'];
     password = json['password'];
     name = json['name'];
-    if (json['gender'] != null) {
-      gender = Gender.values.firstWhere(
-        (e) => e.toString().split('.').last == json['gender'],
-        orElse: () => Gender.MALE, // Default value if not found
-      );
-    }
+    gender = json['gender'];
     age = json['age'];
     occupation = json['occupation'];
     if (json['favourites'] != null) {
@@ -51,18 +46,17 @@ class CustomerModel {
     data['username'] = this.username;
     data['password'] = this.password;
     data['name'] = this.name;
-    if (gender != null) {
-      data['gender'] = gender.toString().split('.').last;
-    }
+    data['gender'] = this.gender;
     data['age'] = this.age;
     data['occupation'] = this.occupation;
     if (this.favourites != null) {
       data['favourites'] = this.favourites!.map((v) => v.toJson()).toList();
+    } else {
+      data['favourites'] = [];
     }
     if (this.tags != null) {
       data['tags'] = this.tags!.map((v) => v.toJson()).toList();
     }
-
     return data;
   }
 
@@ -78,7 +72,7 @@ class CustomerModel {
     name = value;
   }
 
-  set setGender(Gender value) {
+  set setGender(String value) {
     gender = value;
   }
 

@@ -7,19 +7,18 @@ class ShopModelResponse {
 
   ShopModelResponse.fromJson(Map<String, dynamic> json) {
     status = json['status'];
-    metadata = json['metadata'] != null
-        ? new Metadata.fromJson(json['metadata'])
-        : null;
+    metadata =
+        json['metadata'] != null ? Metadata.fromJson(json['metadata']) : null;
     if (json['data'] != null) {
       data = <ShopModel>[];
       json['data'].forEach((v) {
-        data!.add(new ShopModel.fromJson(v));
+        data!.add(ShopModel.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['status'] = this.status;
     if (this.metadata != null) {
       data['metadata'] = this.metadata!.toJson();
@@ -45,7 +44,7 @@ class Metadata {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['totalCount'] = this.totalCount;
     data['page'] = this.page;
     data['pageSize'] = this.pageSize;
@@ -119,37 +118,40 @@ class ShopModel {
     password = json['password'];
     name = json['name'];
     address =
-        json['address'] != null ? new Address.fromJson(json['address']) : null;
+        json['address'] != null ? Address.fromJson(json['address']) : null;
     if (json['menus'] != null) {
       menus = <Menus>[];
       json['menus'].forEach((v) {
-        menus!.add(new Menus.fromJson(v));
+        menus!.add(Menus.fromJson(v));
       });
     }
     if (json['shopImages'] != null) {
       shopImage = <String>[];
       json['shopImages'].forEach((v) {
-        shopImage!.add(v.fromJson(v));
+        shopImage!.add(v);
       });
     }
     if (json['menuImages'] != null) {
       menuImages = <String>[];
       json['menuImages'].forEach((v) {
-        menuImages!.add(v.fromJson(v));
+        menuImages!.add(v);
       });
     }
     if (json['foodImages'] != null) {
       foodImages = <String>[];
       json['foodImages'].forEach((v) {
-        foodImages!.add(v.fromJson(v));
+        foodImages!.add(v);
       });
     }
     if (json['otherImages'] != null) {
       otherImages = <String>[];
       json['otherImages'].forEach((v) {
-        otherImages!.add(v.fromJson(v));
+        otherImages!.add(v);
       });
     }
+    name = json['name'];
+    description = json['description'];
+    coverImage = json['coverImage'];
     daysOpen = json['daysOpen'].cast<int>();
     timeOpen = json['timeOpen'];
     timeClose = json['timeClose'];

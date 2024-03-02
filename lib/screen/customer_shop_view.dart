@@ -4,7 +4,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:coffee_application/data/widget/add_editing_image.dart';
 import 'package:coffee_application/data/widget/skelton_shimmer.dart';
 import 'package:coffee_application/model/customer.dart';
-import 'package:coffee_application/model/promotion.dart';
+import 'package:coffee_application/model/response/promotion.dart';
 import 'package:coffee_application/model/review.dart';
 import 'package:coffee_application/model/shop.dart';
 import 'package:coffee_application/screen/customer_promotion.dart';
@@ -32,11 +32,6 @@ class CustomerShopView extends StatefulWidget {
 
 class _CustomerShopViewState extends State<CustomerShopView> {
   late CustomerOnShopVM _vm;
-
-  List<XFile> _listHomeImages = [];
-  List<XFile> _listMenuImages = [];
-  List<XFile> _listFoodImages = [];
-  List<XFile> _listOtherImages = [];
 
   Map<String, bool> listOfImageShopButton = {
     "Home": true,
@@ -70,7 +65,6 @@ class _CustomerShopViewState extends State<CustomerShopView> {
     5: false
   };
 
-  List<XFile> selectedImagesList = [];
   int _current = 0;
   final CarouselController _controller = CarouselController();
 
@@ -176,307 +170,30 @@ class _CustomerShopViewState extends State<CustomerShopView> {
                       SliverList(
                           delegate: SliverChildListDelegate([
                         sectionBufferHeight(bufferSection: 20),
-                        Center(
-                          child: Container(
-                            child: Text(
-                              shop.name ?? "ERROR_MESSAGE.SHOP_NAME_EMPTY".tr(),
-                              style: kfontH0InterBlackColor(),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                            ),
-                          ),
-                        ),
+                        _shopNameSection(shop),
                         sectionBufferHeight(bufferSection: 20),
-                        Container(
-                          margin: const EdgeInsets.only(
-                              left: 15, right: 15, top: 15),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Colors.black26,
-                                  offset: Offset(3, 10),
-                                  blurRadius: 1,
-                                  // spreadRadius: 1,
-                                ),
-                                BoxShadow(
-                                  color: backGroundApplication,
-                                  offset: Offset(-3, -3),
-                                  blurRadius: 5,
-                                  spreadRadius: 1,
-                                )
-                              ],
-                              border:
-                                  Border.all(color: Colors.black, width: 2)),
-                          height: 150,
-                          padding: const EdgeInsets.only(
-                              top: 5, bottom: 5, left: 10, right: 10),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                flex: 1,
-                                child: Column(
-                                  children: [
-                                    sectionBufferHeight(
-                                        bufferSection: height * 0.01),
-                                    const Icon(
-                                      Icons.access_time_outlined,
-                                      color: Colors.black,
-                                      size: 30,
-                                    ),
-                                    sectionBufferHeight(
-                                        bufferSection: height * 0.03),
-                                    const Icon(
-                                      Icons.place_outlined,
-                                      color: Colors.black,
-                                      size: 30,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Expanded(
-                                flex: 9,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    sectionBufferHeight(
-                                        bufferSection: height * 0.01),
-                                    Text(
-                                      shop.daysOpen != null &&
-                                              shop.daysOpen!.isNotEmpty
-                                          ? "${Helper.getDisplayDayOfWeekOpenShop(shop.daysOpen!, Localizations.localeOf(context) == const Locale('th', 'TH'))}  ${shop.timeOpen} - ${shop.timeClose}\n${Helper.getDisplayDayOfWeekCloseShop(shop.daysOpen!, Localizations.localeOf(context) == const Locale('th', 'TH'))}  ร้านปิด"
-                                          : " ",
-                                      // "จ-ศ   10:00 - 20:00",
-                                      style: kfontH2InterBlackColor(),
-                                      // textAlign: TextAlign.center,
-                                    ),
-                                    sectionBufferHeight(
-                                        bufferSection: height * 0.01),
-                                    Text(
-                                      "ตำบล ${shop.address!.subDistrict!} ,อำเภอเมือง , จังหวัดเชียงใหม่ 50200 ",
-                                      style: kfontH2InterBlackColor(),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                        _shopAddress(height, shop, context),
                         sectionBufferHeight(bufferSection: 20),
-                        Stack(
-                          children: [
-                            Container(
-                              height: 150,
-                              padding: const EdgeInsets.all(16),
-                              margin: const EdgeInsets.only(
-                                  left: 15, right: 15, top: 15),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                color: backgroundActiveButton,
-                              ),
-                              child: Text(
-                                "ร้านกาแฟสไตล์ loft ในตัวเมืองเชียงใหม่ บรรยากาศสไตล์ nature ติดธรรมชาติ ลมเย็น สบายใจ กาแฟรสชาติเยี่ยม เจ๋งสุดๆ",
-                                style: kfontH2InterBlackColor(),
-                              ),
-                            ),
-                          ],
-                        ),
+                        _shopDescriptionSection(shop),
                         sectionBufferHeight(bufferSection: 20),
-                        Container(
-                          width: double.infinity,
-                          margin: const EdgeInsets.only(left: 15, right: 15),
-                          child: Wrap(
-                              alignment: WrapAlignment.start,
-                              spacing: 5,
-                              runSpacing: 5,
-                              children: categoryWidgets),
-                        ),
+                        _shopCategorySection(categoryWidgets),
                         sectionBufferHeight(bufferSection: 20),
-                        Container(
-                          margin: const EdgeInsets.only(
-                              left: 15, right: 15, top: 15),
-                          child: Row(
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    listOfImageShopButton["Home"] = true;
-                                    listOfImageShopButton["Menu"] = false;
-                                    listOfImageShopButton["Food"] = false;
-                                    listOfImageShopButton["Other"] = false;
-                                    usingImagesList();
-                                  });
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.all(10),
-                                  margin: const EdgeInsets.only(right: 10),
-                                  decoration: BoxDecoration(
-                                      color: listOfImageShopButton["Home"]!
-                                          ? selectButtonColor
-                                          : backgroundActiveButton,
-                                      borderRadius: BorderRadius.circular(15)),
-                                  child: const Icon(
-                                    Icons.home_outlined,
-                                    color: Colors.white,
-                                    size: 35,
-                                  ),
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    listOfImageShopButton["Home"] = false;
-                                    listOfImageShopButton["Menu"] = true;
-                                    listOfImageShopButton["Food"] = false;
-                                    listOfImageShopButton["Other"] = false;
-                                    usingImagesList();
-                                  });
-                                },
-                                child: Container(
-                                  margin: const EdgeInsets.only(right: 10),
-                                  padding: const EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                      color: listOfImageShopButton["Menu"]!
-                                          ? selectButtonColor
-                                          : backgroundActiveButton,
-                                      borderRadius: BorderRadius.circular(15)),
-                                  child: const Icon(
-                                    Icons.menu_book_outlined,
-                                    color: Colors.white,
-                                    size: 35,
-                                  ),
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    listOfImageShopButton["Home"] = false;
-                                    listOfImageShopButton["Menu"] = false;
-                                    listOfImageShopButton["Food"] = true;
-                                    listOfImageShopButton["Other"] = false;
-                                    usingImagesList();
-                                  });
-                                },
-                                child: Container(
-                                  margin: const EdgeInsets.only(right: 10),
-                                  padding: const EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                      color: listOfImageShopButton["Food"]!
-                                          ? selectButtonColor
-                                          : backgroundActiveButton,
-                                      borderRadius: BorderRadius.circular(15)),
-                                  child: const Icon(
-                                    Icons.coffee_rounded,
-                                    color: Colors.white,
-                                    size: 35,
-                                  ),
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    listOfImageShopButton["Home"] = false;
-                                    listOfImageShopButton["Menu"] = false;
-                                    listOfImageShopButton["Food"] = false;
-                                    listOfImageShopButton["Other"] = true;
-                                    usingImagesList();
-                                  });
-                                },
-                                child: Container(
-                                  margin: const EdgeInsets.only(right: 10),
-                                  padding: const EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                      color: listOfImageShopButton["Other"]!
-                                          ? selectButtonColor
-                                          : backgroundActiveButton,
-                                      borderRadius: BorderRadius.circular(15)),
-                                  child: const Icon(
-                                    Icons.battery_charging_full_outlined,
-                                    color: Colors.white,
-                                    size: 35,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                        _shopImageButton(shop: shop),
                         sectionBufferHeight(bufferSection: 5),
-                        CarouselSlider.builder(
-                          itemCount: selectedImagesList.isEmpty
-                              ? 1
-                              : selectedImagesList.length,
-                          options: CarouselOptions(
-                              // height: 200,
-                              viewportFraction: 1,
-                              enableInfiniteScroll: false,
-                              scrollPhysics: const BouncingScrollPhysics(),
-                              onPageChanged: (index, reason) {
-                                setState(() {
-                                  _current = index;
-                                });
-                              }),
-                          itemBuilder: (context, index, realIndex) {
-                            return selectedImagesList.isEmpty
-                                ? Container(
-                                    margin: const EdgeInsets.only(
-                                        left: 15, right: 15, top: 5, bottom: 5),
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: backgroundActiveButton,
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                  )
-                                : Container(
-                                    margin: const EdgeInsets.only(
-                                        left: 15, right: 15, top: 5, bottom: 5),
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: backgroundActiveButton,
-                                      borderRadius: BorderRadius.circular(10),
-                                      // You can use Image.network or Image.file based on your image source
-                                    ),
-                                    child: Container(
-                                      width: 100,
-                                      height: 100,
-                                      clipBehavior:
-                                          Clip.hardEdge, //default is none
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                      ),
-                                      child: Image.file(
-                                        File(selectedImagesList[index].path),
-                                        fit: BoxFit.fitHeight,
-                                      ),
-                                    ),
-                                  );
-                          },
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children:
-                              selectedImagesList.asMap().entries.map((entry) {
-                            return GestureDetector(
-                              onTap: () => _controller.animateToPage(entry.key),
-                              child: Container(
-                                width: 12.0,
-                                height: 12.0,
-                                margin: const EdgeInsets.symmetric(
-                                    vertical: 8.0, horizontal: 4.0),
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: (Theme.of(context).brightness ==
-                                                Brightness.dark
-                                            ? Colors.white
-                                            : Colors.black)
-                                        .withOpacity(
-                                            _current == entry.key ? 0.9 : 0.4)),
-                              ),
-                            );
-                          }).toList(),
-                        ),
+                        _imageSliderSection(usingImagesList(
+                          listImageShop: shop.shopImage ?? [],
+                          listImageMenu: shop.menuImages ?? [],
+                          listImageFood: shop.foodImages ?? [],
+                          listImageOther: shop.otherImages ?? [],
+                        )),
+                        _carouselSlider(
+                            context,
+                            usingImagesList(
+                              listImageShop: shop.shopImage ?? [],
+                              listImageMenu: shop.menuImages ?? [],
+                              listImageFood: shop.foodImages ?? [],
+                              listImageOther: shop.otherImages ?? [],
+                            )),
                         sectionBufferHeight(bufferSection: 20),
                         Row(
                           children: [
@@ -485,7 +202,7 @@ class _CustomerShopViewState extends State<CustomerShopView> {
                         ),
                         sectionBufferHeight(bufferSection: 20),
                         CarouselSlider.builder(
-                          itemCount: 2,
+                          itemCount: shop.menus!.length,
                           options: CarouselOptions(
                             height: 300,
                             viewportFraction: 1,
@@ -493,7 +210,8 @@ class _CustomerShopViewState extends State<CustomerShopView> {
                             scrollPhysics: const BouncingScrollPhysics(),
                           ),
                           itemBuilder: (context, index, realIndex) {
-                            return menuCard(width);
+                            return menuCard(
+                                width: width, menu: shop.menus![index]);
                           },
                         ),
                         sectionBufferHeight(bufferSection: 30),
@@ -882,6 +600,328 @@ class _CustomerShopViewState extends State<CustomerShopView> {
     );
   }
 
+  Row _carouselSlider(BuildContext context, List<XFile> selectedImagesList) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: selectedImagesList.asMap().entries.map((entry) {
+        return GestureDetector(
+          onTap: () => _controller.animateToPage(entry.key),
+          child: Container(
+            width: 12.0,
+            height: 12.0,
+            margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+            decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: (Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black)
+                    .withOpacity(_current == entry.key ? 0.9 : 0.4)),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  CarouselSlider _imageSliderSection(
+    List<XFile> selectedImagesList,
+  ) {
+    return CarouselSlider.builder(
+      itemCount: selectedImagesList.isEmpty ? 1 : selectedImagesList.length,
+      options: CarouselOptions(
+          // height: 200,
+          viewportFraction: 1,
+          enableInfiniteScroll: false,
+          scrollPhysics: const BouncingScrollPhysics(),
+          onPageChanged: (index, reason) {
+            setState(() {
+              _current = index;
+            });
+          }),
+      itemBuilder: (context, index, realIndex) {
+        return selectedImagesList.isEmpty
+            ? Container(
+                margin: const EdgeInsets.only(
+                    left: 15, right: 15, top: 5, bottom: 5),
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: backgroundActiveButton,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              )
+            : Container(
+                margin: const EdgeInsets.only(
+                    left: 15, right: 15, top: 5, bottom: 5),
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: backgroundActiveButton,
+                  borderRadius: BorderRadius.circular(10),
+                  // You can use Image.network or Image.file based on your image source
+                ),
+                child: Container(
+                  width: 100,
+                  height: 100,
+                  clipBehavior: Clip.hardEdge, //default is none
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  child: Image.file(
+                    File(selectedImagesList[index].path),
+                    fit: BoxFit.fitHeight,
+                  ),
+                ),
+              );
+      },
+    );
+  }
+
+  Stack _shopDescriptionSection(ShopModel shop) {
+    return Stack(
+      children: [
+        Container(
+          width: double.infinity,
+          height: 150,
+          padding: const EdgeInsets.all(16),
+          margin: const EdgeInsets.only(left: 15, right: 15, top: 15),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            color: backgroundActiveButton,
+          ),
+          child: Text(
+            shop.description ?? "ERROR_MESSAGE.SHOP_DESCRIPTION_EMPTY".tr(),
+            style: kfontH2InterBlackColor(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Center _shopNameSection(ShopModel shop) {
+    return Center(
+      child: Container(
+        child: Text(
+          shop.name ?? "ERROR_MESSAGE.SHOP_NAME_EMPTY".tr(),
+          style: kfontH0InterBlackColor(),
+          textAlign: TextAlign.center,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 1,
+        ),
+      ),
+    );
+  }
+
+  Container _shopCategorySection(List<Widget> categoryWidgets) {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(left: 15, right: 15),
+      child: Wrap(
+          alignment: WrapAlignment.start,
+          spacing: 5,
+          runSpacing: 5,
+          children: categoryWidgets),
+    );
+  }
+
+  Container _shopImageButton({required ShopModel shop}) {
+    return Container(
+      margin: const EdgeInsets.only(left: 15, right: 15, top: 15),
+      child: Row(
+        children: [
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                listOfImageShopButton["Home"] = true;
+                listOfImageShopButton["Menu"] = false;
+                listOfImageShopButton["Food"] = false;
+                listOfImageShopButton["Other"] = false;
+                usingImagesList(
+                  listImageShop: shop.shopImage ?? [],
+                  listImageMenu: shop.menuImages ?? [],
+                  listImageFood: shop.foodImages ?? [],
+                  listImageOther: shop.otherImages ?? [],
+                );
+              });
+            },
+            child: Container(
+              padding: const EdgeInsets.all(10),
+              margin: const EdgeInsets.only(right: 10),
+              decoration: BoxDecoration(
+                  color: listOfImageShopButton["Home"]!
+                      ? selectButtonColor
+                      : backgroundActiveButton,
+                  borderRadius: BorderRadius.circular(15)),
+              child: const Icon(
+                Icons.home_outlined,
+                color: Colors.white,
+                size: 35,
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                listOfImageShopButton["Home"] = false;
+                listOfImageShopButton["Menu"] = true;
+                listOfImageShopButton["Food"] = false;
+                listOfImageShopButton["Other"] = false;
+                usingImagesList(
+                  listImageShop: shop.shopImage ?? [],
+                  listImageMenu: shop.menuImages ?? [],
+                  listImageFood: shop.foodImages ?? [],
+                  listImageOther: shop.otherImages ?? [],
+                );
+              });
+            },
+            child: Container(
+              margin: const EdgeInsets.only(right: 10),
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                  color: listOfImageShopButton["Menu"]!
+                      ? selectButtonColor
+                      : backgroundActiveButton,
+                  borderRadius: BorderRadius.circular(15)),
+              child: const Icon(
+                Icons.menu_book_outlined,
+                color: Colors.white,
+                size: 35,
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                listOfImageShopButton["Home"] = false;
+                listOfImageShopButton["Menu"] = false;
+                listOfImageShopButton["Food"] = true;
+                listOfImageShopButton["Other"] = false;
+                usingImagesList(
+                  listImageShop: shop.shopImage ?? [],
+                  listImageMenu: shop.menuImages ?? [],
+                  listImageFood: shop.foodImages ?? [],
+                  listImageOther: shop.otherImages ?? [],
+                );
+              });
+            },
+            child: Container(
+              margin: const EdgeInsets.only(right: 10),
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                  color: listOfImageShopButton["Food"]!
+                      ? selectButtonColor
+                      : backgroundActiveButton,
+                  borderRadius: BorderRadius.circular(15)),
+              child: const Icon(
+                Icons.coffee_rounded,
+                color: Colors.white,
+                size: 35,
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                listOfImageShopButton["Home"] = false;
+                listOfImageShopButton["Menu"] = false;
+                listOfImageShopButton["Food"] = false;
+                listOfImageShopButton["Other"] = true;
+                usingImagesList(
+                  listImageShop: shop.shopImage ?? [],
+                  listImageMenu: shop.menuImages ?? [],
+                  listImageFood: shop.foodImages ?? [],
+                  listImageOther: shop.otherImages ?? [],
+                );
+              });
+            },
+            child: Container(
+              margin: const EdgeInsets.only(right: 10),
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                  color: listOfImageShopButton["Other"]!
+                      ? selectButtonColor
+                      : backgroundActiveButton,
+                  borderRadius: BorderRadius.circular(15)),
+              child: const Icon(
+                Icons.battery_charging_full_outlined,
+                color: Colors.white,
+                size: 35,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Container _shopAddress(double height, ShopModel shop, BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(left: 15, right: 15, top: 15),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black26,
+              offset: Offset(3, 10),
+              blurRadius: 1,
+              // spreadRadius: 1,
+            ),
+            BoxShadow(
+              color: backGroundApplication,
+              offset: Offset(-3, -3),
+              blurRadius: 5,
+              spreadRadius: 1,
+            )
+          ],
+          border: Border.all(color: Colors.black, width: 2)),
+      height: 150,
+      padding: const EdgeInsets.only(top: 5, bottom: 5, left: 10, right: 10),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 1,
+            child: Column(
+              children: [
+                sectionBufferHeight(bufferSection: height * 0.01),
+                const Icon(
+                  Icons.access_time_outlined,
+                  color: Colors.black,
+                  size: 30,
+                ),
+                sectionBufferHeight(bufferSection: height * 0.03),
+                const Icon(
+                  Icons.place_outlined,
+                  color: Colors.black,
+                  size: 30,
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            flex: 9,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                sectionBufferHeight(bufferSection: height * 0.01),
+                Text(
+                  shop.daysOpen != null && shop.daysOpen!.isNotEmpty
+                      ? "${Helper.getDisplayDayOfWeekOpenShop(shop.daysOpen!, Localizations.localeOf(context) == const Locale('th', 'TH'))}  ${shop.timeOpen} - ${shop.timeClose}\n${Helper.getDisplayDayOfWeekCloseShop(shop.daysOpen!, Localizations.localeOf(context) == const Locale('th', 'TH'))}  ร้านปิด"
+                      : "\n ",
+                  // "จ-ศ   10:00 - 20:00",
+                  style: kfontH2InterBlackColor(),
+                  // textAlign: TextAlign.center,
+                ),
+                sectionBufferHeight(bufferSection: height * 0.01),
+                Text(
+                  "ตำบล ${shop.address!.subDistrict!} ,อำเภอเมือง , จังหวัดเชียงใหม่ 50200 ",
+                  style: kfontH2InterBlackColor(),
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Container containerReviewListCard(
       {required String reviewerName,
       required int flavourScore,
@@ -1124,7 +1164,7 @@ class _CustomerShopViewState extends State<CustomerShopView> {
     );
   }
 
-  Stack menuCard(double width) {
+  Stack menuCard({required double width, required Menus menu}) {
     return Stack(
       alignment: Alignment.topCenter,
       children: [
@@ -1161,7 +1201,7 @@ class _CustomerShopViewState extends State<CustomerShopView> {
           child: SizedBox(
             width: 249,
             height: 30,
-            child: Text('อเมริกาโน่',
+            child: Text(menu.name ?? "",
                 textAlign: TextAlign.center, style: kfontNameMenu()),
           ),
         ),
@@ -1171,7 +1211,7 @@ class _CustomerShopViewState extends State<CustomerShopView> {
           child: SizedBox(
             width: 249,
             height: 30,
-            child: Text(' กาแฟจากชาวเชียงใหม่เพิ่งสกัดมาเลย..',
+            child: Text(menu.category ?? "",
                 textAlign: TextAlign.center, style: kfontMenuDescription()),
           ),
         ),
@@ -1181,7 +1221,7 @@ class _CustomerShopViewState extends State<CustomerShopView> {
           child: SizedBox(
             width: 102,
             height: 51,
-            child: Text('80-.',
+            child: Text(menu.price == null ? "" : menu.price.toString(),
                 textAlign: TextAlign.center, style: kfontMenuPrice()),
           ),
         ),
@@ -1192,10 +1232,10 @@ class _CustomerShopViewState extends State<CustomerShopView> {
             width: 120,
             height: 120,
             decoration: ShapeDecoration(
-              image: const DecorationImage(
-                image: AssetImage(americanoImagePath),
-                fit: BoxFit.fill,
-              ),
+              // image: const DecorationImage(
+              //   image: AssetImage(americanoImagePath),
+              //   fit: BoxFit.fill,
+              // ),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
@@ -1207,6 +1247,13 @@ class _CustomerShopViewState extends State<CustomerShopView> {
                   spreadRadius: 0,
                 )
               ],
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Image.file(
+                File(menu.image!),
+                fit: BoxFit.fill,
+              ),
             ),
           ),
         ),
@@ -1284,16 +1331,30 @@ class _CustomerShopViewState extends State<CustomerShopView> {
     setState(() {});
   }
 
-  void usingImagesList() {
-    if (listOfImageShopButton["Home"]!) {
-      selectedImagesList = _listHomeImages;
-    } else if (listOfImageShopButton["Menu"]!) {
-      selectedImagesList = _listMenuImages;
-    } else if (listOfImageShopButton["Food"]!) {
-      selectedImagesList = _listFoodImages;
-    } else if (listOfImageShopButton["Other"]!) {
-      selectedImagesList = _listOtherImages;
+  List<XFile> pathToXFileList(List<String> listPath) {
+    List<XFile> listXFile = [];
+    for (String path in listPath) {
+      listXFile.add(XFile(path));
     }
+    return listXFile;
+  }
+
+  List<XFile> usingImagesList({
+    required List<String> listImageShop,
+    required List<String> listImageMenu,
+    required List<String> listImageFood,
+    required List<String> listImageOther,
+  }) {
+    if (listOfImageShopButton["Home"]!) {
+      return pathToXFileList(listImageShop);
+    } else if (listOfImageShopButton["Menu"]!) {
+      return pathToXFileList(listImageMenu);
+    } else if (listOfImageShopButton["Food"]!) {
+      return pathToXFileList(listImageFood);
+    } else if (listOfImageShopButton["Other"]!) {
+      return pathToXFileList(listImageOther);
+    }
+    return [];
   }
 
   void addCategoryWidget(

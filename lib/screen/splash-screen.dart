@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:coffee_application/data/network/dio_network_api_service.dart';
+import 'package:coffee_application/model/response/validate_response.dart';
 import 'package:coffee_application/screen/customer_home_view.dart';
 import 'package:coffee_application/screen/login.dart';
+import 'package:coffee_application/screen/shop_information.dart';
 import 'package:coffee_application/viewmodel/splash_screen_view_model.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:flutter/material.dart';
@@ -27,15 +29,18 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> initialize() async {
     _splashScreenVM = SplashScreenVM();
 
-    bool isTokenValid = await _splashScreenVM.validateToken();
+    validateData response = await _splashScreenVM.validateToken();
 
-    if (isTokenValid) {
+    if (response.role == "customer") {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) =>
               const CustomerHomePageView(), // Replace with your home page widget
         ),
       );
+    } else if (response.role == "shop") {
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const ShopInformationPage()));
     } else {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(

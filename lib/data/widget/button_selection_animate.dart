@@ -20,7 +20,7 @@ class ButtonSelectionAnimation extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: TweenAnimationBuilder<double>(
-        duration: Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOutBack,
         tween: Tween<double>(
           begin: isButtonPressed ? 1.0 : 0.95,
@@ -30,7 +30,7 @@ class ButtonSelectionAnimation extends StatelessWidget {
           return Transform.scale(
             scale: scale,
             child: Container(
-              padding: EdgeInsets.only(left: 20, right: 20),
+              padding: const EdgeInsets.only(left: 20, right: 20),
               // width: 120,
               height: height * 0.0437,
               decoration: BoxDecoration(
@@ -38,9 +38,8 @@ class ButtonSelectionAnimation extends StatelessWidget {
                     ? Border.all(color: Colors.transparent)
                     : Border.all(color: brownBorderButton, width: 2),
                 borderRadius: BorderRadius.circular(20),
-                color: isButtonPressed
-                    ? backgroundActiveButton
-                    : backGroundButton,
+                color:
+                    isButtonPressed ? backgroundActiveButton : backGroundButton,
                 boxShadow: isButtonPressed
                     ? []
                     : [

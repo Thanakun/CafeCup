@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:coffee_application/model/promotion.dart';
+import 'package:coffee_application/model/response/promotion.dart';
 import 'package:coffee_application/model/response/promotion_claim_response.dart';
 import 'package:coffee_application/service/customer/customer_promotion_service.dart';
 

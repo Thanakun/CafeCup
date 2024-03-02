@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:io';
 import 'package:coffee_application/hive/boxes.dart';
 import 'package:dio/dio.dart';
@@ -67,8 +69,7 @@ class DioApiService implements BaseApiService {
       final response =
           await _dioAnalyticService.get(url, queryParameters: query ?? {});
       responseJson = returnResponse(response);
-    } on DioError catch (e) {
-      print("Dio Error: $e");
+    } on DioError {
       throw FetchDataException('Error during Dio GET request');
     } on SocketException {
       throw FetchDataException('Cannot Get Data or No Internet Connection');
@@ -81,8 +82,7 @@ class DioApiService implements BaseApiService {
     try {
       final response = await _dioAnalyticService.post(url, data: data);
       responseJson = returnResponse(response);
-    } on DioError catch (e) {
-      print("Dio Error: $e");
+    } on DioError {
       throw FetchDataException('Error during Dio GET request');
     } on SocketException {
       throw FetchDataException('Cannot Get Data or No Internet Connection');
@@ -97,8 +97,7 @@ class DioApiService implements BaseApiService {
       final response =
           await _dioPromotionService.get(url, queryParameters: query ?? {});
       responseJson = returnResponse(response);
-    } on DioError catch (e) {
-      print("Dio Error: $e");
+    } on DioError {
       throw FetchDataException('Error during Dio GET request');
     } on SocketException {
       throw FetchDataException('Cannot Get Data or No Internet Connection');
@@ -106,13 +105,14 @@ class DioApiService implements BaseApiService {
     return responseJson;
   }
 
-  Future postApiPromotion(String url, dynamic data) async {
+  Future postApiPromotion(String url, dynamic data,
+      [Map<String, dynamic>? query]) async {
     dynamic responseJson;
     try {
-      final response = await _dioPromotionService.post(url, data: data);
+      final response = await _dioPromotionService.post(url,
+          data: data, queryParameters: query);
       responseJson = returnResponse(response);
-    } on DioError catch (e) {
-      print("Dio Error: $e");
+    } on DioError {
       throw FetchDataException('Error during Dio POST request');
     } on SocketException {
       throw FetchDataException('Cannot Post Data or No Internet Connection');
@@ -128,8 +128,7 @@ class DioApiService implements BaseApiService {
       final response =
           await _dioPromotionService.put(url, queryParameters: query ?? {});
       responseJson = returnResponse(response);
-    } on DioError catch (e) {
-      print("Dio Error: $e");
+    } on DioError {
       throw FetchDataException('Error during Dio GET request');
     } on SocketException {
       throw FetchDataException('Cannot Get Data or No Internet Connection');
@@ -145,8 +144,7 @@ class DioApiService implements BaseApiService {
       final response = await _dioAnalyticService
           .get(url, queryParameters: {"_id": boxUsers.get(0).id});
       responseJson = returnResponse(response);
-    } on DioError catch (e) {
-      print("Dio Error: $e");
+    } on DioError {
       throw FetchDataException('Error during Dio GET request');
     } on SocketException {
       throw FetchDataException('Cannot Get Data or No Internet Connection');
@@ -166,13 +164,11 @@ class DioApiService implements BaseApiService {
   ) async {
     dynamic responseJson;
     try {
-      print("boxUsers.get(0).id");
-      print(boxUsers.get(0).id);
+      if (boxUsers.isEmpty) return;
       final response = await _dioAuthService
           .get(url, queryParameters: {"_id": boxUsers.get(0).id});
       responseJson = returnResponse(response);
     } on DioError catch (_) {
-      print("Dio Error: ${_}");
       throw FetchDataException('Error during Dio GET request');
     } on SocketException {
       throw FetchDataException('Cannot Get Data or No Internet Connection');
@@ -188,8 +184,23 @@ class DioApiService implements BaseApiService {
       final response =
           await _dioAuthService.post(url, data: data, queryParameters: query);
       responseJson = returnResponse(response);
-    } on DioError catch (e) {
-      print("Dio Error: $e");
+    } on DioError {
+      throw FetchDataException('Error during Dio POST request');
+    } on SocketException {
+      throw FetchDataException('Cannot Post Data or No Internet Connection');
+    }
+
+    return responseJson;
+  }
+
+  Future putAuthApi(String url, dynamic data,
+      [Map<String, dynamic>? query]) async {
+    dynamic responseJson;
+    try {
+      final response =
+          await _dioAuthService.put(url, data: data, queryParameters: query);
+      responseJson = returnResponse(response);
+    } on DioError {
       throw FetchDataException('Error during Dio POST request');
     } on SocketException {
       throw FetchDataException('Cannot Post Data or No Internet Connection');

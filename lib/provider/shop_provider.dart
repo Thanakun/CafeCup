@@ -212,9 +212,10 @@ class ShopProvider with ChangeNotifier {
   }
 
   Menus removeMenuAt(int index) {
+    Menus menu = _shop.menus![index];
     _shop.menus!.removeAt(index);
     notifyListeners();
-    return _shop.menus![index];
+    return menu;
   }
 
   void insertMenuItem(int index, Menus menu) {
@@ -231,6 +232,22 @@ class ShopProvider with ChangeNotifier {
             (menu.price.toString().contains(query)))
         .toList();
     notifyListeners();
+  }
+
+  void clearWhenEnteringShopRegister() {
+    _shop = ShopModel(
+      menus: [],
+      shopImage: [],
+      menuImages: [],
+      foodImages: [],
+      otherImages: [],
+      daysOpen: [],
+      address: Address(),
+      coverImage: null,
+      singleSeat: 0,
+      doubleSeat: 0,
+      largeSeat: 0,
+    );
   }
 
   // Other methods for managing images

@@ -68,16 +68,14 @@ TextStyle kfont22w_400black() => const TextStyle(
 
 TextStyle kfontMenuDescription() => const TextStyle(
       color: Color(0xFF87CE30),
-      fontSize: 14,
-      fontFamily: 'Open Sans',
-      fontWeight: FontWeight.w300,
+      fontSize: 18,
+      fontWeight: FontWeight.w700,
     );
 
 TextStyle kfontMenuPrice() => const TextStyle(
       color: Color(0xFFE2C799),
       fontSize: 22,
-      fontFamily: 'Open Sans',
-      fontWeight: FontWeight.w400,
+      fontWeight: FontWeight.bold,
     );
 
 TextStyle kfont32_400() => const TextStyle(

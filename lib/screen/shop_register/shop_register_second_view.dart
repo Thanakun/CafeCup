@@ -25,7 +25,6 @@ class ShopRegisterSecondView extends StatefulWidget {
 class _ShopRegisterSecondViewState extends State<ShopRegisterSecondView> {
   final ImagePicker _imagePicker = ImagePicker();
   XFile? _file;
-
   Uint8List webImage = Uint8List(10);
 
   late RegisterVM _vm;
@@ -98,7 +97,11 @@ class _ShopRegisterSecondViewState extends State<ShopRegisterSecondView> {
                         fit: BoxFit.fill,
                         child: kIsWeb
                             ? Image.memory(webImage)
-                            : Image.file(File(_file!.path)),
+                            : Image.file(File(context
+                                .read<ShopProvider>()
+                                .shop
+                                .coverImage!
+                                )),
                       ),
                     )
                   : Container(
@@ -187,7 +190,8 @@ class _ShopRegisterSecondViewState extends State<ShopRegisterSecondView> {
                     Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const AllMenuShopPage()))
+                                builder: (context) => AllMenuShopPage(
+                                    shop: context.read<ShopProvider>().shop)))
                         .then((value) => setState(() {}));
                   },
                   child: Container(
@@ -365,6 +369,21 @@ class _ShopRegisterSecondViewState extends State<ShopRegisterSecondView> {
                       ),
                     ],
                   ),
+                  Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Container(
+                          child: Text(
+                            " < ย้อนกลับ",
+                            style: kfontH2InterBlackColor(),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
                 ],
               )
             ]),

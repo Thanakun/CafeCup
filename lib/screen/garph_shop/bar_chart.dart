@@ -1,8 +1,11 @@
+import 'package:coffee_application/model/response/reach_graph_response.dart';
+import 'package:coffee_application/viewmodel/reach_chart_view_model.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:coffee_application/data/widget/sliver_multipleline_appbar.dart';
 import 'package:coffee_application/utility/my_constant.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class BarChartPage extends StatefulWidget {
@@ -13,28 +16,28 @@ class BarChartPage extends StatefulWidget {
 }
 
 class _BarChartPageState extends State<BarChartPage> {
-  String selectedYearQuarter = "2022"; // Set a default year
+  String selectedYearQuarter = "2024"; // Set a default year
   String selectedQuarter = "Q1"; // Set a default quarter
 
-  String selectedYear = "2022"; // Set a default year
+  String selectedYear = "2024"; // Set a default year
 
-  String selectedYearMonth = "2022"; // Set a default year
-  String selectMonthString = "December";
+  String selectedYearMonth = "2024"; // Set a default year
+  String selectMonthString = "DECEMBER";
 
-  List<String> selectMonthList = [
-    "January",
-    "Febuary",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December"
-  ];
+  Map<String, dynamic> selectMonthList = {
+    "JANUARY": 1,
+    "FEBRUARY": 2,
+    "MARCH": 3,
+    "APRIL": 4,
+    "MAY": 5,
+    "JUNE": 6,
+    "JULY": 7,
+    "AUGUST": 8,
+    "SEPTEMBER": 9,
+    "OCTOBER": 10,
+    "NOVEMBER": 11,
+    "DECEMBER": 12
+  };
   List<String> selectDataDateTypeList = [
     "All Time",
     "Quarter",
@@ -51,21 +54,30 @@ class _BarChartPageState extends State<BarChartPage> {
     "2023",
     "2024"
   ];
-  List<String> listOfQuarter = ["Q1", "Q2", "Q3", "Q4"];
+  Map<String, int> listOfQuarter = {"Q1": 1, "Q2": 2, "Q3": 3, "Q4": 4};
 
   String selectDayOfWeek = "ALL";
-  List<String> listDateInWeek = [
-    "ALL",
-    "SUN",
-    "MON",
-    "TUE",
-    "WED",
-    "THU",
-    "FRI",
-    "SAT"
-  ];
+  Map<String, dynamic> listDateInWeek = {
+    "ALL": null,
+    "SUN": 1,
+    "MON": 2,
+    "TUE": 3,
+    "WED": 4,
+    "THU": 5,
+    "FRI": 6,
+    "SAT": 7
+  };
 
   double allTimeHeight = 0;
+
+  late final ReachBarChartVM _vm;
+
+  @override
+  void initState() {
+    super.initState();
+    _vm = ReachBarChartVM();
+    _vm.getBarChartData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +98,7 @@ class _BarChartPageState extends State<BarChartPage> {
               SliverMultilineAppBar(
                 title: "CHART.BAR_CHART_PAGE.BAR_CHART_TITLE".tr(),
                 leading: IconButton(
-                  icon: Icon(Icons.arrow_back, color: Colors.black),
+                  icon: Icon(Icons.arrow_back_ios, color: Colors.black),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
@@ -113,6 +125,8 @@ class _BarChartPageState extends State<BarChartPage> {
                                 selectDateType = "All Time";
                                 setState(() {
                                   allTimeHeight = 100;
+                                  _vm.getBarChartData();
+                                  setState(() {});
                                 });
                               },
                               child: AnimatedContainer(
@@ -134,7 +148,7 @@ class _BarChartPageState extends State<BarChartPage> {
                                 ),
                                 child: Center(
                                   child: Text(
-                                    "All Time",
+                                    "CHART.FILTER.ALL_TIME".tr(),
                                     style: kfont22w_400black(),
                                   ),
                                 ),
@@ -148,7 +162,16 @@ class _BarChartPageState extends State<BarChartPage> {
                               onTap: () {
                                 // Handle the tap for the "Quarter" section
                                 selectDateType = "Quarter";
+
                                 setState(() {
+                                  MapEntry<String, int>? matchingEntry =
+                                      listOfQuarter.entries.firstWhere(
+                                    (entry) => entry.key == selectedQuarter,
+                                  );
+
+                                  _vm.getBarChartData(
+                                      int.parse(selectedYearQuarter),
+                                      matchingEntry.value);
                                   allTimeHeight = 100;
                                 });
                               },
@@ -170,7 +193,7 @@ class _BarChartPageState extends State<BarChartPage> {
                                 child: Column(children: [
                                   Center(
                                     child: Text(
-                                      "Quarter",
+                                      "CHART.FILTER.QUARTER".tr(),
                                       style: kfont22w_400black(),
                                     ),
                                   ),
@@ -212,8 +235,20 @@ class _BarChartPageState extends State<BarChartPage> {
                                           onChanged: selectDateType == "Quarter"
                                               ? (String? newValue) {
                                                   setState(() {
+                                                    MapEntry<String, int>?
+                                                        matchingEntry =
+                                                        listOfQuarter.entries
+                                                            .firstWhere(
+                                                      (entry) =>
+                                                          entry.key ==
+                                                          selectedQuarter,
+                                                    );
                                                     selectedYearQuarter =
                                                         newValue!;
+                                                    _vm.getBarChartData(
+                                                        int.parse(
+                                                            selectedYearQuarter),
+                                                        matchingEntry.value);
                                                   });
                                                 }
                                               : null,
@@ -243,17 +278,37 @@ class _BarChartPageState extends State<BarChartPage> {
                                           ),
                                           onMenuStateChange: null,
                                           value: selectedQuarter,
-                                          items: listOfQuarter
-                                              .map((String quarter) {
-                                            return DropdownMenuItem<String>(
-                                              value: quarter,
-                                              child: Text(quarter),
-                                            );
-                                          }).toList(),
+                                          items: listOfQuarter.entries
+                                              .map<DropdownMenuItem<String>>(
+                                                (MapEntry<String, int> entry) =>
+                                                    DropdownMenuItem<String>(
+                                                  value: entry.key,
+                                                  child: FittedBox(
+                                                    child: Text(
+                                                      ' ${entry.key}',
+                                                      style:
+                                                          kfont22w_400black(),
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                              .toList(),
                                           onChanged: selectDateType == "Quarter"
                                               ? (String? newValue) {
                                                   setState(() {
                                                     selectedQuarter = newValue!;
+                                                    MapEntry<String, int>?
+                                                        matchingEntry =
+                                                        listOfQuarter.entries
+                                                            .firstWhere(
+                                                      (entry) =>
+                                                          entry.key ==
+                                                          selectedQuarter,
+                                                    );
+                                                    _vm.getBarChartData(
+                                                        int.parse(
+                                                            selectedYearQuarter),
+                                                        matchingEntry.value);
                                                   });
                                                 }
                                               : null,
@@ -276,6 +331,7 @@ class _BarChartPageState extends State<BarChartPage> {
                               onTap: () {
                                 selectDateType = "Year";
                                 setState(() {
+                                  _vm.getBarChartData(int.parse(selectedYear));
                                   allTimeHeight = 100;
                                 });
                               },
@@ -300,7 +356,7 @@ class _BarChartPageState extends State<BarChartPage> {
                                   children: [
                                     Center(
                                       child: Text(
-                                        "Year",
+                                        "CHART.FILTER.YEAR".tr(),
                                         style: kfont22w_400black(),
                                       ),
                                     ),
@@ -318,7 +374,7 @@ class _BarChartPageState extends State<BarChartPage> {
                                               color: backGroundApplication),
                                           child: Row(
                                             children: [
-                                              Text(selectedYearQuarter),
+                                              Text(selectedYear),
                                               Spacer(),
                                               Icon(
                                                 Icons.arrow_drop_down_rounded,
@@ -327,7 +383,7 @@ class _BarChartPageState extends State<BarChartPage> {
                                             ],
                                           ),
                                         ),
-                                        value: selectedYearQuarter,
+                                        value: selectedYear,
                                         items: listOfYear.map((String year) {
                                           return DropdownMenuItem<String>(
                                             value: year,
@@ -337,8 +393,9 @@ class _BarChartPageState extends State<BarChartPage> {
                                         onChanged: selectDateType == "Year"
                                             ? (String? newValue) {
                                                 setState(() {
-                                                  selectedYearQuarter =
-                                                      newValue!;
+                                                  selectedYear = newValue!;
+                                                  _vm.getBarChartData(
+                                                      int.parse(selectedYear));
                                                 });
                                               }
                                             : null,
@@ -354,9 +411,17 @@ class _BarChartPageState extends State<BarChartPage> {
                             flex: 280,
                             child: GestureDetector(
                               onTap: () {
-                                // Handle the tap for the "Quarter" section
                                 selectDateType = "Month";
                                 setState(() {
+                                  MapEntry<String, dynamic>? matchingEntry =
+                                      selectMonthList.entries.firstWhere(
+                                    (entry) => entry.key == selectMonthString,
+                                  );
+
+                                  _vm.getBarChartData(
+                                      int.parse(selectedYearMonth),
+                                      null,
+                                      matchingEntry.value);
                                   allTimeHeight = 100;
                                 });
                               },
@@ -378,8 +443,8 @@ class _BarChartPageState extends State<BarChartPage> {
                                 child: Column(children: [
                                   Center(
                                     child: Text(
-                                      "Month",
-                                      style: kfont22w_400black(),
+                                        "CHART.FILTER.MONTH".tr(),
+                                        style: kfont22w_400black(),
                                     ),
                                   ),
                                   sectionBufferHeight(),
@@ -399,7 +464,7 @@ class _BarChartPageState extends State<BarChartPage> {
                                                 color: backGroundApplication),
                                             child: Row(
                                               children: [
-                                                Text(selectMonthString),
+                                                Text("CHART.MONTH.$selectMonthString".tr()),
                                                 Spacer(),
                                                 Icon(
                                                   Icons.arrow_drop_down_rounded,
@@ -410,18 +475,42 @@ class _BarChartPageState extends State<BarChartPage> {
                                           ),
                                           onMenuStateChange: null,
                                           value: selectMonthString,
-                                          items: selectMonthList
-                                              .map((String month) {
-                                            return DropdownMenuItem<String>(
-                                              value: month,
-                                              child: Text(month),
-                                            );
-                                          }).toList(),
+                                          items: selectMonthList.entries
+                                              .map<DropdownMenuItem<String>>(
+                                                (MapEntry<String, dynamic>
+                                                        entry) =>
+                                                    DropdownMenuItem<String>(
+                                                  value: entry.key,
+                                                  child: FittedBox(
+                                                    child: Text(
+                                                      "${"CHART.MONTH.${entry.key}".tr()}",
+                                                      maxLines: 1,
+                                                      style:
+                                                          kfontH2InterBoldBlackColor(),
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                              .toList(),
                                           onChanged: selectDateType == "Month"
                                               ? (String? newValue) {
                                                   setState(() {
                                                     selectMonthString =
                                                         newValue!;
+                                                    MapEntry<String, dynamic>?
+                                                        matchingEntry =
+                                                        selectMonthList.entries
+                                                            .firstWhere(
+                                                      (entry) =>
+                                                          entry.key ==
+                                                          selectMonthString,
+                                                    );
+
+                                                    _vm.getBarChartData(
+                                                        int.parse(
+                                                            selectedYearMonth),
+                                                        null,
+                                                        matchingEntry.value);
                                                   });
                                                 }
                                               : null,
@@ -431,7 +520,7 @@ class _BarChartPageState extends State<BarChartPage> {
                                       DropdownButtonHideUnderline(
                                         child: DropdownButton2<String>(
                                           customButton: Container(
-                                            width: 70.9,
+                                            width: 72,
                                             height: 30,
                                             padding: EdgeInsets.only(
                                                 left: 5, right: 5),
@@ -461,6 +550,20 @@ class _BarChartPageState extends State<BarChartPage> {
                                                   setState(() {
                                                     selectedYearMonth =
                                                         newValue!;
+                                                    MapEntry<String, dynamic>?
+                                                        matchingEntry =
+                                                        selectMonthList.entries
+                                                            .firstWhere(
+                                                      (entry) =>
+                                                          entry.key ==
+                                                          selectMonthString,
+                                                    );
+
+                                                    _vm.getBarChartData(
+                                                        int.parse(
+                                                            selectedYearMonth),
+                                                        null,
+                                                        matchingEntry.value);
                                                   });
                                                 }
                                               : null,
@@ -480,60 +583,131 @@ class _BarChartPageState extends State<BarChartPage> {
                         style: kfontH2InterBlackColor(),
                       ),
                       sectionBufferHeight(),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: selectButtonColor,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: Row(
-                          children: [
-                            containerSelectDate(listDateInWeek[0],
-                                selectDayOfWeek == listDateInWeek[0]),
-                            containerSelectDate(listDateInWeek[1],
-                                selectDayOfWeek == listDateInWeek[1]),
-                            containerSelectDate(listDateInWeek[2],
-                                selectDayOfWeek == listDateInWeek[2]),
-                            containerSelectDate(listDateInWeek[3],
-                                selectDayOfWeek == listDateInWeek[3]),
-                            containerSelectDate(listDateInWeek[4],
-                                selectDayOfWeek == listDateInWeek[4]),
-                            containerSelectDate(listDateInWeek[5],
-                                selectDayOfWeek == listDateInWeek[5]),
-                            containerSelectDate(listDateInWeek[6],
-                                selectDayOfWeek == listDateInWeek[6]),
-                            containerSelectDate(listDateInWeek[7],
-                                selectDayOfWeek == listDateInWeek[7]),
-                          ],
-                        ),
-                      ),
-                      sectionBufferHeight(bufferSection: 20),
-                      Center(
-                        child: Container(
-                          child: SfCartesianChart(
-                            series: <CartesianSeries>[
-                              HistogramSeries<ChartData1, double>(
-                                  dataSource: histogramData,
-                                  showNormalDistributionCurve: true,
-                                  curveColor:
-                                      const Color.fromRGBO(192, 108, 132, 1),
-                                  binInterval: 20,
-                                  yValueMapper: (ChartData1 data, _) => data.y)
-                            ],
-                          ),
-                        ),
-                      ),
-                      Center(
-                        child: Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                color: selectButtonColor.withOpacity(0.5)),
-                            alignment: Alignment.center,
-                            padding: EdgeInsets.all(30),
-                            child: Text(
-                              "กราฟแสดงจำนวนลูกค้าเฉลี่ยใน วันจันทร์ ตลอดระยะเวลาที่ผ่านมาเฉลี่ยตลอด \n \n วันคิดเป็น 30 คน/ชั่วโมงในช่วงพีคมีลูกค้า 80 คน/ชั่วโมง",
-                              style: kfontH2InterBlackColor(),
-                              textAlign: TextAlign.center,
-                            )),
+                      FutureBuilder(
+                        future: _vm.barChartData,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Shimmer.fromColors(
+                              baseColor: Colors.grey.shade300,
+                              highlightColor: Colors.grey.shade100,
+                              child: Container(),
+                            );
+                          } else if (snapshot.hasError) {
+                            print(snapshot.error);
+                            return Text(
+                              "ERROR_MESSAGE.ERROR_LOADING_FAIL".tr(),
+                            );
+                          } else if (snapshot.hasData &&
+                              snapshot.data != null &&
+                              snapshot.connectionState ==
+                                  ConnectionState.done) {
+                            ReachGraphResponse barChartData = snapshot.data!;
+                            return Column(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: selectButtonColor,
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      ...listDateInWeek.entries.map((entry) {
+                                        return containerSelectDate(
+                                          entry.key,
+                                          selectDayOfWeek == entry.key,
+                                        );
+                                      }).toList(),
+                                    ],
+                                  ),
+                                ),
+                                sectionBufferHeight(bufferSection: 20),
+                                Center(
+                                  child: SfCartesianChart(
+                                    // backgroundColor: Colors.white.withOpacity(0.5),
+
+                                    primaryXAxis: CategoryAxis(
+                                        title: AxisTitle(
+                                      text: 'เวลา (ชั่วโมง)',
+                                      textStyle: kfontH1InterBoldBlackColor(),
+                                    )),
+                                    primaryYAxis: CategoryAxis(
+                                        title: AxisTitle(
+                                      text: 'จำนวนลูกค้า',
+                                      textStyle: kfontH1InterBoldBlackColor(),
+                                    )),
+                                    series: <CartesianSeries>[
+                                      ColumnSeries<ChartDataModel, double>(
+                                          xValueMapper:
+                                              ((ChartDataModel data, _) =>
+                                                  data.id.toDouble()),
+                                          dataSource: _reachToChartData(
+                                              reach: barChartData.data ?? []),
+                                          enableTooltip: true,
+                                          dataLabelSettings: DataLabelSettings(
+                                              isVisible: true,
+                                              labelAlignment:
+                                                  ChartDataLabelAlignment.top,
+                                              textStyle:
+                                                  kfontH2InterBlackColor(),
+                                              borderRadius:
+                                                  BorderSide.strokeAlignCenter),
+                                          pointColorMapper: (datum, index) {
+                                            // Access the counter property from datum
+                                            int counterValue = datum.counter;
+
+                                            // Choose a color based on the counter value or use a default color
+                                            Color selectedColor;
+
+                                            if (counterValue < 30) {
+                                              selectedColor =
+                                                  sup3V4; // Green color for 30
+                                            } else if (counterValue < 60 &&
+                                                counterValue >= 30) {
+                                              selectedColor = Color(
+                                                  0xFFFFD700); // Yellow color for 60
+                                            } else if (counterValue < 90 &&
+                                                counterValue >= 60) {
+                                              selectedColor = Color(
+                                                  0xFFFFA500); // Orange color for 90
+                                            } else if (counterValue < 120 &&
+                                                counterValue >= 90) {
+                                              selectedColor = Color(
+                                                  0xFFFF0000); // Red color for 120
+                                            } else {
+                                              selectedColor =
+                                                  brownBorderButton; // Use default color for other values
+                                            }
+
+                                            return selectedColor;
+                                          },
+                                          yValueMapper:
+                                              (ChartDataModel data, _) =>
+                                                  data.counter)
+                                    ],
+                                  ),
+                                ),
+                                Center(
+                                  child: Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          color: selectButtonColor
+                                              .withOpacity(0.5)),
+                                      alignment: Alignment.center,
+                                      padding: EdgeInsets.all(30),
+                                      child: Text(
+                                        "กราฟแสดงจำนวนลูกค้าเฉลี่ยใน วันจันทร์ ตลอดระยะเวลาที่ผ่านมาเฉลี่ยตลอด \n \n วันคิดเป็น 30 คน/ชั่วโมงในช่วงพีคมีลูกค้า 80 คน/ชั่วโมง",
+                                        style: kfontH2InterBlackColor(),
+                                        textAlign: TextAlign.center,
+                                      )),
+                                ),
+                              ],
+                            );
+                          } else {
+                            return Container();
+                          }
+                        },
                       )
                     ],
                   ),
@@ -550,9 +724,41 @@ class _BarChartPageState extends State<BarChartPage> {
     return Expanded(
       child: GestureDetector(
         onTap: () {
-          setState(() {
-            selectDayOfWeek = title;
-          });
+          setState(
+            () {
+              selectDayOfWeek = title;
+              MapEntry<String, dynamic>? matchingEntry =
+                  listDateInWeek.entries.firstWhere(
+                (entry) => entry.key == selectDayOfWeek,
+              );
+              var selectedValue =
+                  matchingEntry.value == "" ? null : matchingEntry.value;
+
+              if (selectDateType == "All Time") {
+                _vm.getBarChartData(null, null, null, selectedValue);
+              } else if (selectDateType == "Quarter") {
+                MapEntry<String, int>? matchingQuarter =
+                    listOfQuarter.entries.firstWhere(
+                  (entry) => entry.key == selectedQuarter,
+                );
+                _vm.getBarChartData(int.parse(selectedYearQuarter),
+                    matchingQuarter.value, null, selectedValue);
+              } else if (selectDateType == "Month") {
+                MapEntry<String, dynamic>? matchingMonth =
+                    selectMonthList.entries.firstWhere(
+                  (entry) => entry.key == selectMonthString,
+                );
+                _vm.getBarChartData(
+                  int.parse(selectedYearMonth),
+                  null,
+                  int.parse(matchingMonth.value),
+                );
+              } else if (selectDateType == "Year") {
+                _vm.getBarChartData(
+                    int.parse(selectedYear), null, null, selectedValue);
+              }
+            },
+          );
         },
         child: Column(
           children: [
@@ -592,111 +798,20 @@ class _BarChartPageState extends State<BarChartPage> {
     );
   }
 
-  final List<ChartData1> histogramData = <ChartData1>[
-    ChartData1(5.250),
-    ChartData1(7.750),
-    ChartData1(0.0),
-    ChartData1(8.275),
-    ChartData1(9.750),
-    ChartData1(7.750),
-    ChartData1(8.275),
-    ChartData1(6.250),
-    ChartData1(5.750),
-    ChartData1(5.250),
-    ChartData1(23.000),
-    ChartData1(26.500),
-    ChartData1(26.500),
-    ChartData1(27.750),
-    ChartData1(25.025),
-    ChartData1(26.500),
-    ChartData1(28.025),
-    ChartData1(29.250),
-    ChartData1(26.750),
-    ChartData1(27.250),
-    ChartData1(26.250),
-    ChartData1(25.250),
-    ChartData1(34.500),
-    ChartData1(25.625),
-    ChartData1(25.500),
-    ChartData1(26.625),
-    ChartData1(36.275),
-    ChartData1(36.250),
-    ChartData1(26.875),
-    ChartData1(40.000),
-    ChartData1(43.000),
-    ChartData1(46.500),
-    ChartData1(47.750),
-    ChartData1(45.025),
-    ChartData1(56.500),
-    ChartData1(56.500),
-    ChartData1(58.025),
-    ChartData1(59.250),
-    ChartData1(56.750),
-    ChartData1(57.250),
-    ChartData1(46.250),
-    ChartData1(55.250),
-    ChartData1(44.500),
-    ChartData1(45.525),
-    ChartData1(55.500),
-    ChartData1(46.625),
-    ChartData1(46.275),
-    ChartData1(56.250),
-    ChartData1(46.875),
-    ChartData1(43.000),
-    ChartData1(46.250),
-    ChartData1(55.250),
-    ChartData1(44.500),
-    ChartData1(45.425),
-    ChartData1(55.500),
-    ChartData1(56.625),
-    ChartData1(46.275),
-    ChartData1(56.250),
-    ChartData1(46.875),
-    ChartData1(43.000),
-    ChartData1(46.250),
-    ChartData1(55.250),
-    ChartData1(44.500),
-    ChartData1(45.425),
-    ChartData1(55.500),
-    ChartData1(46.625),
-    ChartData1(56.275),
-    ChartData1(46.250),
-    ChartData1(56.875),
-    ChartData1(41.000),
-    ChartData1(63.000),
-    ChartData1(66.500),
-    ChartData1(67.750),
-    ChartData1(65.025),
-    ChartData1(66.500),
-    ChartData1(76.500),
-    ChartData1(78.025),
-    ChartData1(79.250),
-    ChartData1(76.750),
-    ChartData1(77.250),
-    ChartData1(66.250),
-    ChartData1(75.250),
-    ChartData1(74.500),
-    ChartData1(65.625),
-    ChartData1(75.500),
-    ChartData1(76.625),
-    ChartData1(76.275),
-    ChartData1(66.250),
-    ChartData1(66.875),
-    ChartData1(80.000),
-    ChartData1(85.250),
-    ChartData1(87.750),
-    ChartData1(89.000),
-    ChartData1(88.275),
-    ChartData1(89.750),
-    ChartData1(97.750),
-    ChartData1(98.275),
-    ChartData1(96.250),
-    ChartData1(95.750),
-    ChartData1(95.250)
-  ];
+  List<ChartDataModel> _reachToChartData({required List<Reach> reach}) {
+    if (reach.isEmpty) {
+      return [];
+    }
+    List<ChartDataModel> chartData = [];
+    for (int i = 0; i < reach.length; i++) {
+      chartData.add(ChartDataModel(reach[i].iId!, reach[i].count!));
+    }
+    return chartData;
+  }
 }
 
-class ChartData1 {
-  ChartData1(this.y);
-  final double y;
+class ChartDataModel {
+  ChartDataModel(this.id, this.counter);
+  final int counter;
+  final int id;
 }

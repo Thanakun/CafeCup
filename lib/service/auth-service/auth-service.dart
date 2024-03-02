@@ -1,3 +1,4 @@
+import 'package:coffee_application/model/response/validate_response.dart';
 import 'package:dio/dio.dart';
 import 'package:coffee_application/data/network/dio_network_api_service.dart';
 import 'package:coffee_application/model/customer.dart';
@@ -23,10 +24,12 @@ class AuthService {
     final data = await _dio.postAuthApi("/customer/inserttest", []);
   }
 
-  Future<bool> validateToken() async {
+  Future<ValidateTokenResponse> validateToken() async {
     try {
       final data = await _dio.getAuthApiWithParam("/validateToken");
-      return true;
+      final response = ValidateTokenResponse.fromJson(data);
+
+      return response;
     } catch (_) {
       rethrow;
     }
@@ -65,25 +68,26 @@ class AuthService {
     }
   }
 
-  Future<dynamic> postShopRegister(ShopModel shop) async {
+  Future<bool> postShopRegister(ShopModel shop) async {
     try {
       final data = await _dio.postAuthApi("/shop/register", shop.toJson());
-      print(data);
-      return data;
+
+      return true;
       // print(data);
     } catch (_) {
-      rethrow;
+      return false;
     }
   }
 
-  Future<dynamic> postCustomerRegister(CustomerModel customer) async {
+  Future<bool> postCustomerRegister(CustomerModel customer) async {
     try {
+      print(customer.toJson());
       final data =
           await _dio.postAuthApi("/customer/register", customer.toJson());
-      return data;
-      // print(data);
+      print(data);
+      return true;
     } catch (e) {
-      rethrow;
+      return false;
     }
   }
 

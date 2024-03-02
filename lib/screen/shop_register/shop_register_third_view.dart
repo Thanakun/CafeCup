@@ -347,153 +347,17 @@ class _ShopRegisterThirdViewState extends State<ShopRegisterThirdView> {
                   sectionBufferHeight(bufferSection: height * 0.0218),
                   headingContainer(header: "วันและเวลาของร้าน"),
                   sectionBufferHeight(bufferSection: height * 0.0218),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      for (int i = 0; i < 5; i++)
-                        dateOpenSelectionButton(
-                          width: width,
-                          height: height,
-                          dateIndex: i,
-                        ),
-                    ],
-                  ),
+                  _pickdateOpen(width, height),
                   sectionBufferHeight(bufferSection: height * 0.0174),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      for (int i = 5; i < 7; i++)
-                        dateOpenSelectionButton(
-                          width: width,
-                          height: height,
-                          dateIndex: i,
-                        ),
-                    ],
-                  ),
+                  _pickdateOpenSecond(width, height),
                   sectionBufferHeight(bufferSection: height * 0.0218),
                   headingContainer(header: "เลือกเวลาเปิด-ปิด"),
                   sectionBufferHeight(bufferSection: height * 0.0218),
                   timePickerWidget(title: "OPEN TIME"),
-                  Container(
-                    height: height * 0.0546,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.white,
-                      border: Border.all(color: Colors.white),
-                    ),
-                    child: InkWell(
-                      onTap: () {
-                        setState(() {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return timePicker(
-                                width: width,
-                                height: height,
-                                timeHour: openHour,
-                                timeMinute: openMinute,
-                                // timeFormat: openTimeFormat,
-                                onHourChanged: (value) {
-                                  setState(() {
-                                    openHour = value;
-                                  });
-                                },
-                                onMinuteChanged: (value) {
-                                  setState(() {
-                                    openHour = value;
-                                  });
-                                },
-                                onFormatChanged: (value) {
-                                  setState(() {
-                                    // openTimeFormat = value;
-                                  });
-                                },
-                              );
-                            },
-                          );
-                        });
-                      },
-                      child: Row(
-                        children: [
-                          Container(
-                            margin: EdgeInsets.only(left: width * 0.0339),
-                            child: Text(
-                              "${openHour.toString().padLeft(2, '0')}:${openMinute.toString().padLeft(2, '0')} ",
-                              style: kfontH1InterBoldBlackColor(),
-                            ),
-                          ),
-                          const Spacer(),
-                          Container(
-                            margin: EdgeInsets.only(right: width * 0.024),
-                            child: Icon(Icons.calendar_view_day_outlined,
-                                color: Colors.black.withOpacity(0.5)),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  _pickTimeOpen(height, context, width),
                   sectionBufferHeight(bufferSection: height * 0.0218),
                   timePickerWidget(title: "CLOSE TIME"),
-                  Container(
-                    height: height * 0.0546,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.white,
-                      border: Border.all(color: Colors.white),
-                    ),
-                    child: InkWell(
-                      onTap: () {
-                        setState(() {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return timePicker(
-                                width: width,
-                                height: height,
-                                timeHour: closeHour,
-                                timeMinute: closeMinute,
-                                // timeFormat: closeTimeFormat,
-                                onHourChanged: (value) {
-                                  setState(() {
-                                    closeHour = value;
-                                  });
-                                },
-                                onMinuteChanged: (value) {
-                                  setState(() {
-                                    closeMinute = value;
-                                  });
-                                },
-                                onFormatChanged: (value) {
-                                  setState(() {
-                                    // closeTimeFormat = value;
-                                  });
-                                },
-                              );
-                            },
-                          );
-                        });
-                      },
-                      child: Row(
-                        children: [
-                          Container(
-                            margin: EdgeInsets.only(left: width * 0.0339),
-                            child: Text(
-                              "${closeHour.toString().padLeft(2, '0')}:${closeMinute.toString().padLeft(2, '0')} ",
-                              style: kfontH1InterBoldBlackColor(),
-                            ),
-                          ),
-                          const Spacer(),
-                          Container(
-                            margin: EdgeInsets.only(right: width * 0.024),
-                            child: Icon(Icons.calendar_view_day_outlined,
-                                color: Colors.black.withOpacity(0.5)),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  _pickTimeClose(height, context, width),
                   const Spacer(),
                   Column(
                     children: [
@@ -577,7 +441,7 @@ class _ShopRegisterThirdViewState extends State<ShopRegisterThirdView> {
                                 if ((openHour == 0 && openMinute == 0) ||
                                     (closeHour == 0 && closeMinute == 0) ||
                                     !isSelectDate.contains(true)) {
-                                  Utility.flushBarErrorMessage(
+                                  return Utility.flushBarErrorMessage(
                                       message:
                                           "ERROR_MESSAGE.PLEASE_SELECT_DATE"
                                               .tr(),
@@ -646,6 +510,158 @@ class _ShopRegisterThirdViewState extends State<ShopRegisterThirdView> {
         }),
       ),
     ));
+  }
+
+  Container _pickTimeClose(double height, BuildContext context, double width) {
+    return Container(
+      height: height * 0.0546,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.white,
+        border: Border.all(color: Colors.white),
+      ),
+      child: InkWell(
+        onTap: () {
+          setState(() {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return timePicker(
+                  width: width,
+                  height: height,
+                  timeHour: closeHour,
+                  timeMinute: closeMinute,
+                  // timeFormat: closeTimeFormat,
+                  onHourChanged: (value) {
+                    setState(() {
+                      closeHour = value;
+                    });
+                  },
+                  onMinuteChanged: (value) {
+                    setState(() {
+                      closeMinute = value;
+                    });
+                  },
+                  onFormatChanged: (value) {
+                    setState(() {
+                      // closeTimeFormat = value;
+                    });
+                  },
+                );
+              },
+            );
+          });
+        },
+        child: Row(
+          children: [
+            Container(
+              margin: EdgeInsets.only(left: width * 0.0339),
+              child: Text(
+                "${closeHour.toString().padLeft(2, '0')}:${closeMinute.toString().padLeft(2, '0')} ",
+                style: kfontH1InterBoldBlackColor(),
+              ),
+            ),
+            const Spacer(),
+            Container(
+              margin: EdgeInsets.only(right: width * 0.024),
+              child: Icon(Icons.calendar_view_day_outlined,
+                  color: Colors.black.withOpacity(0.5)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Container _pickTimeOpen(double height, BuildContext context, double width) {
+    return Container(
+      height: height * 0.0546,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.white,
+        border: Border.all(color: Colors.white),
+      ),
+      child: InkWell(
+        onTap: () {
+          setState(() {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return timePicker(
+                  width: width,
+                  height: height,
+                  timeHour: openHour,
+                  timeMinute: openMinute,
+                  // timeFormat: openTimeFormat,
+                  onHourChanged: (value) {
+                    setState(() {
+                      openHour = value;
+                    });
+                  },
+                  onMinuteChanged: (value) {
+                    setState(() {
+                      openMinute = value;
+                    });
+                  },
+                  onFormatChanged: (value) {
+                    setState(() {
+                      // openTimeFormat = value;
+                    });
+                  },
+                );
+              },
+            );
+          });
+        },
+        child: Row(
+          children: [
+            Container(
+              margin: EdgeInsets.only(left: width * 0.0339),
+              child: Text(
+                "${openHour.toString().padLeft(2, '0')}:${openMinute.toString().padLeft(2, '0')} ",
+                style: kfontH1InterBoldBlackColor(),
+              ),
+            ),
+            const Spacer(),
+            Container(
+              margin: EdgeInsets.only(right: width * 0.024),
+              child: Icon(Icons.calendar_view_day_outlined,
+                  color: Colors.black.withOpacity(0.5)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Row _pickdateOpenSecond(double width, double height) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        for (int i = 5; i < 7; i++)
+          dateOpenSelectionButton(
+            width: width,
+            height: height,
+            dateIndex: i,
+          ),
+      ],
+    );
+  }
+
+  Row _pickdateOpen(double width, double height) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        for (int i = 0; i < 5; i++)
+          dateOpenSelectionButton(
+            width: width,
+            height: height,
+            dateIndex: i,
+          ),
+      ],
+    );
   }
 
   String conCatTimeFormat(int hour, int minute) {

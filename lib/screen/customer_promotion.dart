@@ -1,4 +1,4 @@
-import 'package:coffee_application/model/promotion.dart';
+import 'package:coffee_application/model/response/promotion.dart';
 import 'package:coffee_application/screen/customer_barcode.dart';
 import 'package:coffee_application/screen/my_component/bottom_navigationbar_customer.dart';
 import 'package:coffee_application/utility/decoration.dart';

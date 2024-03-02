@@ -1,7 +1,7 @@
 import 'package:coffee_application/data/network/dio_network_api_service.dart';
 import 'package:coffee_application/hive/boxes.dart';
 import 'package:coffee_application/model/customer.dart';
-import 'package:coffee_application/model/promotion.dart';
+import 'package:coffee_application/model/response/promotion.dart';
 import 'package:coffee_application/model/request/customer_review_request.dart';
 import 'package:coffee_application/model/response/promotion_claim_response.dart';
 import 'package:coffee_application/model/review.dart';

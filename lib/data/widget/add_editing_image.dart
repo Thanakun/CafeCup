@@ -15,10 +15,10 @@ class AddEditingImagesList extends StatefulWidget {
       required this.callBackFunction});
 
   final VoidCallback callBackFunction;
-  final List<XFile> listOfImagesOne;
-  final List<XFile> listOfImagesTwo;
-  final List<XFile> listOfImagesThree;
-  final List<XFile> listOfImagesFour;
+  final List<String> listOfImagesOne;
+  final List<String> listOfImagesTwo;
+  final List<String> listOfImagesThree;
+  final List<String> listOfImagesFour;
 
   @override
   State<AddEditingImagesList> createState() => _AddEditingImagesListState();
@@ -45,7 +45,7 @@ class _AddEditingImagesListState extends State<AddEditingImagesList> {
           elevation: 0,
           backgroundColor: Colors.transparent,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.black),
+            icon: const Icon(Icons.arrow_back, color: Colors.black),
             onPressed: () {
               widget.callBackFunction();
               Navigator.of(context).pop();
@@ -54,7 +54,7 @@ class _AddEditingImagesListState extends State<AddEditingImagesList> {
           ),
         ),
         body: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             image: DecorationImage(
                 image: AssetImage(backgroundImagePath), fit: BoxFit.cover),
           ),
@@ -108,11 +108,11 @@ class _AddEditingImagesListState extends State<AddEditingImagesList> {
   }
 
   Row _titleSection(
-      {required String title, required List<XFile> toInsertImageList}) {
+      {required String title, required List<String> toInsertImageList}) {
     return Row(
       children: [
         Container(
-          margin: EdgeInsets.only(bottom: 30),
+          margin: const EdgeInsets.only(bottom: 30),
           alignment: Alignment.centerLeft,
           child: Text(
             title,
@@ -123,10 +123,12 @@ class _AddEditingImagesListState extends State<AddEditingImagesList> {
         toInsertImageList.isNotEmpty
             ? GestureDetector(
                 onTap: () {
-                  selectImage(toInsertImageList);
+                  setState(() {
+                    selectImage(toInsertImageList);
+                  });
                 },
                 child: Container(
-                  margin: EdgeInsets.only(bottom: 30),
+                  margin: const EdgeInsets.only(bottom: 30),
                   alignment: Alignment.centerRight,
                   child: Text(
                     "แก้ไขรูปภาพ",
@@ -139,7 +141,7 @@ class _AddEditingImagesListState extends State<AddEditingImagesList> {
     );
   }
 
-  GridView _imageListCarousel({required List<XFile>? listOfImages}) {
+  GridView _imageListCarousel({required List<String>? listOfImages}) {
     return GridView.builder(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisSpacing: 8.0,
@@ -153,7 +155,9 @@ class _AddEditingImagesListState extends State<AddEditingImagesList> {
         return listOfImages.isEmpty
             ? GestureDetector(
                 onTap: () {
-                  selectImage(listOfImages);
+                  setState(() {
+                    selectImage(listOfImages);
+                  });
                 },
                 child: Container(
                   decoration: BoxDecoration(
@@ -177,21 +181,29 @@ class _AddEditingImagesListState extends State<AddEditingImagesList> {
                 height: 500,
                 decoration: kdecorationForContainerActiveItem,
                 child: FittedBox(
-                  child: Image.file(File(listOfImages[index].path)),
+                  child: Image.file(File(listOfImages[index])),
                 ),
               );
       },
     );
   }
 
-  void selectImage(List givenListImages) async {
+  void selectImage(List<String> givenListImages) async {
     final List<XFile> selectedImages = await _imagePicker.pickMultiImage();
     if (givenListImages.isNotEmpty) {
       givenListImages.clear();
 
-      givenListImages.addAll(selectedImages.take(5));
+      for (int i = 0; i < selectedImages.length; i++) {
+        if (i < 5) {
+          givenListImages.add(selectedImages[i].path);
+        }
+      }
     } else if (givenListImages.isEmpty) {
-      givenListImages.addAll(selectedImages.take(5));
+      for (int i = 0; i < selectedImages.length; i++) {
+        if (i < 5) {
+          givenListImages.add(selectedImages[i].path);
+        }
+      }
     } else {
       givenListImages.clear();
     }

@@ -50,7 +50,7 @@ class _SearchResultViewState extends State<SearchResultView> {
     "STUDENT": false,
     "OFFICE_WORKER": false,
     "TOURIST": false,
-    "DIGITAL_NOMAD": false,
+    "DIGITAL_NORMAD": false,
     "TAKEAWAY": false,
   };
 

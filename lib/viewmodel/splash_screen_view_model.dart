@@ -1,20 +1,28 @@
 import 'dart:convert';
 
+import 'package:coffee_application/model/response/validate_response.dart';
 import 'package:coffee_application/service/auth-service/auth-service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreenVM {
   final AuthService _authService = AuthService();
-  Future<bool> validateToken() async {
+  Future<validateData> validateToken() async {
     // String? token = await getTokenFromStorage();
     try {
-      bool result = await _authService.validateToken();
-      print("result");
-      print(result);
-      return result;
+      var result = await _authService.validateToken();
+      if (result.status == "ok") {
+        return result.data!;
+      } else {
+        return validateData(
+          iId: -1,
+          role: "Unknown",
+        );
+      }
     } catch (_) {
-      print(_);
-      return false;
+      return validateData(
+        iId: -1,
+        role: "Unknown",
+      );
     }
   }
 

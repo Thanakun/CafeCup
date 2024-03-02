@@ -3,16 +3,6 @@ import 'package:coffee_application/hive/boxes.dart';
 import 'package:coffee_application/hive/users.dart';
 import 'package:coffee_application/provider/customer-provider.dart';
 import 'package:coffee_application/provider/shop_provider.dart';
-import 'package:coffee_application/screen/customer_register_second_view.dart';
-import 'package:coffee_application/screen/customer_register_third_view.dart';
-import 'package:coffee_application/screen/customer_register_view.dart';
-import 'package:coffee_application/screen/customer_home_view.dart';
-import 'package:coffee_application/screen/garph_shop/bar_chart.dart';
-import 'package:coffee_application/screen/login.dart';
-import 'package:coffee_application/screen/my_component/graph_shop.dart';
-import 'package:coffee_application/screen/register.dart';
-import 'package:coffee_application/screen/shop_register/shop_register_second_view.dart';
-import 'package:coffee_application/screen/shop_register/shop_register_third_view.dart';
 import 'package:coffee_application/screen/splash-screen.dart';
 import "package:flutter/material.dart";
 import 'package:easy_localization/easy_localization.dart';
@@ -59,7 +49,7 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
               fontFamily: 'Open Sans',
               visualDensity: VisualDensity.adaptivePlatformDensity),
-          home: SplashScreen()),
+          home: const SplashScreen()),
     );
   }
 }

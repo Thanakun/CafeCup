@@ -187,8 +187,8 @@ class SearchCustomerVM {
         case "TOURIST":
           filters["customerGroup"] = "TOURIST";
           break;
-        case "DIGITAL_NOMAD":
-          filters["customerGroup"] = "DIGITAL_NOMAD";
+        case "DIGITAL_NORMAD":
+          filters["customerGroup"] = "DIGITAL_NORMAD";
           break;
         case "TAKEAWAY":
           filters["customerGroup"] = "TAKEAWAY";
@@ -244,8 +244,8 @@ class SearchCustomerVM {
           case "TOURIST":
             filters["customerGroup"] = "TOURIST";
             break;
-          case "DIGITAL_NOMAD":
-            filters["customerGroup"] = "DIGITAL_NOMAD";
+          case "DIGITAL_NORMAD":
+            filters["customerGroup"] = "DIGITAL_NORMAD";
             break;
           case "TAKEAWAY":
             filters["customerGroup"] = "TAKEAWAY";

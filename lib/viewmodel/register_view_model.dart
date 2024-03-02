@@ -108,25 +108,21 @@ class RegisterVM {
   //   print(customerProvider.customer.toString());
   // }
 
-  void signUp(
+  Future<bool> signUp(
       {required ShopModel shop,
       required CustomerModel customer,
-      required String userType}) {
-    print("Hi");
-    if (userType == "Shop") {
-      // Assuming postShopRegister returns a Future or provides a way to handle the response
-      _service.postShopRegister(shopProvider.shop).then((response) {
-        // Handle the response, e.g., show a message to the user
-      }).catchError((error) {
-        // Handle the error, e.g., show an error message
-      });
-    } else if (userType == "Customer") {
-      // Assuming postCustomerRegister returns a Future or provides a way to handle the response
-      _service.postCustomerRegister(customerProvider.customer).then((response) {
-        // Handle the response, e.g., show a message to the user
-      }).catchError((error) {
-        // Handle the error, e.g., show an error message
-      });
+      required String userType}) async {
+    try {
+      if (userType == "Shop") {
+        // Assuming postShopRegister returns a Future or provides a way to handle the response
+        return _service.postShopRegister(shopProvider.shop);
+      } else if (userType == "Customer") {
+        // Assuming postCustomerRegister returns a Future or provides a way to handle the response
+        return _service.postCustomerRegister(customerProvider.customer);
+      }
+      return false;
+    } catch (_) {
+      return false;
     }
   }
 

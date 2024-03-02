@@ -107,8 +107,16 @@
     "STUDENT": "นักเรียน",
     "OFFICE_WORKER": "เจ้าหน้าที่",
     "TOURIST": "นักท่องเที่ยว",
-    "DIGITAL_NOMAD": "ดิจิทัลโนเมด",
+    "DIGITAL_NORMAD": "ดิจิทัลโนเมด",
     "TAKEAWAY": "กลับบ้าน"
+  },
+
+  "GRAPH": {
+    "UNDER_22": "น้อยกว่า 22",
+    "23_TO_40": "23 - 40",
+    "41_TO_60": "41 - 60",
+    "60_PLUS": "60 ขึ้นไป",
+    "NOT_SPECIFIC": "ไม่ระบุ"
   },
 
   "CUSTOMER_REGISTER": {
@@ -132,9 +140,11 @@
 
   "PROMOTION": {
     "CODE_AVALIABLE": "โค้ดที่แจกอยู่",
+    "CODE_AVALIABLE_EMPTY": "ไม่มีโค้ดที่แจกอยู่",
     "SCAN_CODE": "สแกนรหัส",
     "HISTORY_USED": "ประวัติการใช้โค้ด",
-    "YOU_HAVE_CODE_AVALIABLE": "คุณมีโค้ดที่ใช้ได้อยู่!"
+    "YOU_HAVE_CODE_AVALIABLE": "คุณมีโค้ดที่ใช้ได้อยู่!",
+    "CREATE_CODE_PROMOTION": "สร้างโค้ดโปรโมชั่น"
   },
 
   "CHART": {
@@ -143,6 +153,53 @@
       "PIE_CHART_LABEL": "กราฟแสดงช่วงอายุ",
       "WEB_CHART_LABEL": "กราฟแสดงคะแนนของร้าน",
       "LINEAR_CHART_LABEL": "กราฟแสดงอันดับคะแนน"
+    },
+    "FILTER": {
+      "ALL_TIME": "ทุกช่วงเวลา",
+      "QUARTER": "ไตรมาส",
+      "MONTH": "เดือน",
+      "YEAR": "ปี"
+    },
+
+    "MONTH": {
+      "JANUARY": "ม.ค.",
+      "FEBRUARY": "ก.พ.",
+      "MARCH": "มี.ค.",
+      "APRIL": "เม.ย.",
+      "MAY": "พ.ค.",
+      "JUNE": "มิ.ย.",
+      "JULY": "ก.ค.",
+      "AUGUST": "ส.ค.",
+      "SEPTEMBER": "ก.ย.",
+      "OCTOBER": "ต.ค.",
+      "NOVEMBER": "พ.ย.",
+      "DECEMBER": "ธ.ค."
+    },
+
+    "DATA_CATEGORY": {
+      "ALL": "ทุกประเภท",
+      "FLAVOUR": "รสชาติ",
+      "PLACE": "บรรยากาศ",
+      "PARKING": "ที่จอดรถ",
+      "SERVICE": "บริการ",
+      "WORTHINESS": "ความคุ้มค่า"
+    },
+
+    "LABEL": {
+      "MIN": "น้อยที่สุด",
+      "MAX": "มากที่สุด",
+      "SHOP AVG": "คะแนนเฉลี่ยจากร้านอื่นๆ",
+      "MY AVG": "คะแนนเฉลี่ยร้านของคุณ"
+    },
+    "DAY_OF_WEEK": {
+      "ALL": "ทุกช่วง",
+      "SUN": "อาทิตย์",
+      "MON": "จันทร์",
+      "TUE": "อังคาร",
+      "WED": "พุธ",
+      "THU": "พฤหัสบดี",
+      "FRI": "ศุกร์",
+      "SAT": "เสาร์"
     },
 
     "BAR_CHART_PAGE": {
@@ -163,7 +220,8 @@
       "PARKING": "ที่จอดรถ"
     },
     "TIME_RANGE_TITLE": "เลือกช่วงเวลา",
-    "PICK_DAY_OF_WEEK": "เลือกวัน"
+    "PICK_DAY_OF_WEEK": "เลือกวัน",
+    "CATEGORY": "เลือกหมวดหมู่"
   },
 
   "ALL_SHOP_MENU": {
@@ -178,6 +236,18 @@
     }
   },
 
+  "PROMOTION_VALIDATE": {
+    "LABEL": {
+      "CODEDETAIL": "รายละเอียดโค้ด",
+      "EXPIREDLENGTH": "ระยะเวลาโค้ด",
+      "AMOUNT": "จำนวน"
+    },
+    "VALIDATOR_FIELD": {
+      "CODEDETAIL": "กรุณากรอกโค้ด",
+      "EXPIREDLENGTH": "กรุณากรอกระยะเวลาโค้ด",
+      "AMOUNT": "กรุณากรอกจำนวน"
+    }
+  },
   "VALIDATE": {
     "VALIDATE_USERNAME": {
       "EMPTY": "ชื่อผู้ใช้ต้องไม่ว่าง",
@@ -204,6 +274,11 @@
       "EMPTY": "กรุณากรอกราคา",
       "INVALID": "กรุณากรอกราคาที่ถูกต้อง",
       "OUT_OF_RANGE": "ราคาต้องอยู่ระหว่าง 0 ถึง 99999"
+    },
+    "VALIDATE_PICK_RANGE": {
+      "EMPTY": "กรุณาเลือกช่วงเวลาหมดอายุ",
+      "INVALID": "กรุณาเลือกช่วงเวลาที่ถูกต้อง",
+      "OUT_OF_RANGE": "ราคาต้องอยู่ระหว่าง 0 ถึง 99"
     }
   },
   "ERROR_MESSAGE": {
@@ -220,6 +295,15 @@
     "CLAIM_CODE_FAIL": "เกิดข้อผิดพลาดในการสำหรับโค้ด",
     "PLEASE_INSERT_DATA_INFORMATION": "กรุณากรอกข้อมูลให้ครบถ้วน",
     "PLEASE_SELECT_MENU": "กรุณาเลือกเมนู",
-    "PLEASE_SELECT_DATE": "กรุณาเลือกวันที่"
+    "PLEASE_SELECT_DATE": "กรุณาเลือกวันที่",
+    "SHOP_DESCRIPTION_EMPTY": "กรุณากรอกคําอธิบายร้านค้า"
+  },
+
+  "ALERT_DIALOG": {
+    "CONFIRMATION": "ยืนยันการแก้ไข",
+    "CONFIRM": "ยืนยัน",
+    "CONFIRMATION_MESSAGE": "คุณต้องการแก้ไขข้อมูลหรือไม่?",
+    "CANCEL": "ยกเลิก",
+    "STAY_IN_THIS_PAGE": "อยู่ต่อ"
   }
 }

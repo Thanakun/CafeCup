@@ -309,20 +309,7 @@ class _CustomerRegisterSecondState extends State<CustomerRegisterSecond> {
     "6": "Customer group",
   };
 
-  List<Map<String, String>> orderSelectedTags = [
-    {
-      "key": "1",
-      "value": "ศรึภูมิ",
-    },
-    {
-      "key": "2",
-      "value": "MEDIUM",
-    },
-    {
-      "key": "3",
-      "value": "MORNING",
-    },
-  ];
+  List<Map<String, String>> orderSelectedTags = [];
 
   final CarouselController _controller = CarouselController();
   int _current = 1;
@@ -864,24 +851,108 @@ class _CustomerRegisterSecondState extends State<CustomerRegisterSecond> {
                         onTap: () {
                           setState(
                             () {
-                              if (selectedItem != null &&
-                                  orderSelectedTags.length < 3) {
-                                orderSelectedTags.add(
-                                    {"key": entry.key, "value": selectedItem!});
+                              String _selectedTags = "";
+                              if (entry.key != "1") {
+                                switch (selectedItem) {
+                                  case "นักเรียน / นักศึกษา":
+                                    _selectedTags = "STUDENT";
+                                    break;
+                                  case "พนักงานออฟฟิศ":
+                                    _selectedTags = "OFFICE_WORKER";
+                                    break;
+                                  case "นักท่องเที่ยว":
+                                    _selectedTags = "TOURIST";
+                                    break;
 
-                                modalSetState(() {
-                                  Navigator.pop(modalContext);
-                                });
-                                Utility.flushBarGrantedMessage(
-                                    message: "Added", context: context);
-                              } else if (selectedItem == null) {
-                                Utility.toastMessage(
-                                  "ERROR_MESSAGE.PLEASE_ENTER_VALUE".tr(),
-                                );
-                              } else if (orderSelectedTags.length >= 3) {
-                                Utility.toastMessage(
-                                  "ERROR_MESSAGE.PICK_ONLY_THREE_ITEM".tr(),
-                                );
+                                  case "ดิจิทอล โนแมด":
+                                    _selectedTags = "DIGITAL_NORMAD";
+                                    break;
+
+                                  case "ซื้อกลับบ้าน":
+                                    _selectedTags = "TAKEAWAY";
+                                    break;
+                                  case "เงียบ":
+                                    _selectedTags = "QUITE";
+                                    break;
+                                  case "ใช้เสียงได้":
+                                    _selectedTags = "NORMAL";
+                                    break;
+                                  case "เล็ก":
+                                    _selectedTags = "SMALL";
+                                    break;
+                                  case "ใหญ่":
+                                    _selectedTags = "LARGE";
+                                    break;
+                                  case "เช้าตรู่":
+                                    _selectedTags = "EARLYMORNING";
+                                    break;
+                                  case "เช้าสาย":
+                                    _selectedTags = "MORNING";
+                                    break;
+                                  case "เที่ยงบ่าย":
+                                    _selectedTags = "AFTERNOON";
+                                    break;
+                                  case "เย็นค่ำ":
+                                    _selectedTags = "EVENING";
+                                    break;
+                                  case "กลางคืน":
+                                    _selectedTags = "NIGHT";
+                                    break;
+                                  case "ย่อมเยา":
+                                    _selectedTags = "CHEAP";
+                                    break;
+                                  case "ปานกลาง":
+                                    _selectedTags = "MEDIUM";
+                                    break;
+                                  case "สูง":
+                                    _selectedTags = "HIGH";
+                                    break;
+                                  default:
+                                    break;
+                                }
+                                if (selectedItem != null &&
+                                    orderSelectedTags.length < 3) {
+                                  orderSelectedTags.add({
+                                    "key": entry.key,
+                                    "value": _selectedTags
+                                  });
+
+                                  modalSetState(() {
+                                    Navigator.pop(modalContext);
+                                  });
+                                  Utility.flushBarGrantedMessage(
+                                      message: "Added", context: context);
+                                } else if (selectedItem == null) {
+                                  Utility.toastMessage(
+                                    "ERROR_MESSAGE.PLEASE_ENTER_VALUE".tr(),
+                                  );
+                                } else if (orderSelectedTags.length >= 3) {
+                                  Utility.toastMessage(
+                                    "ERROR_MESSAGE.PICK_ONLY_THREE_ITEM".tr(),
+                                  );
+                                }
+                              } else {
+                                if (selectedItem != null &&
+                                    orderSelectedTags.length < 3) {
+                                  orderSelectedTags.add({
+                                    "key": entry.key,
+                                    "value": selectedItem!
+                                  });
+
+                                  modalSetState(() {
+                                    Navigator.pop(modalContext);
+                                  });
+                                  Utility.flushBarGrantedMessage(
+                                      message: "Added", context: context);
+                                } else if (selectedItem == null) {
+                                  Utility.toastMessage(
+                                    "ERROR_MESSAGE.PLEASE_ENTER_VALUE".tr(),
+                                  );
+                                } else if (orderSelectedTags.length >= 3) {
+                                  Utility.toastMessage(
+                                    "ERROR_MESSAGE.PICK_ONLY_THREE_ITEM".tr(),
+                                  );
+                                }
                               }
                             },
                           );

@@ -1,8 +1,6 @@
-import 'dart:convert';
 import 'package:coffee_application/hive/boxes.dart';
 import 'package:coffee_application/hive/users.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TokenManager extends Interceptor {
@@ -13,7 +11,7 @@ class TokenManager extends Interceptor {
 
   String? _token;
   int? _id;
-  
+
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
     final status = response.statusCode;
@@ -30,8 +28,22 @@ class TokenManager extends Interceptor {
         } else if (status == 401) {
           clearToken();
         }
+      } else if (response.data.containsKey('token') &&
+          response.data.containsKey('currentShop')) {
+        var token = response.data['token'] as String?;
+        var currentShop = response.data['currentShop'] as Map<String, dynamic>?;
+
+        if (token != null &&
+            currentShop != null &&
+            currentShop['_id'] != null) {
+          _saveToken(token, currentShop['_id']);
+        } else if (status == 401) {
+          clearToken();
+        }
       } else {}
-    } catch (e) {}
+    } catch (e) {
+      print(e);
+    }
 
     // Continue with the response handling
     super.onResponse(response, handler);
@@ -42,7 +54,7 @@ class TokenManager extends Interceptor {
     try {
       options.headers['token'] = '$_token';
       options.headers['Access-Control-Allow-Origin'] = '*';
-
+      print(_token);
       if (options.path == "/customer/login") {
         options.queryParameters = {'_id': _id};
       }

@@ -19,8 +19,11 @@ import 'package:provider/provider.dart';
 
 class AllMenuShopPage extends StatefulWidget {
   const AllMenuShopPage({
+    required this.shop,
     super.key,
   });
+
+  final ShopModel shop;
 
   @override
   State<AllMenuShopPage> createState() => _AllMenuShopPageState();
@@ -37,6 +40,12 @@ class _AllMenuShopPageState extends State<AllMenuShopPage> {
   TextEditingController categoryMenu = TextEditingController();
 
   TextEditingController searchText = TextEditingController();
+  late List<Menus> _filteredMenus;
+  @override
+  void initState() {
+    super.initState();
+    _filteredMenus = widget.shop.menus!;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -149,6 +158,7 @@ class _AllMenuShopPageState extends State<AllMenuShopPage> {
                                 controller: nameMenu,
                               ),
                               TextFormField(
+                                keyboardType: TextInputType.number,
                                 style: kfontH2InterBlackColor(),
                                 textAlign: TextAlign.start,
                                 decoration: InputDecoration(
@@ -168,7 +178,6 @@ class _AllMenuShopPageState extends State<AllMenuShopPage> {
                                 controller: priceMenu,
                               ),
                               TextFormField(
-                                keyboardType: TextInputType.number,
                                 style: kfontH2InterBlackColor(),
                                 textAlign: TextAlign.start,
                                 decoration: InputDecoration(
@@ -187,7 +196,8 @@ class _AllMenuShopPageState extends State<AllMenuShopPage> {
                                     hintStyle: kfontH2InterBlackColor()),
                                 validator: (value) {
                                   if (value!.isEmpty) {
-                                    return 'ALL_SHOP_MENU.VALIDATOR_FIELD.CATEGORY';
+                                    return 'ALL_SHOP_MENU.VALIDATOR_FIELD.CATEGORY'
+                                        .tr();
                                   }
                                   return null;
                                 },
@@ -324,18 +334,16 @@ class _AllMenuShopPageState extends State<AllMenuShopPage> {
                       //   });
                       // },
                       shrinkWrap: true,
-                      itemCount:
-                          context.read<ShopProvider>().filteredMenus.length,
+                      itemCount: _filteredMenus.length,
                       itemBuilder: (context, index) {
                         late Menus item;
-                        item =
-                            context.read<ShopProvider>().filteredMenus[index];
+                        item = _filteredMenus[index];
                         return Dismissible(
                           key: ValueKey(item),
                           direction: DismissDirection.endToStart,
                           onDismissed: (direction) {
                             setState(() {
-                              context.read<ShopProvider>().removeMenuAt(index);
+                              widget.shop.menus!.removeAt(index);
                             });
                           },
                           background: Container(
@@ -561,7 +569,7 @@ class _AllMenuShopPageState extends State<AllMenuShopPage> {
             setState(
               () {
                 searchText.text = value;
-                context.read<ShopProvider>().filterMenusByName(value);
+                filterMenusByName(menu: widget.shop.menus!, query: value);
                 // _searchViewModel.onUserSearchItemFilter(searchText.text);
               },
             );
@@ -585,7 +593,8 @@ class _AllMenuShopPageState extends State<AllMenuShopPage> {
       );
 
       setState(() {
-        context.read<ShopProvider>().addMenu(menu);
+        widget.shop.menus!.add(menu);
+        // context.read<ShopProvider>().addMenu(menu);
       });
 
       //clear
@@ -654,5 +663,15 @@ class _AllMenuShopPageState extends State<AllMenuShopPage> {
     setState(() {
       selectedImage = File(returnedImage!.path);
     });
+  }
+
+  void filterMenusByName({required List<Menus> menu, required String query}) {
+    // Update the list of filtered menus based on the name
+    _filteredMenus = menu
+        .where((menu) =>
+            (menu.name!.toLowerCase().contains(query.toLowerCase())) ||
+            (menu.category!.toLowerCase().contains(query.toLowerCase())) ||
+            (menu.price.toString().contains(query)))
+        .toList();
   }
 }
