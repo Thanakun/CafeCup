@@ -1,3 +1,4 @@
+// import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:barcode/barcode.dart';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:coffee_application/utility/my_constant.dart';
@@ -6,12 +7,12 @@ import 'package:flutter/material.dart';
 
 class CustomerBarcodeView extends StatefulWidget {
   const CustomerBarcodeView({
-    super.key,
+    Key? key,
     required this.codeString,
     required this.codeDetail,
     required this.dateExpired,
     required this.codeName,
-  });
+  }) : super(key: key);
 
   final String codeString;
   final String codeDetail;
@@ -23,6 +24,9 @@ class CustomerBarcodeView extends StatefulWidget {
 }
 
 class _CustomerBarcodeViewState extends State<CustomerBarcodeView> {
+  bool isScannedByShop = false;
+  // late QRViewController controller;
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -36,10 +40,11 @@ class _CustomerBarcodeViewState extends State<CustomerBarcodeView> {
             backgroundColor: Colors.transparent,
             centerTitle: true,
             leading: IconButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                icon: const Icon(Icons.arrow_back_ios)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              icon: const Icon(Icons.arrow_back_ios),
+            ),
           ),
           resizeToAvoidBottomInset: false,
           backgroundColor: const Color.fromRGBO(255, 245, 233, 1),
@@ -109,4 +114,18 @@ class _CustomerBarcodeViewState extends State<CustomerBarcodeView> {
       ),
     );
   }
+
+  void handleCodeBeingScanned(String scanData) {
+    setState(() {
+      isScannedByShop = true;
+    });
+    print("isScannedByShop");
+    print(isScannedByShop);
+  }
+
+  // @override
+  // void dispose() {
+  //   controller.dispose();
+  //   super.dispose();
+  // }
 }

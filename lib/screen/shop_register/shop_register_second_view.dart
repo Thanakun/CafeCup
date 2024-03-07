@@ -97,11 +97,8 @@ class _ShopRegisterSecondViewState extends State<ShopRegisterSecondView> {
                         fit: BoxFit.fill,
                         child: kIsWeb
                             ? Image.memory(webImage)
-                            : Image.file(File(context
-                                .read<ShopProvider>()
-                                .shop
-                                .coverImage!
-                                )),
+                            : Image.file(File(
+                                context.read<ShopProvider>().shop.coverImage!)),
                       ),
                     )
                   : Container(

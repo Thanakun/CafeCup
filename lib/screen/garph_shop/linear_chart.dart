@@ -97,7 +97,7 @@ class _LinearChartPageState extends State<LinearChartPage> {
               SliverMultilineAppBar(
                 title: "CHART.BAR_CHART_PAGE.BAR_CHART_TITLE".tr(),
                 leading: IconButton(
-                  icon: Icon(Icons.arrow_back_ios, color: Colors.black),
+                  icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
@@ -129,10 +129,10 @@ class _LinearChartPageState extends State<LinearChartPage> {
                                 });
                               },
                               child: AnimatedContainer(
-                                duration: Duration(milliseconds: 500),
+                                duration: const Duration(milliseconds: 500),
                                 height:
                                     allTimeHeight == 0 ? 100 : allTimeHeight,
-                                padding: EdgeInsets.all(15),
+                                padding: const EdgeInsets.all(15),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   color: selectDateType == "All Time"
@@ -175,7 +175,7 @@ class _LinearChartPageState extends State<LinearChartPage> {
                                 });
                               },
                               child: AnimatedContainer(
-                                duration: Duration(milliseconds: 500),
+                                duration: const Duration(milliseconds: 500),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   color: selectDateType == "Quarter"
@@ -188,7 +188,7 @@ class _LinearChartPageState extends State<LinearChartPage> {
                                       ? null
                                       : selectButtonColor.withOpacity(0.4),
                                 ),
-                                padding: EdgeInsets.all(15),
+                                padding: const EdgeInsets.all(15),
                                 child: Column(children: [
                                   Center(
                                     child: Text(
@@ -206,7 +206,7 @@ class _LinearChartPageState extends State<LinearChartPage> {
                                           customButton: Container(
                                             width: 80,
                                             height: 30,
-                                            padding: EdgeInsets.only(
+                                            padding: const EdgeInsets.only(
                                                 left: 5, right: 5),
                                             decoration: BoxDecoration(
                                                 borderRadius:
@@ -215,8 +215,8 @@ class _LinearChartPageState extends State<LinearChartPage> {
                                             child: Row(
                                               children: [
                                                 Text(selectedYearQuarter),
-                                                Spacer(),
-                                                Icon(
+                                                const Spacer(),
+                                                const Icon(
                                                   Icons.arrow_drop_down_rounded,
                                                   color: selectButtonColor,
                                                 )
@@ -258,7 +258,7 @@ class _LinearChartPageState extends State<LinearChartPage> {
                                           customButton: Container(
                                             width: 60,
                                             height: 30,
-                                            padding: EdgeInsets.only(
+                                            padding: const EdgeInsets.only(
                                                 left: 5, right: 5),
                                             decoration: BoxDecoration(
                                                 borderRadius:
@@ -267,8 +267,8 @@ class _LinearChartPageState extends State<LinearChartPage> {
                                             child: Row(
                                               children: [
                                                 Text(selectedQuarter),
-                                                Spacer(),
-                                                Icon(
+                                                const Spacer(),
+                                                const Icon(
                                                   Icons.arrow_drop_down_rounded,
                                                   color: selectButtonColor,
                                                 )
@@ -335,10 +335,10 @@ class _LinearChartPageState extends State<LinearChartPage> {
                                 });
                               },
                               child: AnimatedContainer(
-                                duration: Duration(milliseconds: 500),
+                                duration: const Duration(milliseconds: 500),
                                 height:
                                     allTimeHeight == 0 ? 100 : allTimeHeight,
-                                padding: EdgeInsets.all(15),
+                                padding: const EdgeInsets.all(15),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   color: selectDateType == "Year"
@@ -365,7 +365,7 @@ class _LinearChartPageState extends State<LinearChartPage> {
                                         customButton: Container(
                                           width: 80,
                                           height: 30,
-                                          padding: EdgeInsets.only(
+                                          padding: const EdgeInsets.only(
                                               left: 5, right: 5),
                                           decoration: BoxDecoration(
                                               borderRadius:
@@ -374,8 +374,8 @@ class _LinearChartPageState extends State<LinearChartPage> {
                                           child: Row(
                                             children: [
                                               Text(selectedYear),
-                                              Spacer(),
-                                              Icon(
+                                              const Spacer(),
+                                              const Icon(
                                                 Icons.arrow_drop_down_rounded,
                                                 color: selectButtonColor,
                                               )
@@ -425,7 +425,7 @@ class _LinearChartPageState extends State<LinearChartPage> {
                                 });
                               },
                               child: AnimatedContainer(
-                                duration: Duration(milliseconds: 500),
+                                duration: const Duration(milliseconds: 500),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   color: selectDateType == "Month"
@@ -438,7 +438,7 @@ class _LinearChartPageState extends State<LinearChartPage> {
                                       ? null
                                       : selectButtonColor.withOpacity(0.4),
                                 ),
-                                padding: EdgeInsets.all(15),
+                                padding: const EdgeInsets.all(15),
                                 child: Column(children: [
                                   Center(
                                     child: Text(
@@ -453,9 +453,9 @@ class _LinearChartPageState extends State<LinearChartPage> {
                                       DropdownButtonHideUnderline(
                                         child: DropdownButton2<String>(
                                           customButton: Container(
-                                            width: 125,
+                                            width: 80,
                                             height: 30,
-                                            padding: EdgeInsets.only(
+                                            padding: const EdgeInsets.only(
                                                 left: 5, right: 5),
                                             decoration: BoxDecoration(
                                                 borderRadius:
@@ -466,8 +466,8 @@ class _LinearChartPageState extends State<LinearChartPage> {
                                                 Text(
                                                     "CHART.MONTH.$selectMonthString"
                                                         .tr()),
-                                                Spacer(),
-                                                Icon(
+                                                const Spacer(),
+                                                const Icon(
                                                   Icons.arrow_drop_down_rounded,
                                                   color: selectButtonColor,
                                                 )
@@ -523,7 +523,7 @@ class _LinearChartPageState extends State<LinearChartPage> {
                                           customButton: Container(
                                             width: 72,
                                             height: 30,
-                                            padding: EdgeInsets.only(
+                                            padding: const EdgeInsets.only(
                                                 left: 5, right: 5),
                                             decoration: BoxDecoration(
                                                 borderRadius:
@@ -532,7 +532,7 @@ class _LinearChartPageState extends State<LinearChartPage> {
                                             child: Row(
                                               children: [
                                                 Text(selectedYearMonth),
-                                                Icon(
+                                                const Icon(
                                                   Icons.arrow_drop_down_rounded,
                                                   color: selectButtonColor,
                                                 )
@@ -633,7 +633,7 @@ class _LinearChartPageState extends State<LinearChartPage> {
                                           color: selectButtonColor
                                               .withOpacity(0.5)),
                                       alignment: Alignment.center,
-                                      padding: EdgeInsets.all(30),
+                                      padding: const EdgeInsets.all(30),
                                       child: Text(
                                         "กราฟแสดงจำนวนลูกค้าเฉลี่ยใน วันจันทร์ ตลอดระยะเวลาที่ผ่านมาเฉลี่ยตลอด \n \n วันคิดเป็น 30 คน/ชั่วโมงในช่วงพีคมีลูกค้า 80 คน/ชั่วโมง",
                                         style: kfontH2InterBlackColor(),
@@ -665,7 +665,7 @@ class _LinearChartPageState extends State<LinearChartPage> {
           width: 20,
           height: 20,
           margin: EdgeInsets.only(right: width * 0.01, left: width * 0.01),
-          decoration: ShapeDecoration(shape: StadiumBorder(), color: color),
+          decoration: ShapeDecoration(shape: const StadiumBorder(), color: color),
         ),
       ),
       WidgetSpan(
@@ -746,7 +746,7 @@ class _LinearChartPageState extends State<LinearChartPage> {
               borderRadius: BorderRadius.circular(15),
               color: selectButtonColor.withOpacity(0.5)),
           alignment: Alignment.center,
-          padding: EdgeInsets.all(30),
+          padding: const EdgeInsets.all(30),
           child: Text(
             "กราฟแสดงอันดับคะแนนของร้านในหมวด บรรยากาศ ในเดือนกุมภาภันธ์ 2022",
             style: kfontH2InterBlackColor(),
@@ -808,7 +808,7 @@ class _LinearChartPageState extends State<LinearChartPage> {
                 dataSource: chartData,
                 xValueMapper: (ChartData data, _) => data.x,
                 yValueMapper: (ChartData data, _) => data.y,
-                borderRadius: BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(10),
                     topRight: Radius.circular(10)),
                 pointColorMapper: (ChartData data, _) => data.color,
@@ -834,7 +834,7 @@ class _LinearChartPageState extends State<LinearChartPage> {
               // padding: EdgeInsets.only(left: 5, right: 5, top: 10, bottom: 10),
               decoration: BoxDecoration(
                 border: isSelected
-                    ? Border(
+                    ? const Border(
                         bottom: BorderSide(
                           color:
                               Colors.black, // Change the border color as needed

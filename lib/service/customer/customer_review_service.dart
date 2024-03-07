@@ -16,7 +16,10 @@ class CustomerReviewService {
 
   Future<List<ShopModel>> getAllShop([Map<String, dynamic>? filter]) async {
     try {
-      final response = await _dio.postAuthApi("/shop/get", filter);
+      final response = await _dio.postAuthApi("/shop/get", filter,{
+        "page": 1,
+        "pageSize": 1000
+      });
       List<dynamic> responseData = response["data"];
       List<ShopModel> shops =
           responseData.map((data) => ShopModel.fromJson(data)).toList();

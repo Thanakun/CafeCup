@@ -183,107 +183,107 @@ class _CustomerReviewPageState extends State<CustomerReviewPage> {
                                   sectionBufferHeight(
                                     bufferSection: height * 0.05,
                                   ),
-                                  Align(
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      "รูปภาพ",
-                                      style: kfontH2InterBlackColor(),
-                                    ),
-                                  ),
-                                  _selectedImage != null
-                                      ? Container(
-                                          alignment: Alignment.center,
-                                          margin: const EdgeInsets.all(16),
-                                          width: width * 0.606,
-                                          height: height * 0.1639,
-                                          decoration: BoxDecoration(
-                                              color: backGroundButton,
-                                              borderRadius:
-                                                  BorderRadius.circular(20)),
-                                          child: FittedBox(
-                                            clipBehavior: Clip.hardEdge,
-                                            fit: BoxFit.fill,
-                                            child: Image.file(
-                                                File(_selectedImage!.path)),
-                                          ),
-                                        )
-                                      : Container(
-                                          alignment: Alignment.center,
-                                          margin: const EdgeInsets.all(16),
-                                          width: width * 0.606,
-                                          height: height * 0.1639,
-                                          decoration: BoxDecoration(
-                                            color: backGroundButton,
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                          ),
-                                        ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      InkWell(
-                                        onTap: () {
-                                          _pickImageFromGallery();
-                                        },
-                                        child: Container(
-                                          padding: const EdgeInsets.all(16),
-                                          decoration: BoxDecoration(
-                                              color: fontMenuNameColor,
-                                              borderRadius:
-                                                  BorderRadius.circular(20)),
-                                          child: Center(
-                                            child: RichText(
-                                              text: TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                    text: "camera ",
-                                                    style:
-                                                        kfontH2InterWhiteColor(),
-                                                  ),
-                                                  const WidgetSpan(
-                                                      child: Icon(
-                                                    Icons.image_sharp,
-                                                    color: Colors.white,
-                                                  ))
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      InkWell(
-                                        onTap: () {
-                                          _pickImageFromCamera();
-                                        },
-                                        child: Container(
-                                          padding: const EdgeInsets.all(16),
-                                          decoration: BoxDecoration(
-                                              color: fontMenuNameColor,
-                                              borderRadius:
-                                                  BorderRadius.circular(20)),
-                                          child: Center(
-                                            child: RichText(
-                                              text: TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                    text: "gallery ",
-                                                    style:
-                                                        kfontH2InterWhiteColor(),
-                                                  ),
-                                                  const WidgetSpan(
-                                                      child: Icon(
-                                                          Icons
-                                                              .camera_alt_outlined,
-                                                          color: Colors.white))
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                  // Align(
+                                  //   alignment: Alignment.center,
+                                  //   child: Text(
+                                  //     "รูปภาพ",
+                                  //     style: kfontH2InterBlackColor(),
+                                  //   ),
+                                  // ),
+                                  // _selectedImage != null
+                                  //     ? Container(
+                                  //         alignment: Alignment.center,
+                                  //         margin: const EdgeInsets.all(16),
+                                  //         width: width * 0.606,
+                                  //         height: height * 0.1639,
+                                  //         decoration: BoxDecoration(
+                                  //             color: backGroundButton,
+                                  //             borderRadius:
+                                  //                 BorderRadius.circular(20)),
+                                  //         child: FittedBox(
+                                  //           clipBehavior: Clip.hardEdge,
+                                  //           fit: BoxFit.fill,
+                                  //           child: Image.file(
+                                  //               File(_selectedImage!.path)),
+                                  //         ),
+                                  //       )
+                                  //     : Container(
+                                  //         alignment: Alignment.center,
+                                  //         margin: const EdgeInsets.all(16),
+                                  //         width: width * 0.606,
+                                  //         height: height * 0.1639,
+                                  //         decoration: BoxDecoration(
+                                  //           color: backGroundButton,
+                                  //           borderRadius:
+                                  //               BorderRadius.circular(20),
+                                  //         ),
+                                  //       ),
+                                  // Row(
+                                  //   mainAxisAlignment:
+                                  //       MainAxisAlignment.spaceEvenly,
+                                  //   children: [
+                                  //     InkWell(
+                                  //       onTap: () {
+                                  //         _pickImageFromGallery();
+                                  //       },
+                                  //       child: Container(
+                                  //         padding: const EdgeInsets.all(16),
+                                  //         decoration: BoxDecoration(
+                                  //             color: fontMenuNameColor,
+                                  //             borderRadius:
+                                  //                 BorderRadius.circular(20)),
+                                  //         child: Center(
+                                  //           child: RichText(
+                                  //             text: TextSpan(
+                                  //               children: [
+                                  //                 TextSpan(
+                                  //                   text: "camera ",
+                                  //                   style:
+                                  //                       kfontH2InterWhiteColor(),
+                                  //                 ),
+                                  //                 const WidgetSpan(
+                                  //                     child: Icon(
+                                  //                   Icons.image_sharp,
+                                  //                   color: Colors.white,
+                                  //                 ))
+                                  //               ],
+                                  //             ),
+                                  //           ),
+                                  //         ),
+                                  //       ),
+                                  //     ),
+                                  //     InkWell(
+                                  //       onTap: () {
+                                  //         _pickImageFromCamera();
+                                  //       },
+                                  //       child: Container(
+                                  //         padding: const EdgeInsets.all(16),
+                                  //         decoration: BoxDecoration(
+                                  //             color: fontMenuNameColor,
+                                  //             borderRadius:
+                                  //                 BorderRadius.circular(20)),
+                                  //         child: Center(
+                                  //           child: RichText(
+                                  //             text: TextSpan(
+                                  //               children: [
+                                  //                 TextSpan(
+                                  //                   text: "gallery ",
+                                  //                   style:
+                                  //                       kfontH2InterWhiteColor(),
+                                  //                 ),
+                                  //                 const WidgetSpan(
+                                  //                     child: Icon(
+                                  //                         Icons
+                                  //                             .camera_alt_outlined,
+                                  //                         color: Colors.white))
+                                  //               ],
+                                  //             ),
+                                  //           ),
+                                  //         ),
+                                  //       ),
+                                  //     ),
+                                  //   ],
+                                  // ),
                                   sectionBufferHeight(
                                     bufferSection: height * 0.05,
                                   ),
@@ -307,33 +307,46 @@ class _CustomerReviewPageState extends State<CustomerReviewPage> {
                                   ),
                                   GestureDetector(
                                     onTap: () {
-                                      _vm
-                                          .onUserSubmitReview(
-                                            review: CustomerReviewRequestBody(
-                                              iShopId: shop!.iId!,
-                                              menuName: menu!.name,
-                                              flavour: _foodScore,
-                                              place: _placeScore,
-                                              service: _serviceScore,
-                                              parking: _parkingScore,
-                                              worthiness: _worthinessScore,
-                                              comment: comment.text,
-                                            ),
-                                          )
-                                          .then((value) => {
-                                                if (value)
-                                                  {
-                                                    //clear all field
-                                                    _clearField(),
-                                                    Utility.toastMessage(
-                                                        "บันทึกข้อมูลสําเร็จ")
-                                                  }
-                                                else
-                                                  {
-                                                    Utility.toastMessage(
-                                                        "บันทึกข้อมูลไม่สําเร็จ")
-                                                  }
-                                              });
+                                      if (shop != null ||
+                                          menu != null ||
+                                          _foodScore != 0 ||
+                                          _placeScore != 0 ||
+                                          _serviceScore != 0 ||
+                                          _parkingScore != 0 ||
+                                          _worthinessScore != 0) {
+                                        _vm
+                                            .onUserSubmitReview(
+                                              review: CustomerReviewRequestBody(
+                                                iShopId: shop!.iId!,
+                                                menuName: menu!.name,
+                                                flavour: _foodScore,
+                                                place: _placeScore,
+                                                service: _serviceScore,
+                                                parking: _parkingScore,
+                                                worthiness: _worthinessScore,
+                                                comment: comment.text,
+                                              ),
+                                            )
+                                            .then((value) => {
+                                                  if (value)
+                                                    {
+                                                      //clear all field
+                                                      _clearField(),
+                                                      Utility.toastMessage(
+                                                          "บันทึกข้อมูลสําเร็จ")
+                                                    }
+                                                  else
+                                                    {
+                                                      Utility.toastMessage(
+                                                          "บันทึกข้อมูลไม่สําเร็จ")
+                                                    }
+                                                });
+                                      } else {
+                                        {
+                                          Utility.toastMessage(
+                                              "บันทึกข้อมูลไม่สําเร็จ");
+                                        }
+                                      }
                                     },
                                     child: Container(
                                       alignment: Alignment.center,
@@ -807,9 +820,7 @@ class _CustomerReviewPageState extends State<CustomerReviewPage> {
             Icon(Icons.star, size: height * 0.05),
           ]),
           sectionBufferHeight(bufferSection: height * 0.02),
-          
         ],
-        
       ),
     );
   }

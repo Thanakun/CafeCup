@@ -6,7 +6,7 @@ class CustomerRecommendation {
 
   CustomerRecommendation.fromJson(Map<String, dynamic> json) {
     iShopID = json['_shopID'];
-    score = json['score'];
+    score = json['score']?.toDouble();
   }
 
   Map<String, dynamic> toJson() {

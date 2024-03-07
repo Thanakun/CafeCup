@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:coffee_application/model/shop.dart';
 import 'package:coffee_application/screen/customer_shop_view.dart';
@@ -411,23 +412,9 @@ class _SearchResultViewState extends State<SearchResultView> {
           return Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                width: constraints.maxWidth * 0.32,
-                height: height * 0.13,
-                margin: EdgeInsets.only(right: constraints.maxWidth * 0.03),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  image: DecorationImage(
-                    onError: (error, stackTrace) {
-                      const AssetImage(imageNotFound);
-                    },
-                    scale: 2,
-                    fit: BoxFit.cover,
-                    image: const AssetImage(shopCoverImagePath),
-                  ),
-                ),
-              ),
+              shop.coverImage == null
+                  ? _imageShopForNullImage(constraints, height)
+                  : _imageShopForimage(constraints, height, shop),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
@@ -437,7 +424,7 @@ class _SearchResultViewState extends State<SearchResultView> {
                     Row(
                       children: [
                         Container(
-                          width: constraints.maxWidth * 0.2,
+                          width: constraints.maxWidth * 0.25,
                           child: Text(
                             shop.name ?? "",
                             // "shop.name!",
@@ -453,21 +440,14 @@ class _SearchResultViewState extends State<SearchResultView> {
                           size: constraints.maxWidth * 0.05,
                           color: Colors.amber,
                         ),
-                        Text.rich(
-                          TextSpan(
-                            children: [
-                              WidgetSpan(
-                                child: FittedBox(
-                                  child: Text(
-                                    "4.7 (5000)",
-                                    style: kfontH2InterBoldBlackColor(),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    softWrap: true,
-                                  ),
-                                ),
-                              ),
-                            ],
+                        Container(
+                          width: constraints.maxWidth * 0.18,
+                          child: Text(
+                            "4.7 (5000)",
+                            style: kfontH2InterBoldBlackColor(),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            softWrap: true,
                           ),
                         ),
                       ],
@@ -526,6 +506,64 @@ class _SearchResultViewState extends State<SearchResultView> {
             ],
           );
         }),
+      ),
+    );
+  }
+
+  Container _imageShopForimage(
+      BoxConstraints constraints, double height, ShopModel shop) {
+    return Container(
+      width: constraints.maxWidth * 0.32,
+      height: height * 0.13,
+      margin: EdgeInsets.only(right: constraints.maxWidth * 0.03),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: FutureBuilder(
+        future: _vm.shopGetImagePathNetworkFromMinio(
+            shopId: shop.iId!, objectName: "coverImage"),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Text("ERROR_MESSAGE.ERROR_LOADING_FAIL").tr();
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.connectionState == ConnectionState.done &&
+              snapshot.data != null) {
+            return snapshot.data!.isNotEmpty
+                ? Image.network(
+                    errorBuilder: (context, error, stackTrace) {
+                      return Image.asset(imageNotFound);
+                    },
+                    snapshot.data!,
+                    fit: BoxFit.cover,
+                  )
+                : Image.asset(imageNotFound);
+          }
+          return Container();
+        },
+      ),
+    );
+  }
+
+  Container _imageShopForNullImage(BoxConstraints constraints, double height) {
+    return Container(
+      width: constraints.maxWidth * 0.32,
+      height: height * 0.13,
+      margin: EdgeInsets.only(right: constraints.maxWidth * 0.03),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        image: DecorationImage(
+          onError: (error, stackTrace) {
+            const AssetImage(imageNotFound);
+          },
+          scale: 2,
+          fit: BoxFit.cover,
+          image: const AssetImage(imageNotFound),
+        ),
       ),
     );
   }

@@ -281,6 +281,11 @@
       "OUT_OF_RANGE": "ราคาต้องอยู่ระหว่าง 0 ถึง 99"
     }
   },
+
+  "SUCCESS_MESSAGE": {
+    "SCANNED": "สแกนเสร็จสิ้น"
+  },
+
   "ERROR_MESSAGE": {
     "PLEASE_ENTER_VALUE": "กรุณากรอกข้อมูลให้ถูกต้อง",
     "PICK_ONLY_THREE_ITEM": "เลือกได้มากที่สุดเพียงแค่ 3 อย่าง",
@@ -296,7 +301,8 @@
     "PLEASE_INSERT_DATA_INFORMATION": "กรุณากรอกข้อมูลให้ครบถ้วน",
     "PLEASE_SELECT_MENU": "กรุณาเลือกเมนู",
     "PLEASE_SELECT_DATE": "กรุณาเลือกวันที่",
-    "SHOP_DESCRIPTION_EMPTY": "กรุณากรอกคําอธิบายร้านค้า"
+    "SHOP_DESCRIPTION_EMPTY": "กรุณากรอกคําอธิบายร้านค้า",
+    "SCANNED": "สแกนไม่สำเร็จ"
   },
 
   "ALERT_DIALOG": {

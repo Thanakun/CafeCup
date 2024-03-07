@@ -31,8 +31,30 @@ class CustomerPromtionService {
     try {
       final response = await _dio.putApiPromotion(
           "/promo/customerClaimCode", {"_customerId": boxUsers.get(0).id});
-      PromotionClaimResponse promotionClaimCode = PromotionClaimResponse.fromJson(response);
+      PromotionClaimResponse promotionClaimCode =
+          PromotionClaimResponse.fromJson(response);
       return promotionClaimCode;
+    } catch (_) {
+      rethrow;
+    }
+  }
+
+  Future<void> updateCustomerReviewPointAfterClaim(
+      {required int points}) async {
+    try {
+      int newPoint = points - 5;
+      final response = await _dio.putAuthApi(
+          "/customer/update", {"reviewPoints": newPoint}, {"_id": boxUsers.get(0).id});
+    } catch (_) {
+      rethrow;
+    }
+  }
+
+  Future<CustomerModel> getCurrentCustomer() async {
+    try {
+      final response = await _dio
+          .getApiAuth("/customer/getById", {"_id": boxUsers.get(0).id});
+      return CustomerModel.fromJson(response);
     } catch (_) {
       rethrow;
     }

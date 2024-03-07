@@ -1,3 +1,4 @@
+import 'package:coffee_application/screen/customer_edit_view.dart';
 import 'package:coffee_application/screen/login.dart';
 import 'package:coffee_application/screen/my_component/bottom_navigationbar_customer.dart';
 import 'package:coffee_application/utility/decoration.dart';
@@ -46,6 +47,27 @@ class _LogOutPageState extends State<LogOutPage> {
             children: [
               GestureDetector(
                 onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const CustomerEditView()),
+                  );
+                },
+                child: Container(
+                  width: width * 0.5,
+                  alignment: Alignment.center,
+                  decoration: kdecorationForContainerButton,
+                  padding: EdgeInsets.symmetric(
+                      horizontal: width * 0.05, vertical: height * 0.01),
+                  child: Text(
+                    "SETTINGS",
+                    style: kfont32_400(),
+                  ),
+                ),
+              ),
+              sectionBufferHeight(bufferSection: height * 0.05),
+              GestureDetector(
+                onTap: () {
                   logoutVM.logout();
                   Navigator.pushAndRemoveUntil(
                       context,
@@ -54,9 +76,11 @@ class _LogOutPageState extends State<LogOutPage> {
                       (route) => false);
                 },
                 child: Container(
+                  width: width * 0.6,
                   alignment: Alignment.center,
                   decoration: kdecorationForContainerButton,
-                  padding: EdgeInsets.all(width * 0.05),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: width * 0.05, vertical: height * 0.02),
                   child: Text(
                     "LOGOUT",
                     style: kfont32_400(),

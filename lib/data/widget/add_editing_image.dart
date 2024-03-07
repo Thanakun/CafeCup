@@ -1,34 +1,64 @@
 import 'dart:io';
 
+import 'package:coffee_application/model/shop.dart';
 import 'package:coffee_application/utility/decoration.dart';
+import 'package:coffee_application/viewmodel/add_editing_image_view_model.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:coffee_application/utility/my_constant.dart';
 import 'package:image_picker/image_picker.dart';
 
-class AddEditingImagesList extends StatefulWidget {
-  const AddEditingImagesList(
+class AddEditingImagesShopList extends StatefulWidget {
+  const AddEditingImagesShopList(
       {super.key,
-      required this.listOfImagesOne,
-      required this.listOfImagesTwo,
-      required this.listOfImagesThree,
-      required this.listOfImagesFour,
-      required this.callBackFunction});
+      required this.shop,
+      required this.callBackFunction,
+      required this.isHaveShopAlready});
 
   final VoidCallback callBackFunction;
-  final List<String> listOfImagesOne;
-  final List<String> listOfImagesTwo;
-  final List<String> listOfImagesThree;
-  final List<String> listOfImagesFour;
+  final ShopModel shop;
+  final bool isHaveShopAlready;
 
   @override
-  State<AddEditingImagesList> createState() => _AddEditingImagesListState();
+  State<AddEditingImagesShopList> createState() =>
+      _AddEditingImagesShopListState();
 }
 
-class _AddEditingImagesListState extends State<AddEditingImagesList> {
+class _AddEditingImagesShopListState extends State<AddEditingImagesShopList> {
   final int _maximumImagesAddingPossible = 5;
 
   ImagePicker _imagePicker = ImagePicker();
   List<XFile>? _shopImagesFileList = [];
+
+  late final AddEditImageVM _vm;
+
+  bool isShopImage = false;
+  bool isFoodImage = false;
+  bool isMenuImage = false;
+  bool isOtherImage = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _vm = AddEditImageVM();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    isFoodImage = false;
+    isMenuImage = false;
+    isOtherImage = false;
+    isShopImage = false;
+  }
+
+  Map<String, List<String>> mapImage = {
+    "shopImages": [],
+    "foodImages": [],
+    "menuImages": [],
+    "otherImages": [],
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -48,8 +78,7 @@ class _AddEditingImagesListState extends State<AddEditingImagesList> {
             icon: const Icon(Icons.arrow_back, color: Colors.black),
             onPressed: () {
               widget.callBackFunction();
-              Navigator.of(context).pop();
-              print("hello word");
+              Navigator.of(context).pop(mapImage);
             },
           ),
         ),
@@ -71,31 +100,135 @@ class _AddEditingImagesListState extends State<AddEditingImagesList> {
                       children: [
                         _titleSection(
                             title:
-                                "รูปภาพร้าน (${widget.listOfImagesOne.length} / $_maximumImagesAddingPossible )",
-                            toInsertImageList: widget.listOfImagesOne),
+                                "รูปภาพร้าน (${widget.shop.shopImage == null ? 1 : widget.shop.shopImage!.length} / $_maximumImagesAddingPossible )",
+                            toInsertImageList: widget.shop.shopImage ?? [],
+                            isEdit: isShopImage,
+                            onTap: () {
+                              selectImage(widget.shop.shopImage!, isShopImage,
+                                      "shopImages")
+                                  .then((value) {
+                                setState(() {
+                                  isShopImage = true;
+                                });
+                              });
+                            }),
                         _imageListCarousel(
-                            listOfImages: widget.listOfImagesOne),
+                            listOfImages: widget.shop.shopImage ?? [],
+                            shop: widget.shop,
+                            isEdit: isShopImage,
+                            objectName: "shopimages",
+                            onTap: () {
+                              selectImage(widget.shop.shopImage!, isShopImage,
+                                      "shopImages")
+                                  .then((value) {
+                                setState(() {
+                                  isShopImage = true;
+                                });
+                              });
+                            }),
                         sectionBufferHeight(bufferSection: height * 0.015),
                         _titleSection(
                             title:
-                                "รูปภาพเมนู(${widget.listOfImagesTwo.length} / $_maximumImagesAddingPossible )",
-                            toInsertImageList: widget.listOfImagesTwo),
+                                "รูปภาพเมนู(${widget.shop.menuImages == null ? 1 : widget.shop.menuImages!.length} / $_maximumImagesAddingPossible )",
+                            toInsertImageList: widget.shop.menuImages ?? [],
+                            isEdit: isMenuImage,
+                            onTap: () {
+                              selectImage(widget.shop.menuImages!, isMenuImage,
+                                      "menuImages")
+                                  .then((value) {
+                                setState(() {
+                                  isMenuImage = true;
+                                });
+                              });
+                            }),
                         _imageListCarousel(
-                            listOfImages: widget.listOfImagesTwo),
+                            listOfImages: widget.shop.menuImages ?? [],
+                            shop: widget.shop,
+                            isEdit: isMenuImage,
+                            objectName: "menuimages",
+                            onTap: () {
+                              selectImage(widget.shop.menuImages!, isMenuImage,
+                                      "menuImages")
+                                  .then((value) {
+                                setState(() {
+                                  isMenuImage = true;
+                                });
+                              });
+                            }),
                         sectionBufferHeight(bufferSection: height * 0.015),
                         _titleSection(
                             title:
-                                "รูปภาพอาหาร (${widget.listOfImagesThree.length} / $_maximumImagesAddingPossible )",
-                            toInsertImageList: widget.listOfImagesThree),
+                                "รูปภาพอาหาร (${widget.shop.foodImages == null ? 1 : widget.shop.foodImages!.length} / $_maximumImagesAddingPossible  )",
+                            toInsertImageList: widget.shop.foodImages ?? [],
+                            isEdit: isFoodImage,
+                            onTap: () {
+                              selectImage(widget.shop.foodImages!, isFoodImage,
+                                      "foodImages")
+                                  .then((value) {
+                                setState(() {
+                                  isFoodImage = true;
+                                });
+                              });
+                            }),
                         _imageListCarousel(
-                            listOfImages: widget.listOfImagesThree),
+                            listOfImages: widget.shop.foodImages ?? [],
+                            shop: widget.shop,
+                            isEdit: isFoodImage,
+                            objectName: "foodimages",
+                            onTap: () {
+                              setState(() {
+                                selectImage(widget.shop.foodImages!,
+                                        isFoodImage, "foodImages")
+                                    .then((value) {
+                                  setState(() {
+                                    isFoodImage = true;
+                                  });
+                                });
+                              });
+                            }),
                         sectionBufferHeight(bufferSection: height * 0.015),
                         _titleSection(
-                            title:
-                                "รูปภาพอื่นๆ (${widget.listOfImagesFour.length} / $_maximumImagesAddingPossible )",
-                            toInsertImageList: widget.listOfImagesFour),
+                          title:
+                              "รูปภาพอื่นๆ (${widget.shop.otherImages == null ? 1 : widget.shop.otherImages!.length} / $_maximumImagesAddingPossible )",
+                          toInsertImageList: widget.shop.otherImages ?? [],
+                          isEdit: isOtherImage,
+                          onTap: () {
+                            selectImage(widget.shop.otherImages!, isOtherImage,
+                                    "otherImages")
+                                .then(
+                              (value) {
+                                setState(
+                                  () {
+                                    isOtherImage = true;
+                                  },
+                                );
+                              },
+                            );
+                          },
+                        ),
                         _imageListCarousel(
-                            listOfImages: widget.listOfImagesFour),
+                          listOfImages: widget.shop.otherImages ?? [],
+                          shop: widget.shop,
+                          isEdit: isOtherImage,
+                          objectName: "otherimages",
+                          onTap: () {
+                            setState(
+                              () {
+                                selectImage(widget.shop.otherImages!,
+                                        isOtherImage, "otherImages")
+                                    .then(
+                                  (value) {
+                                    setState(
+                                      () {
+                                        isOtherImage = true;
+                                      },
+                                    );
+                                  },
+                                );
+                              },
+                            );
+                          },
+                        ),
                         sectionBufferHeight(bufferSection: height * 0.015),
                       ],
                     ),
@@ -108,7 +241,10 @@ class _AddEditingImagesListState extends State<AddEditingImagesList> {
   }
 
   Row _titleSection(
-      {required String title, required List<String> toInsertImageList}) {
+      {required String title,
+      required List<String> toInsertImageList,
+      required bool isEdit,
+      required Function onTap}) {
     return Row(
       children: [
         Container(
@@ -123,9 +259,7 @@ class _AddEditingImagesListState extends State<AddEditingImagesList> {
         toInsertImageList.isNotEmpty
             ? GestureDetector(
                 onTap: () {
-                  setState(() {
-                    selectImage(toInsertImageList);
-                  });
+                  onTap();
                 },
                 child: Container(
                   margin: const EdgeInsets.only(bottom: 30),
@@ -141,7 +275,12 @@ class _AddEditingImagesListState extends State<AddEditingImagesList> {
     );
   }
 
-  GridView _imageListCarousel({required List<String>? listOfImages}) {
+  GridView _imageListCarousel(
+      {required List<String>? listOfImages,
+      required ShopModel shop,
+      required bool isEdit,
+      required String objectName,
+      required Function onTap}) {
     return GridView.builder(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisSpacing: 8.0,
@@ -155,9 +294,7 @@ class _AddEditingImagesListState extends State<AddEditingImagesList> {
         return listOfImages.isEmpty
             ? GestureDetector(
                 onTap: () {
-                  setState(() {
-                    selectImage(listOfImages);
-                  });
+                  onTap();
                 },
                 child: Container(
                   decoration: BoxDecoration(
@@ -181,14 +318,71 @@ class _AddEditingImagesListState extends State<AddEditingImagesList> {
                 height: 500,
                 decoration: kdecorationForContainerActiveItem,
                 child: FittedBox(
-                  child: Image.file(File(listOfImages[index])),
+                  child: isEdit
+                      ? kIsWeb
+                          ? FutureBuilder(
+                              future:
+                                  (_xfileToUnit8(XFile(listOfImages[index]))),
+                              builder: (context, snapshot) {
+                                if (!snapshot.hasData) {
+                                  return Text(
+                                          "ERROR_MESSAGE.ERROR_LOADING_FAIL")
+                                      .tr();
+                                } else if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return Container();
+                                } else if (snapshot.connectionState ==
+                                        ConnectionState.done &&
+                                    snapshot.data != null) {
+                                  return Image.memory(
+                                    snapshot.data!,
+                                  );
+                                }
+                                return Container();
+                              },
+                            )
+                          : Image.file(File(listOfImages[index]))
+                      : FutureBuilder(
+                          future: _vm.shopGetMenuImageFromMinio(
+                              shop: shop,
+                              objectName: objectName,
+                              maxImageLength: listOfImages.length),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) {
+                              return Text("ERROR_MESSAGE.ERROR_LOADING_FAIL")
+                                  .tr();
+                            } else if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            } else if (snapshot.connectionState ==
+                                    ConnectionState.done &&
+                                snapshot.data != null) {
+                              return snapshot.data!.isNotEmpty
+                                  ? FadeInImage(
+                                      image:
+                                          NetworkImage(snapshot.data![index]),
+                                      fit: BoxFit.cover,
+                                      placeholder: AssetImage(imageNotFound))
+                                  : Image.asset(imageNotFound);
+                            }
+                            return Container();
+                          },
+                        ),
                 ),
               );
       },
     );
   }
 
-  void selectImage(List<String> givenListImages) async {
+  Future<Uint8List> _xfileToUnit8(XFile file) async {
+    var f = await file.readAsBytes();
+    return f;
+  }
+
+  Future selectImage(
+      List<String> givenListImages, bool isEdit, String imageType) async {
     final List<XFile> selectedImages = await _imagePicker.pickMultiImage();
     if (givenListImages.isNotEmpty) {
       givenListImages.clear();
@@ -207,7 +401,9 @@ class _AddEditingImagesListState extends State<AddEditingImagesList> {
     } else {
       givenListImages.clear();
     }
-    print(givenListImages.length);
+
     setState(() {});
+    mapImage[imageType] = givenListImages;
+    isEdit = true;
   }
 }

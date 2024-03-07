@@ -50,28 +50,28 @@ class LoginPageState extends State<LoginPage> {
             Container(
               decoration: const BoxDecoration(
                   image: DecorationImage(
-                      image: AssetImage("assets/images/background_crop.jpg"),
+                      image: AssetImage(backgroundRegisterPath),
                       fit: BoxFit.cover)),
-              child: Column(
-                children: [
-                  Container(
-                    width: width,
-                    height: height,
-                    // padding: const EdgeInsets.only(right: 14, bottom: 568),
-                    clipBehavior: Clip.antiAlias,
-                    decoration: const BoxDecoration(color: Color(0xFFFFF5E9)),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        logoApplication(),
-                      ],
-                    ),
-                  ),
-                  // const SizedBox(height: 10),
-                ],
-              ),
+              // child: Column(
+              //   children: [
+              //     Container(
+              //       width: width,
+              //       height: height,
+              //       // padding: const EdgeInsets.only(right: 14, bottom: 568),
+              //       clipBehavior: Clip.antiAlias,
+              //       decoration: const BoxDecoration(color: Color(0xFFFFF5E9)),
+              //       child: Column(
+              //         mainAxisSize: MainAxisSize.min,
+              //         mainAxisAlignment: MainAxisAlignment.start,
+              //         crossAxisAlignment: CrossAxisAlignment.center,
+              //         children: [
+              //           logoApplication(),
+              //         ],
+              //       ),
+              //     ),
+              //     // const SizedBox(height: 10),
+              //   ],
+              // ),
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -344,93 +344,93 @@ class LoginPageState extends State<LoginPage> {
     }
   }
 
-  SizedBox logoApplication() {
-    return SizedBox(
-      width: 524,
-      height: 360,
-      child: Stack(
-        children: [
-          Positioned(
-            left: -150,
-            top: -150,
-            child: backGroundBrownBall(),
-          ),
-          Positioned(
-            left: 100,
-            top: 50,
-            child: Opacity(
-              opacity: 0.20,
-              child: backGroundLowOpacityBall(),
-            ),
-          ),
-          Positioned(
-            left: 130,
-            top: 130,
-            child: titleTextOfApplication(),
-          ),
-        ],
-      ),
-    );
-  }
+  // SizedBox logoApplication() {
+  //   return SizedBox(
+  //     width: 524,
+  //     height: 360,
+  //     child: Stack(
+  //       children: [
+  //         Positioned(
+  //           left: -150,
+  //           top: -150,
+  //           child: backGroundBrownBall(),
+  //         ),
+  //         Positioned(
+  //           left: 100,
+  //           top: 50,
+  //           child: Opacity(
+  //             opacity: 0.20,
+  //             child: backGroundLowOpacityBall(),
+  //           ),
+  //         ),
+  //         Positioned(
+  //           left: 130,
+  //           top: 130,
+  //           child: titleTextOfApplication(),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
-  Text titleTextOfApplication() {
-    return Text('APP_TITLE'.tr(),
-        textAlign: TextAlign.center,
-        style: GoogleFonts.pacifico(
-          color: const Color(0xFF352B19),
-          fontSize: 60,
-          fontWeight: FontWeight.w400,
-          height: 0,
-        )
-        // TextStyle(
-        //   color: Color(0xFF352B19),
-        //   fontSize: 40,
-        //   fontFamily: GoogleFonts(),
-        //   fontWeight: FontWeight.w400,
-        //   height: 0,
-        // ),
-        );
-  }
+  // Text titleTextOfApplication() {
+  //   return Text('APP_TITLE'.tr(),
+  //       textAlign: TextAlign.center,
+  //       style: GoogleFonts.pacifico(
+  //         color: const Color(0xFF352B19),
+  //         fontSize: 60,
+  //         fontWeight: FontWeight.w400,
+  //         height: 0,
+  //       )
+  //       // TextStyle(
+  //       //   color: Color(0xFF352B19),
+  //       //   fontSize: 40,
+  //       //   fontFamily: GoogleFonts(),
+  //       //   fontWeight: FontWeight.w400,
+  //       //   height: 0,
+  //       // ),
+  //       );
+  // }
 
-  Container backGroundLowOpacityBall() {
-    return Container(
-      width: 200,
-      height: 200,
-      decoration: const ShapeDecoration(
-        color: Color(0xFFB99470),
-        shape: OvalBorder(),
-        shadows: [
-          BoxShadow(
-            color: Color(0x3F000000),
-            blurRadius: 4,
-            offset: Offset(0, 4),
-            spreadRadius: 0,
-          )
-        ],
-      ),
-    );
-  }
+  // Container backGroundLowOpacityBall() {
+  //   return Container(
+  //     width: 200,
+  //     height: 200,
+  //     decoration: const ShapeDecoration(
+  //       color: Color(0xFFB99470),
+  //       shape: OvalBorder(),
+  //       shadows: [
+  //         BoxShadow(
+  //           color: Color(0x3F000000),
+  //           blurRadius: 4,
+  //           offset: Offset(0, 4),
+  //           spreadRadius: 0,
+  //         )
+  //       ],
+  //     ),
+  //   );
+  // }
 
-  Container backGroundBrownBall() {
-    return Container(
-      width: 360,
-      height: 360,
-      decoration: const ShapeDecoration(
-        gradient: LinearGradient(
-          begin: Alignment(0.00, -1.00),
-          end: Alignment(0, 1),
-          colors: [Color(0xFF643303), Color(0xFFAF5523)],
-        ),
-        shape: OvalBorder(),
-        shadows: [
-          BoxShadow(
-            color: Color(0x3F000000),
-            blurRadius: 4,
-            offset: Offset(0, 4),
-            spreadRadius: 0,
-          )
-        ],
-      ),
-    );
-  }
+  // Container backGroundBrownBall() {
+  //   return Container(
+  //     width: 360,
+  //     height: 360,
+  //     decoration: const ShapeDecoration(
+  //       gradient: LinearGradient(
+  //         begin: Alignment(0.00, -1.00),
+  //         end: Alignment(0, 1),
+  //         colors: [Color(0xFF643303), Color(0xFFAF5523)],
+  //       ),
+  //       shape: OvalBorder(),
+  //       shadows: [
+  //         BoxShadow(
+  //           color: Color(0x3F000000),
+  //           blurRadius: 4,
+  //           offset: Offset(0, 4),
+  //           spreadRadius: 0,
+  //         )
+  //       ],
+  //     ),
+  //   );
+  // }
 }

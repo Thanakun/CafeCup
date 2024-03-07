@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:coffee_application/model/customer.dart';
 import 'package:coffee_application/model/response/promotion.dart';
 import 'package:coffee_application/model/response/promotion_claim_response.dart';
 import 'package:coffee_application/service/customer/customer_promotion_service.dart';
@@ -10,9 +11,11 @@ class CustomerPromotionVM {
   late Future<List<Promotion>> promotionListModel;
   late List<Promotion> promotionList;
   late List<Promotion> filteredPromotions;
+  late Future<CustomerModel> customerModel;
 
   void onUserEnterThePromotionPage() {
     getApiPromotion();
+    getCurrentCustomer();
   }
 
   Future<void> getApiPromotion() async {
@@ -38,11 +41,20 @@ class CustomerPromotionVM {
     // You can use this filtered list as needed in your application logic.
   }
 
+  Future<void> getCurrentCustomer() async {
+    customerModel = service.getCurrentCustomer();
+  }
+
+  Future<void> updateCustomerReviewPointAfterClaim(
+      {required int points}) async {
+    service.updateCustomerReviewPointAfterClaim(points: points);
+  }
+
   Future<bool> onUserClaimingPromotionCode() async {
     try {
       PromotionClaimResponse result = await service.getCustomerClaimShopCode();
       if (result.claimedCode == null) {
-        } else {
+      } else {
         if (result.claimedCode!.iId != null) {
           return true;
         } else {

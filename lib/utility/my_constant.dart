@@ -10,6 +10,8 @@ const String backgroundCustomerImagePath =
 const String backgroundCustomerHomeImagePath =
     "assets/images/customer-home.png";
 const String backgroundShopInformationPath = "assets/images/owner_home.jpg";
+const String shopCoverImageOutSide = "assets/images/cafe_outside.jpg";
+const String shopCoverImageCombine = "assets/images/cafe_combine.jpg";
 const String shopCoverImagePath = "assets/images/shop_cover.png";
 const String americanoImagePath = "assets/images/coffee_image.png";
 const String barChartPath = "assets/images/bar_chart.jpg";

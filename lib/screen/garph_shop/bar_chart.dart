@@ -364,7 +364,7 @@ class _BarChartPageState extends State<BarChartPage> {
                                     DropdownButtonHideUnderline(
                                       child: DropdownButton2<String>(
                                         customButton: Container(
-                                          width: 80,
+                                          width: 90,
                                           height: 30,
                                           padding: EdgeInsets.only(
                                               left: 5, right: 5),
@@ -443,8 +443,8 @@ class _BarChartPageState extends State<BarChartPage> {
                                 child: Column(children: [
                                   Center(
                                     child: Text(
-                                        "CHART.FILTER.MONTH".tr(),
-                                        style: kfont22w_400black(),
+                                      "CHART.FILTER.MONTH".tr(),
+                                      style: kfont22w_400black(),
                                     ),
                                   ),
                                   sectionBufferHeight(),
@@ -454,7 +454,7 @@ class _BarChartPageState extends State<BarChartPage> {
                                       DropdownButtonHideUnderline(
                                         child: DropdownButton2<String>(
                                           customButton: Container(
-                                            width: 125,
+                                            width: 80,
                                             height: 30,
                                             padding: EdgeInsets.only(
                                                 left: 5, right: 5),
@@ -464,7 +464,9 @@ class _BarChartPageState extends State<BarChartPage> {
                                                 color: backGroundApplication),
                                             child: Row(
                                               children: [
-                                                Text("CHART.MONTH.$selectMonthString".tr()),
+                                                Text(
+                                                    "CHART.MONTH.$selectMonthString"
+                                                        .tr()),
                                                 Spacer(),
                                                 Icon(
                                                   Icons.arrow_drop_down_rounded,
@@ -520,7 +522,7 @@ class _BarChartPageState extends State<BarChartPage> {
                                       DropdownButtonHideUnderline(
                                         child: DropdownButton2<String>(
                                           customButton: Container(
-                                            width: 72,
+                                            width: 85,
                                             height: 30,
                                             padding: EdgeInsets.only(
                                                 left: 5, right: 5),
@@ -626,11 +628,16 @@ class _BarChartPageState extends State<BarChartPage> {
                                   child: SfCartesianChart(
                                     // backgroundColor: Colors.white.withOpacity(0.5),
 
-                                    primaryXAxis: CategoryAxis(
+                                    primaryXAxis: NumericAxis(
+                                        numberFormat:
+                                            NumberFormat.decimalPatternDigits(
+                                          decimalDigits: 0,
+                                        ),
                                         title: AxisTitle(
-                                      text: 'เวลา (ชั่วโมง)',
-                                      textStyle: kfontH1InterBoldBlackColor(),
-                                    )),
+                                          text: 'เวลา (กี่โมง)',
+                                          textStyle:
+                                              kfontH1InterBoldBlackColor(),
+                                        )),
                                     primaryYAxis: CategoryAxis(
                                         title: AxisTitle(
                                       text: 'จำนวนลูกค้า',
@@ -748,11 +755,16 @@ class _BarChartPageState extends State<BarChartPage> {
                     selectMonthList.entries.firstWhere(
                   (entry) => entry.key == selectMonthString,
                 );
+
                 _vm.getBarChartData(
                   int.parse(selectedYearMonth),
                   null,
-                  int.parse(matchingMonth.value),
+                  matchingMonth.value,
+                  selectedValue
                 );
+                setState(() {
+                  
+                });
               } else if (selectDateType == "Year") {
                 _vm.getBarChartData(
                     int.parse(selectedYear), null, null, selectedValue);
@@ -782,7 +794,7 @@ class _BarChartPageState extends State<BarChartPage> {
               ),
               child: Center(
                 child: Text(
-                  title,
+                  "CHART.DAY_OF_WEEK.$title".tr(),
                   style: kfontH4InterBlackColor(),
                   overflow: TextOverflow.clip,
                   textAlign: TextAlign.center,

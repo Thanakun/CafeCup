@@ -1,3 +1,4 @@
+import 'package:coffee_application/model/customer.dart';
 import 'package:coffee_application/model/response/promotion.dart';
 import 'package:coffee_application/screen/customer_barcode.dart';
 import 'package:coffee_application/screen/my_component/bottom_navigationbar_customer.dart';
@@ -79,113 +80,184 @@ class _CustomerPromotionViewState extends State<CustomerPromotionView> {
                         ),
                         sectionBufferHeight(bufferSection: height * 0.05),
                         Container(
-                          margin: EdgeInsets.only(bottom: height * 0.05),
-                          padding: EdgeInsets.only(
-                              left: width * 0.05,
-                              right: width * 0.05,
-                              top: height * 0.02,
-                              bottom: height * 0.02),
-                          decoration: kdecorationForContainerActiveItem,
-                          child: Column(
-                            children: [
-                              Text(
-                                "CUSTOMER_PROMOTION.PROMOTION_MISSION".tr(),
-                                style: kfont26_400(),
-                              ),
-                              sectionBufferHeight(bufferSection: height * 0.01),
-                              Stack(
-                                children: [
-                                  Container(
-                                    width: width * 0.8,
-                                    height: height * 0.03,
-                                    decoration: kdecorationContainerBrownColor,
-                                    child: LayoutBuilder(
-                                      builder: (context, constraints) {
-                                        return Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Stack(
-                                              children: [
-                                                Positioned(
-                                                  child: Container(
-                                                    margin: EdgeInsets.only(
-                                                        left: constraints
-                                                                .minWidth *
-                                                            0.005,
-                                                        right: constraints
-                                                                .minWidth *
-                                                            0.005),
-                                                    width:
-                                                        constraints.maxWidth *
-                                                            0.8,
-                                                    height: height * 0.026,
-                                                    decoration:
-                                                        kdecorationForContainerYellowProgressBar,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                  Positioned(
-                                      left: 0,
-                                      top: 0,
-                                      right: 0,
-                                      bottom: 0,
-                                      child: Center(
+                            margin: EdgeInsets.only(bottom: height * 0.05),
+                            padding: EdgeInsets.only(
+                                left: width * 0.05,
+                                right: width * 0.05,
+                                top: height * 0.02,
+                                bottom: height * 0.02),
+                            decoration: kdecorationForContainerActiveItem,
+                            child: FutureBuilder(
+                                future: _vm.customerModel,
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return Shimmer.fromColors(
+                                      baseColor: Colors.grey.shade300,
+                                      highlightColor: Colors.grey.shade100,
+                                      child: Column(children: [
+                                        Container(
+                                          width: width,
+                                          height: height * 0.05,
+                                        )
+                                      ]),
+                                    );
+                                  } else if (snapshot.hasError) {
+                                    return Center(
                                         child: Text(
-                                          "80%",
+                                      "ERROR_MESSAGE.ERROR_LOADING_FAIL".tr(),
+                                    ));
+                                  } else if (snapshot.connectionState ==
+                                          ConnectionState.done &&
+                                      !snapshot.hasError) {
+                                    CustomerModel customerModel =
+                                        snapshot.data!;
+                                    return Column(
+                                      children: [
+                                        Text(
+                                          "CUSTOMER_PROMOTION.PROMOTION_MISSION"
+                                              .tr(),
+                                          style: kfont26_400(),
+                                        ),
+                                        sectionBufferHeight(
+                                            bufferSection: height * 0.01),
+                                        Stack(
+                                          children: [
+                                            Container(
+                                              width: width * 0.8,
+                                              height: height * 0.03,
+                                              decoration:
+                                                  kdecorationForContainerApplication,
+                                              child: LayoutBuilder(
+                                                builder:
+                                                    (context, constraints) {
+                                                  return Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Stack(
+                                                        children: [
+                                                          Positioned(
+                                                            child: AnimatedContainer(
+                                                                duration: const Duration(
+                                                                    milliseconds:
+                                                                        500),
+                                                                margin: EdgeInsets.only(
+                                                                    left: constraints
+                                                                            .minWidth *
+                                                                        0.005,
+                                                                    right: constraints
+                                                                            .minWidth *
+                                                                        0.005),
+                                                                width: constraints
+                                                                        .maxWidth *
+                                                                    (0.2 *
+                                                                        customerModel
+                                                                            .reviewPoints!),
+                                                                height: height *
+                                                                    0.026,
+                                                                decoration: BoxDecoration(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            100),
+                                                                    color: getColorByCurrentCustomerReviewPoint(customerModel.reviewPoints!))),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                            Positioned(
+                                                left: 0,
+                                                top: 0,
+                                                right: 0,
+                                                bottom: 0,
+                                                child: Center(
+                                                  child: Text(
+                                                    getCurrentCustomerReviewPointToPercent(
+                                                        customerModel
+                                                            .reviewPoints!),
+                                                    style:
+                                                        kfontH2InterBoldBlackColor(),
+                                                  ),
+                                                ))
+                                          ],
+                                        ),
+                                        Text(
+                                          "รีเซ้ตในอีก 3 วัน",
                                           style: kfontH2InterBlackColor(),
                                         ),
-                                      ))
-                                ],
-                              ),
-                              Text(
-                                "รีเซ้ตในอีก 3 วัน",
-                                style: kfontH2InterBlackColor(),
-                              ),
-                              sectionBufferHeight(
-                                bufferSection: height * 0.01,
-                              ),
-                              GestureDetector(
-                                onTap: () async {
-                                  //TODO CLAIM CODE
-                                  bool isNotEmpty =
-                                      await _vm.onUserClaimingPromotionCode();
-                                  setState(() {
-                                    _vm.getApiPromotion();
+                                        sectionBufferHeight(
+                                          bufferSection: height * 0.01,
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            setState(()  {
+                                              if (customerModel.reviewPoints! <
+                                                  5) {
+                                                return Utility.toastMessage(
+                                                    "ERROR_MESSAGE.CLAIM_CODE_FAIL"
+                                                        .tr());
+                                              } else {
+                                                _vm
+                                                    .onUserClaimingPromotionCode().then((value) => 
+                                                    setState(() {
+                                                  _vm.getApiPromotion();
 
-                                    if (isNotEmpty) {
-                                      Utility.toastMessage(
-                                        "ERROR_MESSAGE.CLAIM_CODE_SUCCESS".tr(),
-                                      );
-                                    } else {
-                                      Utility.toastMessage(
-                                          "ERROR_MESSAGE.CLAIM_CODE_FAIL".tr());
-                                    }
-                                  });
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: width * 0.05,
-                                    vertical: height * 0.01,
-                                  ),
-                                  decoration: kdecorationButtonDisableContainer,
-                                  child: Text(
-                                    "CUSTOMER_PROMOTION.CLAIM_CODE".tr(),
-                                    style: kfont22w_400black(),
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
+                                                  if (value) {
+                                                    _vm.updateCustomerReviewPointAfterClaim(
+                                                        points: customerModel
+                                                            .reviewPoints!);
+                                                    _vm.getCurrentCustomer();
+
+                                                    Utility.toastMessage(
+                                                      "ERROR_MESSAGE.CLAIM_CODE_SUCCESS"
+                                                          .tr(),
+                                                    );
+                                                  } else {
+                                                    Utility.toastMessage(
+                                                        "ERROR_MESSAGE.CLAIM_CODE_FAIL"
+                                                            .tr());
+                                                  }
+                                                })
+                                                    );
+                                                
+                                              }
+                                            });
+                                          },
+                                          child: Container(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: width * 0.05,
+                                              vertical: height * 0.01,
+                                            ),
+                                            decoration: customerModel
+                                                        .reviewPoints! >=
+                                                    5
+                                                ? kdecorationForContainerAcceptButton
+                                                : kdecorationButtonDisableContainer,
+                                            child: Text(
+                                                "CUSTOMER_PROMOTION.CLAIM_CODE"
+                                                    .tr(),
+                                                style: customerModel
+                                                            .reviewPoints! >=
+                                                        5
+                                                    ? kfont22w_400black()
+                                                        .copyWith(
+                                                            color: Colors.white)
+                                                    : kfont22w_400black()),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  }
+                                  return Container();
+                                })),
                         FutureBuilder(
                           future: _vm.promotionListModel,
                           builder: (context, snapshot) {
@@ -488,5 +560,45 @@ class _CustomerPromotionViewState extends State<CustomerPromotionView> {
         DateTime.parse(promotion.dateExpired!).isBefore(currentDateTime));
 
     return sortedList;
+  }
+
+  String getCurrentCustomerReviewPointToPercent(
+    int currentCustomerReviewPoint,
+  ) {
+    if (currentCustomerReviewPoint == 0) {
+      return "0%";
+    } else if (currentCustomerReviewPoint == 1) {
+      return "20%";
+    } else if (currentCustomerReviewPoint == 2) {
+      return "40%";
+    } else if (currentCustomerReviewPoint == 3) {
+      return "60%";
+    } else if (currentCustomerReviewPoint == 4) {
+      return "80%";
+    } else if (currentCustomerReviewPoint == 5) {
+      return "100%";
+    } else {
+      return "0%";
+    }
+  }
+
+  Color getColorByCurrentCustomerReviewPoint(
+    int currentCustomerReviewPoint,
+  ) {
+    if (currentCustomerReviewPoint == 0) {
+      return Colors.red;
+    } else if (currentCustomerReviewPoint == 1) {
+      return Colors.yellow;
+    } else if (currentCustomerReviewPoint == 2) {
+      return Colors.yellow;
+    } else if (currentCustomerReviewPoint == 3) {
+      return Colors.yellow;
+    } else if (currentCustomerReviewPoint == 4) {
+      return Colors.green;
+    } else if (currentCustomerReviewPoint == 5) {
+      return Colors.green;
+    } else {
+      return Colors.red;
+    }
   }
 }

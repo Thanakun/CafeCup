@@ -1,6 +1,8 @@
 import 'package:coffee_application/screen/my_component/barcode_scanner_overlay_shape.dart';
 import 'package:coffee_application/screen/my_component/buttom_navigationbar_shop.dart';
 import 'package:coffee_application/utility/my_constant.dart';
+import 'package:coffee_application/viewmodel/scanner_view_model.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:indexed/indexed.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
@@ -18,6 +20,14 @@ class _ScannerCodePageState extends State<ScannerCodePage> {
   late QRViewController controller;
   late String? barcode;
   bool _isScanningTime = false;
+
+  late final ScannerVM _vm;
+
+  @override
+  void initState() {
+    super.initState();
+    _vm = ScannerVM();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,43 +92,37 @@ class _ScannerCodePageState extends State<ScannerCodePage> {
                     InkWell(
                       splashColor: Colors.greenAccent,
                       onTap: () {
-                        //TODO Use Code
-                        // if (nameShop.text.isEmpty ||
-                        //     descriptionShop.text.isEmpty ||
-                        //     selectedProvince == null ||
-                        //     selectedDistrict == null ||
-                        //     selectedSubDistrict == null ||
-                        //     addressDetail.text.isEmpty) {
-                        //   // Display an error message or perform some action for invalid input
-                        //   Utility.flushBarErrorMessage(
-                        //       message: "Please insert data information",
-                        //       context: context);
-                        //   return;
-                        // }
-
                         setState(() {
-                          // Your logic here
-                          print("hello");
-
-                          // print(nameShop.text);
-                          // print(descriptionShop.text);
-                          // print(selectedProvince);
-                          // print(selectedDistrict);
-                          // print(selectedSubDistrict);
-                          // print(addressDetail.text);
-                          // Navigator.push(
-                          //     (context),
-                          //     MaterialPageRoute(
-                          //       builder: (context) =>
-                          //           const ShopRegisterSecondView(),
-                          //     ));
-                          // Add more logic as needed
+                          if (!_isScanningTime) {
+                            _isScanningTime = true;
+                            controller.pauseCamera();
+                            try {
+                              _vm
+                                  .onUserScannedCode(code: inputStr.text)
+                                  .then((value) {
+                                if (value) {
+                                  Navigator.pop(context);
+                                  Utility.toastMessage(
+                                      "SUCCESS_MESSAGE.SCANNED".tr());
+                                } else {
+                                  Utility.toastMessage(
+                                      "ERROR_MESSAGE.SCANNED".tr());
+                                }
+                              });
+                              _isScanningTime = false;
+                              controller.resumeCamera();
+                              Utility.toastMessage(
+                                  "SUCCESS_MESSAGE.SCANNED".tr());
+                            } catch (e) {
+                              //TODO: Handle general exceptions
+                            }
+                          }
                         });
                       },
                       child: Container(
-                        margin: EdgeInsets.symmetric(vertical: height*0.01),
+                        margin: EdgeInsets.symmetric(vertical: height * 0.01),
                         padding: EdgeInsets.symmetric(horizontal: 8.0),
-                        width: width*0.5,
+                        width: width * 0.5,
                         height: constraints.maxHeight * 0.07,
                         decoration: BoxDecoration(
                             color: Colors.green,
@@ -200,17 +204,19 @@ class _ScannerCodePageState extends State<ScannerCodePage> {
           _isScanningTime = true;
           controller.pauseCamera();
           inputStr.text = scanData.code!;
-          //TODO onUserScanbarcode
+
           try {
-            // await _viewModel.onUserScannedBarcode(
-            //   barcode: barcode.toString(),
-            // );
+            _vm.onUserScannedCode(code: scanData.code!).then((value) {
+              if (value) {
+                Utility.toastMessage("SUCCESS_MESSAGE.SCANNED".tr());
+                Navigator.pop(context);
+              } else {
+                Utility.toastMessage("ERROR_MESSAGE.SCANNED".tr());
+              }
+            });
             _isScanningTime = false;
             controller.resumeCamera();
-            // } on ProductRunOutOfStockError catch (_) {
-            //   await _alertRunOutOfBox();
-            // } on ResourceNotFoundError catch (_) {
-            //   await _alertNotSpecifyBox();
+            Utility.toastMessage("SUCCESS_MESSAGE.SCANNED".tr());
           } catch (e) {
             //TODO: Handle general exceptions
           }

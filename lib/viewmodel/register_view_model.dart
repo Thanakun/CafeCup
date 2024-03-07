@@ -3,7 +3,6 @@ import 'package:coffee_application/provider/shop_provider.dart';
 import 'package:coffee_application/model/customer.dart';
 import 'package:coffee_application/model/shop.dart';
 import 'package:coffee_application/service/auth-service/auth-service.dart';
-import 'package:image_picker/image_picker.dart';
 
 class RegisterVM {
   final AuthService _service = AuthService();
@@ -68,7 +67,7 @@ class RegisterVM {
     shopProvider.conferenceRoom = facilities["ห้องประชุม"]!;
     shopProvider.toilet = facilities["ห้องน้ำ"]!;
     shopProvider.smokingZone = facilities["ที่สูบบุหรี่"]!;
-    shopProvider.noise = cafeNoiseLevel["ห้ามใช้เสียง"]! ? "NORMAL" : "QUIET";
+    shopProvider.noise = cafeNoiseLevel["ห้ามใช้เสียง"]! ? "QUITE" : "NORMAL";
     shopProvider.photoSpots = cafeTakePhotoSpot.entries
         .firstWhere((entry) => entry.value,
             orElse: () => const MapEntry("", false))

@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_is_empty
 
 import 'dart:io';
-
+import 'dart:typed_data';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -227,7 +227,7 @@ class Helper {
     return null; // Return null for successful validation
   }
 
-    static String? validateDateLimitCode(String? value) {
+  static String? validateDateLimitCode(String? value) {
     String patttern = r'^\d{1,2}$'; // Regex pattern for 1 to 5 digits
     RegExp regExp = RegExp(patttern);
     if (value == null || value.isEmpty) {
@@ -468,7 +468,8 @@ class Helper {
   static String getDisplayTimeDate(String dateTime) {
     return DateFormat("dd/MM/yy").format(DateTime.parse(dateTime));
   }
-static String getDisplayTimeDateTime(String dateTime) {
+
+  static String getDisplayTimeDateTime(String dateTime) {
     return DateFormat("HH:MM : dd/MM/yy").format(DateTime.parse(dateTime));
   }
 
@@ -477,5 +478,32 @@ static String getDisplayTimeDateTime(String dateTime) {
     DateTime dateTimeNow = DateTime.parse(dateTime);
 
     return dateTimeNow.isBefore(now);
+  }
+
+  static bool isBlobPath(String path) {
+    return path.startsWith('blob:');
+  }
+
+  static Uint8List fileToUint8List(String filePath) {
+    File file = File(filePath);
+    if (file.existsSync()) {
+      List<int> bytes = file.readAsBytesSync();
+      return Uint8List.fromList(bytes);
+    } else {
+      // Handle the case where the file does not exist
+      throw Exception("File not found: $filePath");
+    }
+  }
+
+  static List<XFile> pathListToXFileList(List<String> pathFileList) {
+    List<XFile> xFileList = [];
+    for (String path in pathFileList) {
+      xFileList.add(XFile(path));
+    }
+    return xFileList;
+  }
+
+  static XFile pathToXFile(String path) {
+    return XFile(path);
   }
 }

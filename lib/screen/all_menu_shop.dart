@@ -47,6 +47,8 @@ class _AllMenuShopPageState extends State<AllMenuShopPage> {
     _filteredMenus = widget.shop.menus!;
   }
 
+  List<Menus> menuAddingImage = [];
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -401,8 +403,9 @@ class _AllMenuShopPageState extends State<AllMenuShopPage> {
                                     )
                                   ],
                                 ),
-                                // const Spacer(),
+                                const Spacer(),
                                 Container(
+                                  margin: EdgeInsets.only(right: width * 0.05),
                                   child: Text(
                                     formatPrice(item.price!.toString()),
                                     textAlign: TextAlign.end,
@@ -594,6 +597,7 @@ class _AllMenuShopPageState extends State<AllMenuShopPage> {
 
       setState(() {
         widget.shop.menus!.add(menu);
+        menuAddingImage.add(menu);
         // context.read<ShopProvider>().addMenu(menu);
       });
 
@@ -604,7 +608,7 @@ class _AllMenuShopPageState extends State<AllMenuShopPage> {
       categoryMenu.clear();
 
       // Close the dialog
-      Navigator.of(context).pop();
+      Navigator.of(context).pop(menuAddingImage);
     }
   }
 

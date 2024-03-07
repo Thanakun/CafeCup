@@ -583,7 +583,7 @@ class _WebChartPageState extends State<WebChartPage> {
                                     DropdownButtonHideUnderline(
                                       child: DropdownButton2<String>(
                                         customButton: Container(
-                                          width: 125,
+                                          width: 80,
                                           height: 30,
                                           padding: EdgeInsets.only(
                                               left: 5, right: 5),
@@ -898,6 +898,9 @@ class _WebChartPageState extends State<WebChartPage> {
           selectDateType = "All Time";
           selectDateTypeFirst =
               "${"CHART.FILTER.ALL_TIME".tr()} วัน ${"CHART.DAY_OF_WEEK.${selectDayOfWeek}".tr()}";
+              selectDateTypeSecond =
+              "${"CHART.FILTER.ALL_TIME".tr()} วัน ${"CHART.DAY_OF_WEEK.${selectDayOfWeek}".tr()}";
+          
           _vm.getSpiderChartFirstGraph(
               null, null, null, _getIndexDayOfWeek(selectDayOfWeek));
         });
@@ -1123,7 +1126,7 @@ class _WebChartPageState extends State<WebChartPage> {
               ),
               child: Center(
                 child: Text(
-                  title,
+                  "CHART.DAY_OF_WEEK.$title".tr(),
                   style: kfontH4InterBlackColor(),
                   overflow: TextOverflow.clip,
                   textAlign: TextAlign.center,

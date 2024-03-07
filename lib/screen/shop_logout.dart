@@ -1,6 +1,7 @@
 import 'package:coffee_application/screen/login.dart';
 import 'package:coffee_application/screen/my_component/bottom_navigationbar_customer.dart';
 import 'package:coffee_application/screen/my_component/buttom_navigationbar_shop.dart';
+import 'package:coffee_application/screen/shop_edit_profile_view.dart';
 import 'package:coffee_application/utility/decoration.dart';
 import 'package:coffee_application/utility/my_constant.dart';
 import 'package:coffee_application/viewmodel/logout_view_model.dart';
@@ -47,25 +48,52 @@ class _ShopLogOutPageState extends State<ShopLogOutPage> {
             children: [
               GestureDetector(
                 onTap: () {
-                  logoutVM.logout();
-                  Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const LoginPage()),
-                      (route) => false);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ShopEditProfileView()),
+                  );
                 },
                 child: Container(
+                  width: width * 0.5,
                   alignment: Alignment.center,
                   decoration: kdecorationForContainerButton,
-                  padding: EdgeInsets.all(width * 0.05),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: width * 0.05, vertical: height * 0.01),
                   child: Text(
-                    "LOGOUT",
+                    "SETTINGS",
                     style: kfont32_400(),
                   ),
                 ),
-              )
+              ),
+              sectionBufferHeight(bufferSection: height * 0.05),
+              _logoutButton(context, width, height),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  GestureDetector _logoutButton(
+      BuildContext context, double width, double height) {
+    return GestureDetector(
+      onTap: () {
+        logoutVM.logout();
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const LoginPage()),
+            (route) => false);
+      },
+      child: Container(
+        width: width * 0.5,
+        alignment: Alignment.center,
+        decoration: kdecorationForContainerButton,
+        padding: EdgeInsets.symmetric(
+            horizontal: width * 0.05, vertical: height * 0.01),
+        child: Text(
+          "LOGOUT",
+          style: kfont32_400(),
         ),
       ),
     );

@@ -454,7 +454,7 @@ class _PieChartPageState extends State<PieChartPage> {
                                       DropdownButtonHideUnderline(
                                         child: DropdownButton2<String>(
                                           customButton: Container(
-                                            width: 125,
+                                            width: 80,
                                             height: 30,
                                             padding: EdgeInsets.only(
                                                 left: 5, right: 5),
@@ -625,40 +625,45 @@ class _PieChartPageState extends State<PieChartPage> {
                                 ),
                                 sectionBufferHeight(bufferSection: 20),
                                 Center(
-                                    child: SfCircularChart(
-                                        onDataLabelRender: (dataLabelArgs) {
-                                          dataLabelArgs.textStyle =
-                                              kfont26Bold_400();
-                                        },
-                                        legend: Legend(
-                                            isVisible: true,
-                                            textStyle:
-                                                kfontH1InterBoldBlackColor()),
-                                        series: <CircularSeries>[
-                                      // Render pie chart
-                                      PieSeries<PieChartData, String>(
-                                          explode: true,
-                                          explodeAll: true,
-                                          explodeOffset: '10%',
-                                          strokeWidth: 1.5,
-                                          strokeColor:
-                                              Colors.black.withOpacity(0.5),
-                                          dataLabelSettings: DataLabelSettings(
+                                    child: Container(
+                                      width: double.infinity,
+                                      height: height*0.35,
+                                      child: SfCircularChart(
+                                          onDataLabelRender: (dataLabelArgs) {
+                                            dataLabelArgs.textStyle =
+                                                kfont26Bold_400();
+                                          },
+                                          legend: Legend(
                                               isVisible: true,
-                                              labelPosition:
-                                                  ChartDataLabelPosition
-                                                      .outside),
-                                          // legendIconType: LegendIconType.circle,
-                                          dataSource: pieDataTOgraphData(
-                                              pieChartData.data ?? []),
-                                          pointColorMapper:
-                                              (PieChartData data, _) =>
-                                                  data.color,
-                                          xValueMapper:
-                                              (PieChartData data, _) => data.x,
-                                          yValueMapper:
-                                              (PieChartData data, _) => data.y)
-                                    ])),
+                                              textStyle:
+                                                  kfontH1InterBoldBlackColor()),
+                                          series: <CircularSeries>[
+                                        // Render pie chart
+                                        PieSeries<PieChartData, String>(
+                                          
+                                            explode: true,
+                                            explodeAll: true,
+                                            explodeOffset: '10%',
+                                            strokeWidth: 1.5,
+                                            strokeColor:
+                                                Colors.black.withOpacity(0.5),
+                                            dataLabelSettings: DataLabelSettings(
+                                                isVisible: true,
+                                                labelPosition:
+                                                    ChartDataLabelPosition
+                                                        .outside),
+                                            // legendIconType: LegendIconType.circle,
+                                            dataSource: pieDataTOgraphData(
+                                                pieChartData.data ?? []),
+                                            pointColorMapper:
+                                                (PieChartData data, _) =>
+                                                    data.color,
+                                            xValueMapper:
+                                                (PieChartData data, _) => data.x,
+                                            yValueMapper:
+                                                (PieChartData data, _) => data.y)
+                                      ]),
+                                    )),
                                 Center(
                                   child: Container(
                                       decoration: BoxDecoration(
@@ -754,7 +759,7 @@ class _PieChartPageState extends State<PieChartPage> {
               ),
               child: Center(
                 child: Text(
-                  title,
+                  "CHART.DAY_OF_WEEK.$title".tr(),
                   style: kfontH4InterBlackColor(),
                   overflow: TextOverflow.clip,
                   textAlign: TextAlign.center,

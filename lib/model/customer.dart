@@ -1,6 +1,8 @@
 enum Gender { MALE, FEMALE }
 
 class CustomerModel {
+  int? iId;
+  int? reviewPoints;
   String? username;
   String? password;
   String? name;
@@ -11,7 +13,9 @@ class CustomerModel {
   List<Tags>? tags;
 
   CustomerModel(
-      {this.username,
+      {this.reviewPoints,
+      this.iId,
+      this.username,
       this.password,
       this.name,
       this.gender,
@@ -21,6 +25,8 @@ class CustomerModel {
       this.tags});
 
   CustomerModel.fromJson(Map<String, dynamic> json) {
+    reviewPoints = json['reviewPoints'];
+    iId = json['_id'];
     username = json['username'];
     password = json['password'];
     name = json['name'];
@@ -30,32 +36,34 @@ class CustomerModel {
     if (json['favourites'] != null) {
       favourites = <Favourites>[];
       json['favourites'].forEach((v) {
-        favourites!.add(new Favourites.fromJson(v));
+        favourites!.add(Favourites.fromJson(v));
       });
     }
     if (json['tags'] != null) {
       tags = <Tags>[];
       json['tags'].forEach((v) {
-        tags!.add(new Tags.fromJson(v));
+        tags!.add(Tags.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['username'] = this.username;
-    data['password'] = this.password;
-    data['name'] = this.name;
-    data['gender'] = this.gender;
-    data['age'] = this.age;
-    data['occupation'] = this.occupation;
-    if (this.favourites != null) {
-      data['favourites'] = this.favourites!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['reviewPoints'] = reviewPoints;
+    data['_id'] = iId;
+    data['username'] = username;
+    data['password'] = password;
+    data['name'] = name;
+    data['gender'] = gender;
+    data['age'] = age;
+    data['occupation'] = occupation;
+    if (favourites != null) {
+      data['favourites'] = favourites!.map((v) => v.toJson()).toList();
     } else {
       data['favourites'] = [];
     }
-    if (this.tags != null) {
-      data['tags'] = this.tags!.map((v) => v.toJson()).toList();
+    if (tags != null) {
+      data['tags'] = tags!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -109,8 +117,8 @@ class Favourites {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_shopID'] = this.iShopID;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['_shopID'] = iShopID;
     return data;
   }
 }
@@ -127,9 +135,9 @@ class Tags {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['key'] = this.key;
-    data['value'] = this.value;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['key'] = key;
+    data['value'] = value;
     return data;
   }
 }

@@ -43,7 +43,7 @@ dependencies:
   flutter_launcher_icons: ^0.13.1
   flutter_native_splash: ^2.2.19
   fluttertoast: ^8.2.2
-  http: ^1.1.2
+
   material_design_icons_flutter: ^7.0.7296
   shared_preferences: ^2.2.2
   simple_animations: ^5.0.0+3
@@ -55,7 +55,7 @@ dependencies:
   google_maps_flutter: ^2.5.00
   permission_handler: ^11.0.1
   another_flushbar: ^1.12.30
-  google_fonts: ^6.1.0
+  google_fonts: ^4.0.0
   dropdown_button2: ^2.3.9
   animated_toggle_switch: ^0.8.0
   image_picker: ^1.0.7
@@ -76,6 +76,7 @@ dependencies:
   shimmer: ^3.0.0
   barcode: ^2.2.6
   barcode_widget: ^2.0.4
+  minio_new: ^1.0.2
 
   # provider:
 

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -102,7 +103,7 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
 
     return SafeArea(
       child: Scaffold(
-        bottomNavigationBar: ShopBottomNavigationBar(
+        bottomNavigationBar: const ShopBottomNavigationBar(
           pageName: "HOME",
         ),
         body: FutureBuilder<ShopModel>(
@@ -134,7 +135,8 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
                     "SHOP_CATEGORY.NORMAL_NOICE");
                 addCategoryWidget(categoryWidgets, shop.noice! == "QUITE_NOICE",
                     "SHOP_CATEGORY.QUITE_NOICE");
-
+                _vm.shopGetImagePathNetworkFromMinio(
+                    shopId: shop.iId!, objectName: "coverImage");
                 return Container(
                     decoration: const BoxDecoration(
                       image: DecorationImage(
@@ -152,11 +154,30 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
                           // pinned: true,
                           expandedHeight: 250.0,
                           flexibleSpace: FlexibleSpaceBar(
-                            background: Image.file(
-                              File(shop.coverImage!),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
+                              background: FutureBuilder(
+                            future: _vm.shopCoverImage,
+                            builder: (context, snapshot) {
+                              if (snapshot.hasError) {
+                                return Text("ERROR_MESSAGE.ERROR_LOADING_FAIL")
+                                    .tr();
+                              } else if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              } else if (snapshot.connectionState ==
+                                      ConnectionState.done &&
+                                  snapshot.data != null) {
+                                return snapshot.data!.isNotEmpty
+                                    ? FadeInImage(
+                                        image: NetworkImage(snapshot.data!),
+                                        fit: BoxFit.cover,
+                                        placeholder: AssetImage(imageNotFound))
+                                    : Image.asset(imageNotFound);
+                              }
+                              return Container();
+                            },
+                          )),
 
                           bottom: PreferredSize(
                             preferredSize: const Size.fromHeight(10),
@@ -171,9 +192,9 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
                                   borderRadius: BorderRadius.circular(15),
                                 ),
                                 child: IconButton(
-                                  style: ButtonStyle(
+                                  style: const ButtonStyle(
                                       shadowColor: MaterialStatePropertyAll(
-                                          Colors.black38)),
+                                          Color.fromARGB(96, 160, 131, 131))),
                                   splashColor: brownBorderButton,
                                   icon: const Icon(
                                     Icons.edit,
@@ -191,12 +212,28 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
                                     uploadImage().then((value) {
                                       if (value != null) {
                                         setState(() {
-                                          _vm.onUserAddCoverImageShop(
-                                              coverImage: value.path);
-                                          shop.coverImage = value.path;
+                                          XFile _xfile = value;
+                                          _vm
+                                              .onUserAddCoverImageShop(
+                                            shopId: shop.iId!,
+                                            coverImage: File(_xfile.path).path,
+                                            coverImageXfile: _xfile,
+                                            // coverImageStream: _xfile
+                                          )
+                                              .then((value) {
+                                            Future.delayed(
+                                              const Duration(milliseconds: 300),
+                                            );
+                                            setState(() {
+                                              _vm.shopGetImagePathNetworkFromMinio(
+                                                  shopId: shop.iId!,
+                                                  objectName: "coverImage");
+                                            });
+                                            return value;
+                                          });
                                         });
                                       }
-                                    }).then((value) => setState(() {}));
+                                    });
                                   },
                                 ),
                               ),
@@ -295,12 +332,11 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
                           sectionBufferHeight(bufferSection: 10),
                           _categoryShopSection(categoryWidgets),
                           sectionBufferHeight(bufferSection: 20),
-                          _shopImageIconSection(context),
+                          _shopImageIconSection(context, shop),
                           sectionBufferHeight(bufferSection: 5),
-                          _imageOfShopSection(
-                              usingImagesList(context: context)),
-                          _imageslider(
-                              context, usingImagesList(context: context)),
+                          _imageOfShopSection(shop),
+                          // _imageslider(context,
+                          //     usingImagesList(context: context, shop: shop)),
                           sectionBufferHeight(bufferSection: 20),
                           _menuHeader(context, shop),
                           sectionBufferHeight(bufferSection: 20),
@@ -397,8 +433,8 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
                                         Colors.grey[300]!,
                                         Colors.grey[100]!
                                       ], // Adjust colors as needed
-                                      begin: Alignment(-1, -1),
-                                      end: Alignment(1, 1),
+                                      begin: const Alignment(-1, -1),
+                                      end: const Alignment(1, 1),
                                     ),
                                   ),
                                 );
@@ -445,6 +481,9 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
                                         customerList.firstWhere(
                                       (element) =>
                                           element.iId == review.iCustomerId,
+                                      orElse: () => CustomerModelResponse(
+                                        name: "No Name",
+                                      ),
                                     );
 
                                     return containerReviewListCard(
@@ -457,6 +496,7 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
                                       comment: review.comment ?? "",
                                       timestamp: review.timestamp ?? "",
                                       menuID: review.iMenuId ?? 0,
+                                      shop: shop,
                                     );
                                   }).toList(),
                                 );
@@ -469,6 +509,8 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
                       ],
                     ));
               }
+              print("snapshot.error");
+              print(snapshot.error);
               return Container();
             }),
       ),
@@ -484,7 +526,8 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
       required int worthinessScore,
       required String comment,
       required String timestamp,
-      required int menuID}) {
+      required int menuID,
+      required ShopModel shop}) {
     return Container(
       margin: const EdgeInsets.only(left: 15, right: 15, top: 5, bottom: 5),
       padding: const EdgeInsets.all(16),
@@ -544,8 +587,10 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
           reviewSectionValueScore(
               scoreTitle: "SHOP_PAGE_VIEW.WORTHINESS_SCORE".tr(),
               score: worthinessScore),
-          sectionBufferHeight(bufferSection: 30),
-          menuPriceReviewSection(),
+          // sectionBufferHeight(bufferSection: 30),
+          // menuPriceReviewSection(
+          //   menu: shop.menus!.firstWhere((menu) => menu. == menuID),
+          // ),
           sectionBufferHeight(bufferSection: 30),
           Row(
             children: [
@@ -566,34 +611,40 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
                 ),
               ),
               sectionBufferWidth(bufferSection: 10),
-              Expanded(
-                flex: 3,
-                child: Container(
-                  height: 125,
-                  decoration: ShapeDecoration(
-                    image: const DecorationImage(
-                      image: AssetImage(americanoImagePath),
-                      fit: BoxFit.fill,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    shadows: [
-                      const BoxShadow(
-                        color: Color(0x3F000000),
-                        blurRadius: 4,
-                        offset: Offset(0, 4),
-                        spreadRadius: 0,
-                      )
-                    ],
-                  ),
-                ),
-              ),
+              // Expanded(
+              //   flex: 3,
+              //   child: Container(
+              //     height: 125,
+              //     decoration: ShapeDecoration(
+              //       image: const DecorationImage(
+              //         image: AssetImage(americanoImagePath),
+              //         fit: BoxFit.fill,
+              //       ),
+              //       shape: RoundedRectangleBorder(
+              //         borderRadius: BorderRadius.circular(10),
+              //       ),
+              //       shadows: [
+              //         const BoxShadow(
+              //           color: Color(0x3F000000),
+              //           blurRadius: 4,
+              //           offset: Offset(0, 4),
+              //           spreadRadius: 0,
+              //         )
+              //       ],
+              //     ),
+              //   ),
+              // ),
             ],
           )
         ],
       ),
     );
+  }
+
+  Future<Uint8List> _pathToUnit8(String filePath) async {
+    XFile file = XFile(filePath);
+    var f = await file.readAsBytes();
+    return f;
   }
 
   Container reviewSectionValueScore({required scoreTitle, required int score}) {
@@ -638,27 +689,49 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
     );
   }
 
-  CarouselSlider _menuCarouselSliderList(
+  FutureBuilder _menuCarouselSliderList(
       ShopModel shop, double width, double height) {
-    return CarouselSlider.builder(
-      itemCount: shop.menus!.isEmpty ? 1 : shop.menus!.length,
-      options: CarouselOptions(
-        height: height * 0.3,
-        viewportFraction: 1,
-        enableInfiniteScroll: false,
-        scrollPhysics: const BouncingScrollPhysics(),
-      ),
-      itemBuilder: (context, index, realIndex) {
-        return shop.menus!.isEmpty
-            ? Container(
-                alignment: Alignment.center,
-                decoration: kdecorationButtonSelectedOrange,
-                child: Text(
-                  " คุณยังไม่มีเมนูเลยนะ",
-                  style: kfontH0InterBlackColor(),
-                ),
-              )
-            : menuCard(width: width, height: height, menu: shop.menus![index]);
+    return FutureBuilder(
+      future: _vm.shopGetMenuImageFromMinio(shop: shop, objectName: "menus"),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Shimmer.fromColors(
+            baseColor: Colors.grey.shade300,
+            highlightColor: Colors.grey.shade100,
+            child: Container(),
+          );
+        } else if (snapshot.hasError) {
+          return Text("ERROR_MESSAGE.ERROR_LOADING_FAIL");
+        } else if (snapshot.connectionState == ConnectionState.done &&
+            !snapshot.hasError &&
+            snapshot.data != null) {
+          return CarouselSlider.builder(
+            itemCount: shop.menus!.isEmpty ? 1 : shop.menus!.length,
+            options: CarouselOptions(
+              height: height * 0.3,
+              viewportFraction: 1,
+              enableInfiniteScroll: false,
+              scrollPhysics: const BouncingScrollPhysics(),
+            ),
+            itemBuilder: (context, index, realIndex) {
+              return shop.menus!.isEmpty
+                  ? Container(
+                      alignment: Alignment.center,
+                      decoration: kdecorationButtonSelectedOrange,
+                      child: Text(
+                        " คุณยังไม่มีเมนูเลยนะ",
+                        style: kfontH0InterBlackColor(),
+                      ),
+                    )
+                  : menuCard(
+                      width: width,
+                      height: height,
+                      menu: shop.menus![index],
+                      image: snapshot.data![index]);
+            },
+          );
+        }
+        return Container();
       },
     );
   }
@@ -690,7 +763,10 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
                 },
               )).then((value) {
                 setState(() {
-                  _vm.onUserAddEditShopMenu(menu: shop.menus!);
+                  _vm.onUserAddEditShopMenu(
+                    menu: shop.menus!,
+                    shopId: shop.iId!,
+                  );
                 });
               });
             },
@@ -709,7 +785,7 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
           child: Container(
             width: 12.0,
             height: 12.0,
-            margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+            margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
             decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: (Theme.of(context).brightness == Brightness.dark
@@ -722,178 +798,38 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
     );
   }
 
-  CarouselSlider _imageOfShopSection(List<XFile> selectedImagesList) {
-    return CarouselSlider.builder(
-      itemCount: selectedImagesList.isEmpty ? 1 : selectedImagesList.length,
-      options: CarouselOptions(
-          // height: 200,
-          viewportFraction: 1,
-          enableInfiniteScroll: false,
-          scrollPhysics: const BouncingScrollPhysics(),
-          onPageChanged: (index, reason) {
-            setState(() {
-              _current = index;
-            });
-          }),
-      itemBuilder: (context, index, realIndex) {
-        return selectedImagesList.isEmpty
-            ? Container(
-                margin: const EdgeInsets.only(
-                    left: 15, right: 15, top: 5, bottom: 5),
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: backgroundActiveButton,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              )
-            : Container(
-                margin: const EdgeInsets.only(
-                    left: 15, right: 15, top: 5, bottom: 5),
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: backgroundActiveButton,
-                  borderRadius: BorderRadius.circular(10),
-                  // You can use Image.network or Image.file based on your image source
-                ),
-                child: Container(
-                  width: 100,
-                  height: 100,
-                  clipBehavior: Clip.hardEdge, //default is none
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                  child: Image.file(
-                    File(selectedImagesList[index].path),
-                    fit: BoxFit.fitHeight,
-                  ),
-                ),
-              );
-      },
-    );
-  }
-
-  Container _categoryShopSection(List<Widget> categoryWidgets) {
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.only(left: 15, right: 15),
-      child: Wrap(
-          alignment: WrapAlignment.start,
-          spacing: 5,
-          runSpacing: 5,
-          children: categoryWidgets),
-    );
-  }
-
-  Container _shopImageIconSection(BuildContext context) {
+  Container _shopImageIconSection(BuildContext context, ShopModel shop) {
     return Container(
       margin: const EdgeInsets.only(left: 15, right: 15, top: 15),
       child: Row(
         children: [
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                listOfImageShopButton["Home"] = true;
-                listOfImageShopButton["Menu"] = false;
-                listOfImageShopButton["Food"] = false;
-                listOfImageShopButton["Other"] = false;
-                usingImagesList(context: context);
-                _current = 1;
-              });
-            },
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              margin: const EdgeInsets.only(right: 10),
-              decoration: BoxDecoration(
-                  color: listOfImageShopButton["Home"]!
+          for (var category in ["Home", "Menu", "Food", "Other"])
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  for (var key in listOfImageShopButton.keys) {
+                    listOfImageShopButton[key] = (key == category);
+                  }
+                  _current = 1;
+                });
+              },
+              child: Container(
+                margin: EdgeInsets.only(right: 10),
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: listOfImageShopButton[category]!
                       ? selectButtonColor
                       : backgroundActiveButton,
-                  borderRadius: BorderRadius.circular(15)),
-              child: Icon(
-                Icons.home_outlined,
-                color: Colors.white,
-                size: 35,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Icon(
+                  _getIconForCategory(category),
+                  color: Colors.white,
+                  size: 35,
+                ),
               ),
             ),
-          ),
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                listOfImageShopButton["Home"] = false;
-                listOfImageShopButton["Menu"] = true;
-                listOfImageShopButton["Food"] = false;
-                listOfImageShopButton["Other"] = false;
-                _current = 1;
-                usingImagesList(context: context);
-              });
-            },
-            child: Container(
-              margin: const EdgeInsets.only(right: 10),
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                  color: listOfImageShopButton["Menu"]!
-                      ? selectButtonColor
-                      : backgroundActiveButton,
-                  borderRadius: BorderRadius.circular(15)),
-              child: Icon(
-                Icons.menu_book_outlined,
-                color: Colors.white,
-                size: 35,
-              ),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                listOfImageShopButton["Home"] = false;
-                listOfImageShopButton["Menu"] = false;
-                listOfImageShopButton["Food"] = true;
-                listOfImageShopButton["Other"] = false;
-                usingImagesList(context: context);
-                _current = 1;
-              });
-            },
-            child: Container(
-              margin: const EdgeInsets.only(right: 10),
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                  color: listOfImageShopButton["Food"]!
-                      ? selectButtonColor
-                      : backgroundActiveButton,
-                  borderRadius: BorderRadius.circular(15)),
-              child: const Icon(
-                Icons.coffee_rounded,
-                color: Colors.white,
-                size: 35,
-              ),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                listOfImageShopButton["Home"] = false;
-                listOfImageShopButton["Menu"] = false;
-                listOfImageShopButton["Food"] = false;
-                listOfImageShopButton["Other"] = true;
-                usingImagesList(context: context);
-                _current = 1;
-              });
-            },
-            child: Container(
-              margin: const EdgeInsets.only(right: 10),
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                  color: listOfImageShopButton["Other"]!
-                      ? selectButtonColor
-                      : backgroundActiveButton,
-                  borderRadius: BorderRadius.circular(15)),
-              child: const Icon(
-                Icons.battery_charging_full_outlined,
-                color: Colors.white,
-                size: 35,
-              ),
-            ),
-          ),
-          const Spacer(),
+          Spacer(),
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 8),
             padding: const EdgeInsets.all(8),
@@ -910,28 +846,22 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
               onPressed: () {
                 Navigator.of(context)
                     .push(
-                  (MaterialPageRoute(
-                    builder: (context) => AddEditingImagesList(
-                      listOfImagesOne:
-                          context.read<ShopProvider>().shop.shopImage,
-                      listOfImagesTwo:
-                          context.read<ShopProvider>().shop.menuImages,
-                      listOfImagesThree:
-                          context.read<ShopProvider>().shop.foodImages,
-                      listOfImagesFour:
-                          context.read<ShopProvider>().shop.otherImages,
+                  MaterialPageRoute(
+                    builder: (context) => AddEditingImagesShopList(
+                      shop: shop,
                       callBackFunction: callbackSetStateFunction,
+                      isHaveShopAlready: true,
                     ),
-                  )),
+                  ),
                 )
                     .then((value) {
                   setState(() {
                     _vm.onUserAddImagesShop(
-                      shopImages: context.read<ShopProvider>().shop.shopImage,
-                      menuImages: context.read<ShopProvider>().shop.menuImages,
-                      foodImages: context.read<ShopProvider>().shop.foodImages,
-                      otherImages:
-                          context.read<ShopProvider>().shop.otherImages,
+                      shopId: shop.iId!,
+                      shopImages: value["shopImages"],
+                      menuImages: value["menuImages"],
+                      foodImages: value["foodImages"],
+                      otherImages: value["otherImages"],
                     );
                   });
                 });
@@ -940,6 +870,92 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
           ),
         ],
       ),
+    );
+  }
+
+  IconData _getIconForCategory(String category) {
+    switch (category) {
+      case "Home":
+        return Icons.home_outlined;
+      case "Menu":
+        return Icons.menu_book_outlined;
+      case "Food":
+        return Icons.coffee_rounded;
+      case "Other":
+        return Icons.battery_charging_full_outlined;
+      default:
+        return Icons.error;
+    }
+  }
+
+  FutureBuilder _imageOfShopSection(ShopModel shop) {
+    return FutureBuilder(
+        future: _vm.shopGetImageShop(shop: shop, objectName: findObjectName()),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Text("ERROR_MESSAGE.ERROR_LOADING_FAIL").tr();
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.connectionState == ConnectionState.done &&
+              snapshot.data != null) {
+            return CarouselSlider.builder(
+              itemCount: snapshot.data!.isEmpty ? 1 : snapshot.data!.length,
+              options: CarouselOptions(
+                // height: 200,
+                viewportFraction: 1,
+                enableInfiniteScroll: false,
+                scrollPhysics: const BouncingScrollPhysics(),
+              ),
+              itemBuilder: (context, index, realIndex) {
+                return snapshot.data!.isEmpty
+                    ? Container(
+                        margin: const EdgeInsets.only(
+                            left: 15, right: 15, top: 5, bottom: 5),
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: backgroundActiveButton,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      )
+                    : Container(
+                        margin: const EdgeInsets.only(
+                            left: 15, right: 15, top: 5, bottom: 5),
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: backgroundActiveButton,
+                          borderRadius: BorderRadius.circular(10),
+                          // You can use Image.network or Image.file based on your image source
+                        ),
+                        child: Container(
+                            width: 100,
+                            height: 100,
+                            clipBehavior: Clip.hardEdge, //default is none
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                            child: FadeInImage(
+                                image: NetworkImage(snapshot.data![index]),
+                                fit: BoxFit.fitHeight,
+                                placeholder: AssetImage(imageNotFound))),
+                      );
+              },
+            );
+          }
+          return Container();
+        });
+  }
+
+  Container _categoryShopSection(List<Widget> categoryWidgets) {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(left: 15, right: 15),
+      child: Wrap(
+          alignment: WrapAlignment.start,
+          spacing: 5,
+          runSpacing: 5,
+          children: categoryWidgets),
     );
   }
 
@@ -963,7 +979,7 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
               color: backgroundActiveButton,
             ),
             child: !isEditingDescrition
-                ? Container(
+                ? SizedBox(
                     width: width,
                     child: Text(
                       shop.description ?? "",
@@ -971,7 +987,7 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
                       style: kfontH2InterBlackColor(),
                     ),
                   )
-                : Container(
+                : SizedBox(
                     width: width,
                     child: TextField(
                       maxLines: 3,
@@ -980,7 +996,7 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
                         shop.description = value;
                       },
                       style: kfontH2InterBlackColor(),
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         border: InputBorder.none, // Hide underline
                       ),
                     ),
@@ -1046,7 +1062,7 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
                 softWrap: true,
                 style: kfontH0InterBlackColor(),
               )
-            : Container(
+            : SizedBox(
                 width: width,
                 child: TextField(
                   textAlign: TextAlign.center,
@@ -1056,7 +1072,7 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
                     shop.name = value;
                   },
                   style: kfontH0InterBlackColor(),
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     border: InputBorder.none, // Hide underline
                   ),
                 ),
@@ -1317,13 +1333,15 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
     );
   }
 
-  Container menuPriceReviewSection() {
+  Container menuPriceReviewSection({
+    required Menus menu,
+  }) {
     return Container(
       width: double.infinity,
       height: 60,
       // margin: EdgeInsets.only(
       //     left: 10, right: 10, top: 5, bottom: 5),
-      padding: EdgeInsets.only(left: 10, right: 10),
+      padding: const EdgeInsets.only(left: 10, right: 10),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
@@ -1340,7 +1358,7 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
               ),
             ),
           ),
-          Spacer(
+          const Spacer(
             flex: 2,
           ),
           Flexible(
@@ -1361,7 +1379,7 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
   Container scoreReviewSection(
       {required String title, required dynamic score}) {
     return Container(
-      margin: EdgeInsets.only(bottom: 10, top: 10),
+      margin: const EdgeInsets.only(bottom: 10, top: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -1376,11 +1394,11 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
             child: Align(
                 alignment: Alignment.center,
                 child: Text(
-                  title,
+                  "CHART.DAY_OF_WEEK.$title".tr(),
                   style: kfont26_400(),
                 )),
           ),
-          Spacer(),
+          const Spacer(),
           Container(
             width: 60,
             height: 60,
@@ -1392,8 +1410,8 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
               alignment: Alignment.center,
               child: score.runtimeType == bool
                   ? (score
-                      ? Icon(Icons.sentiment_satisfied_outlined)
-                      : Icon(Icons.sentiment_dissatisfied_outlined))
+                      ? const Icon(Icons.sentiment_satisfied_outlined)
+                      : const Icon(Icons.sentiment_dissatisfied_outlined))
                   : Text(
                       score.toString(),
                       style: kfontH0InterBlackColor(),
@@ -1417,7 +1435,7 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
         decoration: BoxDecoration(
             color: isSelected ? selectButtonColor : colorStarReviewUnSelect,
             borderRadius: BorderRadius.circular(20)),
-        padding: EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
+        padding: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
         child: Text(
           nameContainerFilter,
           style: kfontH3InterBlackColor(),
@@ -1426,9 +1444,12 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
     );
   }
 
-  Container menuCard(
-      {required double width, required double height, required Menus menu}) {
-    return Container(
+  SizedBox menuCard(
+      {required double width,
+      required double height,
+      required Menus menu,
+      required String image}) {
+    return SizedBox(
       width: width,
       child: Stack(
         alignment: Alignment.topCenter,
@@ -1439,7 +1460,7 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
               width: width * 0.6,
               height: height * 0.175,
               decoration: ShapeDecoration(
-                color: Color(0xFFFFF5E9),
+                color: const Color(0xFFFFF5E9),
                 shape: RoundedRectangleBorder(
                   side: BorderSide(
                     width: 3,
@@ -1449,7 +1470,7 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 shadows: [
-                  BoxShadow(
+                  const BoxShadow(
                     color: Color(0x3F000000),
                     blurRadius: 4,
                     offset: Offset(0, 4),
@@ -1458,7 +1479,7 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
                 ],
               ),
               child: Column(children: [
-                Spacer(),
+                const Spacer(),
                 Text(menu.name ?? "",
                     textAlign: TextAlign.center, style: kfontNameMenu()),
                 Text(menu.category ?? "",
@@ -1486,7 +1507,7 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 shadows: [
-                  BoxShadow(
+                  const BoxShadow(
                     color: Color(0x3F000000),
                     blurRadius: 4,
                     offset: Offset(0, 4),
@@ -1496,13 +1517,34 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: Image.file(
-                  File(menu.image!),
-                  fit: BoxFit.fitHeight,
+                child: Image.network(
+                  image,
+                  fit: BoxFit.fill,
+                  loadingBuilder: (BuildContext context, Widget child,
+                      ImageChunkEvent? loadingProgress) {
+                    if (loadingProgress == null) {
+                      return child;
+                    } else {
+                      // You can display a loading indicator or progress bar here if needed.
+                      return Center(
+                        child: CircularProgressIndicator(
+                          value: loadingProgress.expectedTotalBytes != null
+                              ? loadingProgress.cumulativeBytesLoaded /
+                                  (loadingProgress.expectedTotalBytes ?? 1)
+                              : null,
+                        ),
+                      );
+                    }
+                  },
+                  errorBuilder: (BuildContext context, Object error,
+                      StackTrace? stackTrace) {
+                    // You can handle the error here and display a placeholder or custom error widget.
+                    return Image.asset(imageNotFound);
+                  },
                 ),
               ),
             ),
-          ),
+          )
         ],
       ),
     );
@@ -1521,7 +1563,7 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
         }
       },
       child: Container(
-        padding: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
+        padding: const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
         decoration: BoxDecoration(
           color: isSelected ? selectButtonColor : colorStarReviewUnSelect,
           borderRadius: BorderRadius.circular(20),
@@ -1537,11 +1579,11 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
                     Icons.star_rate_rounded,
                     color: Colors.amber.shade400,
                     shadows: [
-                      BoxShadow(
+                      const BoxShadow(
                         color: Colors.black26,
                         offset: Offset(1, 1),
                       ),
-                      BoxShadow(
+                      const BoxShadow(
                         color: Colors.black12,
                         offset: Offset(-1, -1),
                       ),
@@ -1619,18 +1661,21 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
     }
   }
 
-  List<XFile> usingImagesList({
-    required BuildContext context,
-  }) {
-    if (listOfImageShopButton["Home"]!) {
-      return pathToXFileList(context.read<ShopProvider>().shop.shopImage);
-    } else if (listOfImageShopButton["Menu"]!) {
-      return pathToXFileList(context.read<ShopProvider>().shop.menuImages);
-    } else if (listOfImageShopButton["Food"]!) {
-      return pathToXFileList(context.read<ShopProvider>().shop.foodImages);
-    } else if (listOfImageShopButton["Other"]!) {
-      return pathToXFileList(context.read<ShopProvider>().shop.otherImages);
+  String findObjectName() {
+    for (var entry in listOfImageShopButton.entries) {
+      if (entry.value == true) {
+        switch (entry.key) {
+          case "Home":
+            return "shopimages";
+          case "Menu":
+            return "menuimages";
+          case "Food":
+            return "foodimages";
+          case "Other":
+            return "otherimages";
+        }
+      }
     }
-    return [];
+    return "";
   }
 }

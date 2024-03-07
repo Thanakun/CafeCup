@@ -1,15 +1,19 @@
 import 'package:coffee_application/data/network/dio_network_api_service.dart';
+import 'package:coffee_application/data/network/minio_service.dart';
 import 'package:coffee_application/hive/boxes.dart';
 import 'package:coffee_application/model/customer.dart';
+import 'package:coffee_application/model/response/customer_response.dart';
 import 'package:coffee_application/model/response/promotion.dart';
 import 'package:coffee_application/model/review.dart';
 import 'package:coffee_application/model/shop.dart';
 
 class CustomerOnShopService {
   late final DioApiService _dio;
+  late final MinioService _minio;
 
   CustomerOnShopService() {
     _dio = DioApiService();
+    _minio = MinioService();
   }
 
   Future<ShopModel> getShopByShopId({required int id}) async {
@@ -47,11 +51,15 @@ class CustomerOnShopService {
     }
   }
 
-  Future<CustomerModel> getCurrentCustomer() async {
+  Future<List<CustomerModelResponse>> getCurrentCustomer() async {
     try {
-      final response = await _dio
-          .getApiAuth("/customer/getById", {"_id": boxUsers.get(0).id});
-      return CustomerModel.fromJson(response);
+      final response = await _dio.getApiAuth("/customer/get");
+      List<dynamic> responseData = response;
+      List<CustomerModelResponse> customerList = responseData
+          .map((data) => CustomerModelResponse.fromJson(data))
+          .toList();
+
+      return customerList;
     } catch (_) {
       rethrow;
     }
@@ -61,8 +69,8 @@ class CustomerOnShopService {
     required int shopID,
   }) async {
     try {
-      final response = await _dio
-          .getApiAnalytics("/review/get", {"_shopId": shopID});
+      final response =
+          await _dio.getApiAnalytics("/review/get", {"_shopId": shopID});
       List<dynamic> responseData = response;
       List<ReviewModel> reviewList =
           responseData.map((data) => ReviewModel.fromJson(data)).toList();
@@ -71,5 +79,15 @@ class CustomerOnShopService {
     } catch (_) {
       rethrow;
     }
+  }
+
+  Future<String> shopGetObjectFromMinio({
+    required int shopId,
+    required objectName,
+  }) async {
+    return await _minio.getObjectItem(
+      bucketName: "Shop${shopId.toString()}",
+      objectName: objectName,
+    );
   }
 }

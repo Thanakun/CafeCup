@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:coffee_application/data/widget/add_editing_image.dart';
+import 'package:coffee_application/data/widget/add_editing_image_register.dart';
 import 'package:coffee_application/provider/customer-provider.dart';
 import 'package:coffee_application/provider/shop_provider.dart';
 import 'package:coffee_application/utility/decoration.dart';
@@ -51,6 +52,7 @@ class _ShopRegisterThirdViewState extends State<ShopRegisterThirdView> {
     "Shop": true,
     "Food": false,
     "Menu": false,
+    "Other": false,
   };
 
   List<bool> isSelectDate = [false, false, false, false, false, false, false];
@@ -134,6 +136,7 @@ class _ShopRegisterThirdViewState extends State<ShopRegisterThirdView> {
                                 selectImageType["Shop"] = true;
                                 selectImageType["Food"] = false;
                                 selectImageType["Menu"] = false;
+                                selectImageType["Other"] = false;
                                 _current = 0;
                               });
                             },
@@ -161,6 +164,7 @@ class _ShopRegisterThirdViewState extends State<ShopRegisterThirdView> {
                                 selectImageType["Food"] = true;
                                 selectImageType["Shop"] = false;
                                 selectImageType["Menu"] = false;
+                                selectImageType["Other"] = false;
                                 _current = 0;
                               });
                             },
@@ -188,6 +192,7 @@ class _ShopRegisterThirdViewState extends State<ShopRegisterThirdView> {
                                 selectImageType["Menu"] = true;
                                 selectImageType["Food"] = false;
                                 selectImageType["Shop"] = false;
+                                selectImageType["Other"] = false;
                                 _current = 0;
                               });
                             },
@@ -209,11 +214,39 @@ class _ShopRegisterThirdViewState extends State<ShopRegisterThirdView> {
                               ),
                             ),
                           ),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                selectImageType["Menu"] = false;
+                                selectImageType["Food"] = false;
+                                selectImageType["Shop"] = false;
+                                selectImageType["Other"] = true;
+                                _current = 0;
+                              });
+                            },
+                            child: AnimatedContainer(
+                              padding: EdgeInsets.only(
+                                  left: width * 0.03,
+                                  right: width * 0.03,
+                                  top: height * 0.01,
+                                  bottom: height * 0.01),
+                              duration: const Duration(milliseconds: 200),
+                              decoration: selectImageType["Other"] == true
+                                  ? kdecorationForContainerActiveItem
+                                  : kdecorationForContainerApplication,
+                              child: Text(
+                                "อื่นๆ",
+                                style: selectImageType["Other"] == true
+                                    ? kfontH2InterBoldBlackColor()
+                                    : kfontH2InterBlackColorHalfOpacity(),
+                              ),
+                            ),
+                          ),
                           const Spacer(),
                           getListImagesFromSelect().isNotEmpty
                               ? GestureDetector(
                                   child: Text(
-                                    "แก้ไข / เพิ่ม",
+                                    "แก้ไข ",
                                     style: kfontH3InterBlackColorHalfOpacity(),
                                   ),
                                   onTap: () {
@@ -244,24 +277,11 @@ class _ShopRegisterThirdViewState extends State<ShopRegisterThirdView> {
                                       MaterialPageRoute(
                                         builder: (context) =>
                                             AddEditingImagesList(
-                                          listOfImagesOne: context
-                                              .read<ShopProvider>()
-                                              .shop
-                                              .shopImage,
-                                          listOfImagesTwo: context
-                                              .read<ShopProvider>()
-                                              .shop
-                                              .menuImages,
-                                          listOfImagesThree: context
-                                              .read<ShopProvider>()
-                                              .shop
-                                              .foodImages,
-                                          listOfImagesFour: context
-                                              .read<ShopProvider>()
-                                              .shop
-                                              .otherImages,
+                                          shop:
+                                              context.read<ShopProvider>().shop,
                                           callBackFunction:
                                               callbackSetStateFunction,
+                                          isHaveShopAlready: false,
                                         ),
                                       ),
                                     );
@@ -308,6 +328,10 @@ class _ShopRegisterThirdViewState extends State<ShopRegisterThirdView> {
                                     context
                                         .read<ShopProvider>()
                                         .addMenuImageAll(_allImagePath);
+                                  } else if (selectImageType["Other"] == true) {
+                                    context
+                                        .read<ShopProvider>()
+                                        .addOtherImageAll(_allImagePath);
                                   }
                                 });
                               },
@@ -684,6 +708,10 @@ class _ShopRegisterThirdViewState extends State<ShopRegisterThirdView> {
       }
     } else if (item == "Menu") {
       for (String e in context.read<ShopProvider>().shop.menuImages) {
+        listImages.add(XFile(e));
+      }
+    } else if (item == "Other") {
+      for (String e in context.read<ShopProvider>().shop.otherImages) {
         listImages.add(XFile(e));
       }
     }

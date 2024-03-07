@@ -4,10 +4,12 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:coffee_application/data/widget/add_editing_image.dart';
 import 'package:coffee_application/data/widget/skelton_shimmer.dart';
 import 'package:coffee_application/model/customer.dart';
+import 'package:coffee_application/model/response/customer_response.dart';
 import 'package:coffee_application/model/response/promotion.dart';
 import 'package:coffee_application/model/review.dart';
 import 'package:coffee_application/model/shop.dart';
 import 'package:coffee_application/screen/customer_promotion.dart';
+import 'package:coffee_application/screen/customer_review_view.dart';
 import 'package:coffee_application/screen/my_component/bottom_navigationbar_customer.dart';
 import 'package:coffee_application/utility/decoration.dart';
 import 'package:coffee_application/utility/helper.dart';
@@ -152,20 +154,40 @@ class _CustomerShopViewState extends State<CustomerShopView> {
                       shop.noice! == "QUITE_NOICE",
                       "SHOP_CATEGORY.QUITE_NOICE");
 
+                  _vm.shopGetImagePathNetworkFromMinio(
+                      shopId: widget.shopId, objectName: "coverImage");
+
                   return CustomScrollView(
                     slivers: [
                       SliverAppBar(
                         backgroundColor: backGroundApplication,
                         elevation: 0,
-                        expandedHeight: 200.0,
+                        expandedHeight: 250.0,
                         flexibleSpace: FlexibleSpaceBar(
-                          background: shop.coverImage == null
-                              ? const Image(
-                                  image: AssetImage(imageNotFound),
-                                  fit: BoxFit.cover,
-                                )
-                              : Image.file(File(shop.coverImage!)),
-                        ),
+                            background: FutureBuilder(
+                          future: _vm.shopCoverImage,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) {
+                              return Text("ERROR_MESSAGE.ERROR_LOADING_FAIL")
+                                  .tr();
+                            } else if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            } else if (snapshot.connectionState ==
+                                    ConnectionState.done &&
+                                snapshot.data != null) {
+                              return snapshot.data!.isNotEmpty
+                                  ? Image.network(
+                                      snapshot.data!,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Image.asset(imageNotFound);
+                            }
+                            return Container();
+                          },
+                        )),
                       ),
                       SliverList(
                           delegate: SliverChildListDelegate([
@@ -178,22 +200,10 @@ class _CustomerShopViewState extends State<CustomerShopView> {
                         sectionBufferHeight(bufferSection: 20),
                         _shopCategorySection(categoryWidgets),
                         sectionBufferHeight(bufferSection: 20),
-                        _shopImageButton(shop: shop),
+                        _shopImageIconSection(shop),
                         sectionBufferHeight(bufferSection: 5),
-                        _imageSliderSection(usingImagesList(
-                          listImageShop: shop.shopImage ?? [],
-                          listImageMenu: shop.menuImages ?? [],
-                          listImageFood: shop.foodImages ?? [],
-                          listImageOther: shop.otherImages ?? [],
-                        )),
-                        _carouselSlider(
-                            context,
-                            usingImagesList(
-                              listImageShop: shop.shopImage ?? [],
-                              listImageMenu: shop.menuImages ?? [],
-                              listImageFood: shop.foodImages ?? [],
-                              listImageOther: shop.otherImages ?? [],
-                            )),
+                        _imageOfShopSection(shop),
+                        //
                         sectionBufferHeight(bufferSection: 20),
                         Row(
                           children: [
@@ -201,17 +211,53 @@ class _CustomerShopViewState extends State<CustomerShopView> {
                           ],
                         ),
                         sectionBufferHeight(bufferSection: 20),
-                        CarouselSlider.builder(
-                          itemCount: shop.menus!.length,
-                          options: CarouselOptions(
-                            height: 300,
-                            viewportFraction: 1,
-                            enableInfiniteScroll: false,
-                            scrollPhysics: const BouncingScrollPhysics(),
-                          ),
-                          itemBuilder: (context, index, realIndex) {
-                            return menuCard(
-                                width: width, menu: shop.menus![index]);
+                        FutureBuilder(
+                          future: _vm.shopGetMenuImageFromMinio(
+                              shop: shop, objectName: "menus"),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Shimmer.fromColors(
+                                baseColor: Colors.grey.shade300,
+                                highlightColor: Colors.grey.shade100,
+                                child: Container(),
+                              );
+                            } else if (snapshot.hasError) {
+                              return Text("ERROR_MESSAGE.ERROR_LOADING_FAIL");
+                            } else if (snapshot.connectionState ==
+                                    ConnectionState.done &&
+                                !snapshot.hasError &&
+                                snapshot.data != null) {
+                              return CarouselSlider.builder(
+                                itemCount: shop.menus!.isEmpty
+                                    ? 1
+                                    : shop.menus!.length,
+                                options: CarouselOptions(
+                                  height: height * 0.3,
+                                  viewportFraction: 1,
+                                  enableInfiniteScroll: false,
+                                  scrollPhysics: const BouncingScrollPhysics(),
+                                ),
+                                itemBuilder: (context, index, realIndex) {
+                                  return shop.menus!.isEmpty
+                                      ? Container(
+                                          alignment: Alignment.center,
+                                          decoration:
+                                              kdecorationButtonSelectedOrange,
+                                          child: Text(
+                                            " คุณยังไม่มีเมนูเลยนะ",
+                                            style: kfontH0InterBlackColor(),
+                                          ),
+                                        )
+                                      : menuCard(
+                                          width: width,
+                                          height: height,
+                                          menu: shop.menus![index],
+                                          image: snapshot.data![index]);
+                                },
+                              );
+                            }
+                            return Container();
                           },
                         ),
                         sectionBufferHeight(bufferSection: 30),
@@ -428,7 +474,12 @@ class _CustomerShopViewState extends State<CustomerShopView> {
                         Center(
                           child: GestureDetector(
                             onTap: () {
-                              //TODO ADD NAVIGATE TO REVIEW PAGE
+                              Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const CustomerReviewPage()),
+                                  (route) => false);
                             },
                             child: Container(
                               padding: EdgeInsets.symmetric(
@@ -544,8 +595,8 @@ class _CustomerShopViewState extends State<CustomerShopView> {
                                     ConnectionState.done &&
                                 !snapshot.hasError) {
                               List<ReviewModel> reviewList = snapshot.data![0];
-                              CustomerModel currentCustomer = snapshot.data![1];
-
+                              List<CustomerModelResponse> customerList =
+                                  snapshot.data![1];
                               List<ReviewModel> displayList;
 
                               if (filterTimelineMap["Most Recent"]!) {
@@ -571,8 +622,16 @@ class _CustomerShopViewState extends State<CustomerShopView> {
 
                               return Column(
                                 children: displayList.map((review) {
+                                  CustomerModelResponse? customer =
+                                      customerList.firstWhere(
+                                    (element) =>
+                                        element.iId == review.iCustomerId,
+                                    orElse: () => CustomerModelResponse(
+                                      name: "No Name",
+                                    ),
+                                  );
                                   return containerReviewListCard(
-                                    reviewerName: currentCustomer.name ?? "",
+                                    reviewerName: customer.name ?? "",
                                     flavourScore: review.flavour ?? 0,
                                     placeScore: review.place ?? 0,
                                     serviceScore: review.service ?? 0,
@@ -622,56 +681,80 @@ class _CustomerShopViewState extends State<CustomerShopView> {
     );
   }
 
-  CarouselSlider _imageSliderSection(
-    List<XFile> selectedImagesList,
-  ) {
-    return CarouselSlider.builder(
-      itemCount: selectedImagesList.isEmpty ? 1 : selectedImagesList.length,
-      options: CarouselOptions(
-          // height: 200,
-          viewportFraction: 1,
-          enableInfiniteScroll: false,
-          scrollPhysics: const BouncingScrollPhysics(),
-          onPageChanged: (index, reason) {
-            setState(() {
-              _current = index;
-            });
-          }),
-      itemBuilder: (context, index, realIndex) {
-        return selectedImagesList.isEmpty
-            ? Container(
-                margin: const EdgeInsets.only(
-                    left: 15, right: 15, top: 5, bottom: 5),
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: backgroundActiveButton,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              )
-            : Container(
-                margin: const EdgeInsets.only(
-                    left: 15, right: 15, top: 5, bottom: 5),
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: backgroundActiveButton,
-                  borderRadius: BorderRadius.circular(10),
-                  // You can use Image.network or Image.file based on your image source
-                ),
-                child: Container(
-                  width: 100,
-                  height: 100,
-                  clipBehavior: Clip.hardEdge, //default is none
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                  child: Image.file(
-                    File(selectedImagesList[index].path),
-                    fit: BoxFit.fitHeight,
-                  ),
-                ),
-              );
-      },
-    );
+  String findObjectName() {
+    for (var entry in listOfImageShopButton.entries) {
+      if (entry.value == true) {
+        switch (entry.key) {
+          case "Home":
+            return "shopimages";
+          case "Menu":
+            return "menuimages";
+          case "Food":
+            return "foodimages";
+          case "Other":
+            return "otherimages";
+        }
+      }
+    }
+    return "";
+  }
+
+  FutureBuilder _imageOfShopSection(ShopModel shop) {
+    return FutureBuilder(
+        future: _vm.shopGetImageShop(shop: shop, objectName: findObjectName()),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Text("ERROR_MESSAGE.ERROR_LOADING_FAIL").tr();
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.connectionState == ConnectionState.done &&
+              snapshot.data != null) {
+            return CarouselSlider.builder(
+              itemCount: snapshot.data!.isEmpty ? 1 : snapshot.data!.length,
+              options: CarouselOptions(
+                // height: 200,
+                viewportFraction: 1,
+                enableInfiniteScroll: false,
+                scrollPhysics: const BouncingScrollPhysics(),
+              ),
+              itemBuilder: (context, index, realIndex) {
+                return snapshot.data!.isEmpty
+                    ? Container(
+                        margin: const EdgeInsets.only(
+                            left: 15, right: 15, top: 5, bottom: 5),
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: backgroundActiveButton,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      )
+                    : Container(
+                        margin: const EdgeInsets.only(
+                            left: 15, right: 15, top: 5, bottom: 5),
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: backgroundActiveButton,
+                          borderRadius: BorderRadius.circular(10),
+                          // You can use Image.network or Image.file based on your image source
+                        ),
+                        child: Container(
+                            width: 100,
+                            height: 100,
+                            clipBehavior: Clip.hardEdge, //default is none
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                            child: Image.network(
+                              snapshot.data![index],
+                            )),
+                      );
+              },
+            );
+          }
+          return Container();
+        });
   }
 
   Stack _shopDescriptionSection(ShopModel shop) {
@@ -721,131 +804,52 @@ class _CustomerShopViewState extends State<CustomerShopView> {
     );
   }
 
-  Container _shopImageButton({required ShopModel shop}) {
+  IconData _getIconForCategory(String category) {
+    switch (category) {
+      case "Home":
+        return Icons.home_outlined;
+      case "Menu":
+        return Icons.menu_book_outlined;
+      case "Food":
+        return Icons.coffee_rounded;
+      case "Other":
+        return Icons.battery_charging_full_outlined;
+      default:
+        return Icons.error;
+    }
+  }
+
+  Container _shopImageIconSection(ShopModel shop) {
     return Container(
       margin: const EdgeInsets.only(left: 15, right: 15, top: 15),
       child: Row(
         children: [
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                listOfImageShopButton["Home"] = true;
-                listOfImageShopButton["Menu"] = false;
-                listOfImageShopButton["Food"] = false;
-                listOfImageShopButton["Other"] = false;
-                usingImagesList(
-                  listImageShop: shop.shopImage ?? [],
-                  listImageMenu: shop.menuImages ?? [],
-                  listImageFood: shop.foodImages ?? [],
-                  listImageOther: shop.otherImages ?? [],
-                );
-              });
-            },
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              margin: const EdgeInsets.only(right: 10),
-              decoration: BoxDecoration(
-                  color: listOfImageShopButton["Home"]!
+          for (var category in ["Home", "Menu", "Food", "Other"])
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  for (var key in listOfImageShopButton.keys) {
+                    listOfImageShopButton[key] = (key == category);
+                  }
+                  _current = 1;
+                });
+              },
+              child: Container(
+                margin: EdgeInsets.only(right: 10),
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: listOfImageShopButton[category]!
                       ? selectButtonColor
                       : backgroundActiveButton,
-                  borderRadius: BorderRadius.circular(15)),
-              child: const Icon(
-                Icons.home_outlined,
-                color: Colors.white,
-                size: 35,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Icon(
+                  _getIconForCategory(category),
+                  color: Colors.white,
+                  size: 35,
+                ),
               ),
             ),
-          ),
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                listOfImageShopButton["Home"] = false;
-                listOfImageShopButton["Menu"] = true;
-                listOfImageShopButton["Food"] = false;
-                listOfImageShopButton["Other"] = false;
-                usingImagesList(
-                  listImageShop: shop.shopImage ?? [],
-                  listImageMenu: shop.menuImages ?? [],
-                  listImageFood: shop.foodImages ?? [],
-                  listImageOther: shop.otherImages ?? [],
-                );
-              });
-            },
-            child: Container(
-              margin: const EdgeInsets.only(right: 10),
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                  color: listOfImageShopButton["Menu"]!
-                      ? selectButtonColor
-                      : backgroundActiveButton,
-                  borderRadius: BorderRadius.circular(15)),
-              child: const Icon(
-                Icons.menu_book_outlined,
-                color: Colors.white,
-                size: 35,
-              ),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                listOfImageShopButton["Home"] = false;
-                listOfImageShopButton["Menu"] = false;
-                listOfImageShopButton["Food"] = true;
-                listOfImageShopButton["Other"] = false;
-                usingImagesList(
-                  listImageShop: shop.shopImage ?? [],
-                  listImageMenu: shop.menuImages ?? [],
-                  listImageFood: shop.foodImages ?? [],
-                  listImageOther: shop.otherImages ?? [],
-                );
-              });
-            },
-            child: Container(
-              margin: const EdgeInsets.only(right: 10),
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                  color: listOfImageShopButton["Food"]!
-                      ? selectButtonColor
-                      : backgroundActiveButton,
-                  borderRadius: BorderRadius.circular(15)),
-              child: const Icon(
-                Icons.coffee_rounded,
-                color: Colors.white,
-                size: 35,
-              ),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                listOfImageShopButton["Home"] = false;
-                listOfImageShopButton["Menu"] = false;
-                listOfImageShopButton["Food"] = false;
-                listOfImageShopButton["Other"] = true;
-                usingImagesList(
-                  listImageShop: shop.shopImage ?? [],
-                  listImageMenu: shop.menuImages ?? [],
-                  listImageFood: shop.foodImages ?? [],
-                  listImageOther: shop.otherImages ?? [],
-                );
-              });
-            },
-            child: Container(
-              margin: const EdgeInsets.only(right: 10),
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                  color: listOfImageShopButton["Other"]!
-                      ? selectButtonColor
-                      : backgroundActiveButton,
-                  borderRadius: BorderRadius.circular(15)),
-              child: const Icon(
-                Icons.battery_charging_full_outlined,
-                color: Colors.white,
-                size: 35,
-              ),
-            ),
-          ),
         ],
       ),
     );
@@ -992,8 +996,8 @@ class _CustomerShopViewState extends State<CustomerShopView> {
               scoreTitle: "SHOP_PAGE_VIEW.WORTHINESS_SCORE".tr(),
               score: worthinessScore),
           sectionBufferHeight(bufferSection: 30),
-          menuPriceReviewSection(),
-          sectionBufferHeight(bufferSection: 30),
+          // menuPriceReviewSection(),
+          // sectionBufferHeight(bufferSection: 30),
           Row(
             children: [
               Expanded(
@@ -1013,29 +1017,29 @@ class _CustomerShopViewState extends State<CustomerShopView> {
                 ),
               ),
               sectionBufferWidth(bufferSection: 10),
-              Expanded(
-                flex: 3,
-                child: Container(
-                  height: 125,
-                  decoration: ShapeDecoration(
-                    image: const DecorationImage(
-                      image: AssetImage(americanoImagePath),
-                      fit: BoxFit.fill,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    shadows: [
-                      const BoxShadow(
-                        color: Color(0x3F000000),
-                        blurRadius: 4,
-                        offset: Offset(0, 4),
-                        spreadRadius: 0,
-                      )
-                    ],
-                  ),
-                ),
-              ),
+              // Expanded(
+              //   flex: 3,
+              //   child: Container(
+              //     height: 125,
+              //     decoration: ShapeDecoration(
+              //       image: const DecorationImage(
+              //         image: AssetImage(americanoImagePath),
+              //         fit: BoxFit.fill,
+              //       ),
+              //       shape: RoundedRectangleBorder(
+              //         borderRadius: BorderRadius.circular(10),
+              //       ),
+              //       shadows: [
+              //         const BoxShadow(
+              //           color: Color(0x3F000000),
+              //           blurRadius: 4,
+              //           offset: Offset(0, 4),
+              //           spreadRadius: 0,
+              //         )
+              //       ],
+              //     ),
+              //   ),
+              // ),
             ],
           )
         ],
@@ -1164,7 +1168,11 @@ class _CustomerShopViewState extends State<CustomerShopView> {
     );
   }
 
-  Stack menuCard({required double width, required Menus menu}) {
+  Stack menuCard(
+      {required double width,
+      required Menus menu,
+      required double height,
+      required String image}) {
     return Stack(
       alignment: Alignment.topCenter,
       children: [
@@ -1250,9 +1258,30 @@ class _CustomerShopViewState extends State<CustomerShopView> {
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10),
-              child: Image.file(
-                File(menu.image!),
+              child: Image.network(
+                image,
                 fit: BoxFit.fill,
+                loadingBuilder: (BuildContext context, Widget child,
+                    ImageChunkEvent? loadingProgress) {
+                  if (loadingProgress == null) {
+                    return child;
+                  } else {
+                    // You can display a loading indicator or progress bar here if needed.
+                    return Center(
+                      child: CircularProgressIndicator(
+                        value: loadingProgress.expectedTotalBytes != null
+                            ? loadingProgress.cumulativeBytesLoaded /
+                                (loadingProgress.expectedTotalBytes ?? 1)
+                            : null,
+                      ),
+                    );
+                  }
+                },
+                errorBuilder: (BuildContext context, Object error,
+                    StackTrace? stackTrace) {
+                  // You can handle the error here and display a placeholder or custom error widget.
+                  return Image.asset(imageNotFound);
+                },
               ),
             ),
           ),
@@ -1337,24 +1366,6 @@ class _CustomerShopViewState extends State<CustomerShopView> {
       listXFile.add(XFile(path));
     }
     return listXFile;
-  }
-
-  List<XFile> usingImagesList({
-    required List<String> listImageShop,
-    required List<String> listImageMenu,
-    required List<String> listImageFood,
-    required List<String> listImageOther,
-  }) {
-    if (listOfImageShopButton["Home"]!) {
-      return pathToXFileList(listImageShop);
-    } else if (listOfImageShopButton["Menu"]!) {
-      return pathToXFileList(listImageMenu);
-    } else if (listOfImageShopButton["Food"]!) {
-      return pathToXFileList(listImageFood);
-    } else if (listOfImageShopButton["Other"]!) {
-      return pathToXFileList(listImageOther);
-    }
-    return [];
   }
 
   void addCategoryWidget(

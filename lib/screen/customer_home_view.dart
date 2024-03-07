@@ -133,9 +133,9 @@ class _CustomerHomePageViewState extends State<CustomerHomePageView> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              _imageContainerCategory(width, height),
-                              _imageContainerCategory(width, height),
-                              _imageContainerCategory(width, height),
+                              _imageContainerCategory(width, height,shopCoverImageOutSide,"นอกสถานที่"),
+                              _imageContainerCategory(width, height,shopCoverImagePath,"ในสถานที่"),
+                              _imageContainerCategory(width, height,shopCoverImageCombine,"ผสม"),
                             ],
                           ),
                         ),
@@ -536,23 +536,24 @@ class _CustomerHomePageViewState extends State<CustomerHomePageView> {
       width: width,
       height: height * 0.14,
       decoration: BoxDecoration(
+        color: Colors.grey.withOpacity(0.5),
         borderRadius: BorderRadius.circular(15),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.5),
-            spreadRadius: 2,
-            blurRadius: 1,
-            offset: const Offset(0, 3),
-          ),
-          BoxShadow(
-            color: Colors.black.withOpacity(0.7),
-            spreadRadius: 2,
-            blurRadius: 1,
-            offset: const Offset(0, -3),
-          )
-        ],
+        // boxShadow: [
+        //   BoxShadow(
+        //     color: Colors.black.withOpacity(0.5),
+        //     spreadRadius: 2,
+        //     blurRadius: 1,
+        //     offset: const Offset(0, 3),
+        //   ),
+        //   BoxShadow(
+        //     color: Colors.black.withOpacity(0.7),
+        //     spreadRadius: 2,
+        //     blurRadius: 1,
+        //     offset: const Offset(0, -3),
+        //   )
+        // ],
         image: DecorationImage(
-          image: const AssetImage(shopCoverImagePath) as ImageProvider<Object>,
+          image: const AssetImage(imageNotFound) as ImageProvider<Object>,
           fit: BoxFit.cover,
         ),
       ),
@@ -587,7 +588,7 @@ class _CustomerHomePageViewState extends State<CustomerHomePageView> {
     );
   }
 
-  Column _imageContainerCategory(double width, double height) {
+  Column _imageContainerCategory(double width, double height,String imagePath, String title) {
     return Column(
       // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
@@ -596,30 +597,30 @@ class _CustomerHomePageViewState extends State<CustomerHomePageView> {
           height: height * 0.115,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.5),
-                spreadRadius: 2,
-                blurRadius: 1,
-                offset: const Offset(0, 3),
-              ),
-              BoxShadow(
-                color: Colors.black.withOpacity(0.7),
-                spreadRadius: 1,
-                blurRadius: 1,
-                offset: const Offset(0, -3),
-              )
-            ],
+            // boxShadow: [
+            //   BoxShadow(
+            //     color: Colors.black.withOpacity(0.5),
+            //     spreadRadius: 2,
+            //     blurRadius: 1,
+            //     offset: const Offset(0, 3),
+            //   ),
+            //   BoxShadow(
+            //     color: Colors.black.withOpacity(0.7),
+            //     spreadRadius: 1,
+            //     blurRadius: 1,
+            //     offset: const Offset(0, -3),
+            //   )
+            // ],
             image: DecorationImage(
                 image: AssetImage(
-                  shopCoverImagePath,
+                  imagePath,
                 ),
                 fit: BoxFit.cover),
           ),
         ),
         Container(
           child: Text(
-            "กลางแจ้ง",
+            title,
             style: kfontH1InterBoldBlackColor(),
           ),
         ),

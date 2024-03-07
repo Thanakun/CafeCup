@@ -1,21 +1,15 @@
 import 'package:coffee_application/data/widget/button_selection_animate.dart';
-import 'package:coffee_application/provider/customer-provider.dart';
-import 'package:coffee_application/provider/shop_provider.dart';
-import 'package:coffee_application/screen/shop_register/shop_register_success_view.dart';
-import 'package:coffee_application/viewmodel/register_view_model.dart';
+import 'package:coffee_application/utility/my_constant.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:coffee_application/screen/my_component/shop_register_statusbar.dart';
-import 'package:coffee_application/screen/shop_information.dart';
-import 'package:coffee_application/utility/my_constant.dart';
-import 'package:provider/provider.dart';
 
-class ShopRegisterForthView extends StatefulWidget {
-  const ShopRegisterForthView({super.key});
+class ShopEditProfileView extends StatefulWidget {
+  const ShopEditProfileView({super.key});
 
   @override
-  State<ShopRegisterForthView> createState() => _ShopRegisterForthViewState();
+  State<ShopEditProfileView> createState() => _ShopEditProfileViewState();
 }
 
 enum CustomerGroup {
@@ -26,7 +20,7 @@ enum CustomerGroup {
   TAKEAWAY,
 }
 
-class _ShopRegisterForthViewState extends State<ShopRegisterForthView> {
+class _ShopEditProfileViewState extends State<ShopEditProfileView> {
   TextEditingController selectedCustomerGroup = TextEditingController();
   List<TextEditingController> textEditingControllers = [
     TextEditingController(),
@@ -52,102 +46,82 @@ class _ShopRegisterForthViewState extends State<ShopRegisterForthView> {
   late Map<String, bool> cafeShopStyle;
   late Map<String, bool> cafeNoiseType;
 
-  late final RegisterVM _vm;
-
   @override
   void initState() {
-    super.initState();
-    _vm = RegisterVM(
-        customerProvider: context.read<CustomerProvider>(),
-        shopProvider: context.read<ShopProvider>());
     tableButton = createButtonStateMap(listOfTableType);
     facilitiesButton = createButtonStateMap(listOfFacilitiesType);
     cafeTakePhotoSpot = createButtonStateMap(listOfTakePhotoSpot);
     cafeShopStyle = createButtonStateMap(listOfCafeShopStyle);
     cafeNoiseType = createButtonStateMap(listOfCafeNoice);
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, size: 40, color: Colors.black),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+
+        ),
         resizeToAvoidBottomInset: false,
         backgroundColor: const Color.fromRGBO(255, 245, 233, 1),
-        body: GestureDetector(
-          onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-          child: Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage(backgroundImagePath),
-                fit: BoxFit.cover,
-              ),
+        body: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(backgroundImagePath),
+              fit: BoxFit.cover,
             ),
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                return AnimatedContainer(
-                  duration: const Duration(seconds: 15),
-                  child: Container(
-                    width: width,
-                    height: height,
-                    margin: EdgeInsets.only(
-                        left: width * 0.07281,
-                        right: width * 0.07281,
-                        top: height * 0.0163),
-                    child: Column(
-                        // mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const ShopStatusBarRegister(
-                            shopIndicatorRegistationState: 4,
-                          ),
-                          sectionBufferHeight(bufferSection: height * 0.0218),
-                          Container(
-                            child: Center(
-                              child: Text(
-                                "รายละเอียดภาพรวมของร้าน",
-                                style: kfontH1InterBoldBlackColor(),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ),
-                          sectionBufferHeight(bufferSection: height * 0.0163),
-                          headingContainer(
-                              header: "เลือกลูกค้าส่วนใหญ่ที่เข้ามาในร้าน"),
-                          sectionBufferHeight(bufferSection: height * 0.0109),
-                          _customerGroupSection(width),
-                          sectionBufferHeight(bufferSection: height * 0.0218),
-                          headingContainer(
-                              header:
-                                  "ประเภทของโต๊ะที่นั่งที่มี ( หลายตัวเลือก )"),
-                          sectionBufferHeight(bufferSection: height * 0.0109),
-                          _tableSelectionSection(constraints, width, height),
-                          sectionBufferHeight(bufferSection: height * 0.0218),
-                          headingContainer(
-                              header: "สิ่งอำนวยความสะดวกเบื้องต้น "),
-                          sectionBufferHeight(bufferSection: height * 0.0109),
-                          _listFacilitiesSection(),
-                          sectionBufferHeight(bufferSection: height * 0.0218),
-                          headingContainer(header: "มุมถ่ายรูป"),
-                          sectionBufferHeight(bufferSection: height * 0.0109),
-                          _photoTakingSection(),
-                          sectionBufferHeight(bufferSection: height * 0.0218),
-                          headingContainer(header: "สถานที่"),
-                          sectionBufferHeight(bufferSection: height * 0.0109),
-                          _shopCafeStyle(height),
-                          sectionBufferHeight(bufferSection: height * 0.0218),
-                          headingContainer(header: "เสียงภายในร้าน"),
-                          sectionBufferHeight(bufferSection: height * 0.0109),
-                          _shopNoiseType(),
-                          const Spacer(),
-                          _confirmSection(context, width, constraints),
-                        ]),
-                  ),
-                );
-              },
-            ),
+          ),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return Container(
+                  width: width,
+                  height: height,
+                  margin: EdgeInsets.symmetric(
+                      horizontal: width * 0.05, vertical: height * 0.0163),
+                  child: SingleChildScrollView(
+                    physics: const ScrollPhysics(),
+                    scrollDirection: Axis.vertical,
+                    child: Column(children: [
+                      Text(
+                        'แก้ไขโปรไฟล์',
+                        style: kfontH0InterBlackColor(),
+                      ),
+                      sectionBufferHeight(bufferSection: height * 0.01),
+                      sectionBufferHeight(bufferSection: height * 0.0218),
+                      _customerGroupSection(width),
+                      sectionBufferHeight(bufferSection: height * 0.0218),
+                      _tableSelectionSection(constraints, width, height),
+                      sectionBufferHeight(bufferSection: height * 0.0218),
+                      headingContainer(header: "สิ่งอำนวยความสะดวกเบื้องต้น "),
+                      sectionBufferHeight(bufferSection: height * 0.0109),
+                      _listFacilitiesSection(),
+                      sectionBufferHeight(bufferSection: height * 0.0218),
+                      headingContainer(header: "มุมถ่ายรูป"),
+                      sectionBufferHeight(bufferSection: height * 0.0109),
+                      _photoTakingSection(),
+                      sectionBufferHeight(bufferSection: height * 0.0218),
+                      headingContainer(header: "สถานที่"),
+                      sectionBufferHeight(bufferSection: height * 0.0109),
+                      _shopCafeStyle(height),
+                      sectionBufferHeight(bufferSection: height * 0.0218),
+                      headingContainer(header: "เสียงภายในร้าน"),
+                      sectionBufferHeight(bufferSection: height * 0.0109),
+                      _shopNoiseType(),
+                      sectionBufferHeight(bufferSection: height * 0.1),
+                      _confirmSection(context, width, constraints),
+                    ]),
+                  ));
+            },
           ),
         ),
       ),
@@ -178,42 +152,23 @@ class _ShopRegisterForthViewState extends State<ShopRegisterForthView> {
                       context: context);
                 }
 
-                _vm.shopSignUpForthPage(
-                    customerGroup: groupValueSelect.name,
-                    singleSeat: textEditingControllers[0].text.isEmpty
-                        ? 0
-                        : int.parse(textEditingControllers[0].text),
-                    doubleSeat: textEditingControllers[1].text.isEmpty
-                        ? 0
-                        : int.parse(textEditingControllers[1].text),
-                    largeSeat: textEditingControllers[2].text.isEmpty
-                        ? 0
-                        : int.parse(textEditingControllers[2].text),
-                    facilities: facilitiesButton,
-                    cafeTakePhotoSpot: cafeTakePhotoSpot,
-                    cafeShopStyle: cafeShopStyle,
-                    cafeNoiseLevel: cafeNoiseType);
+                // _vm.shopSignUpForthPage(
+                //     customerGroup: groupValueSelect.name,
+                //     singleSeat: textEditingControllers[0].text.isEmpty
+                //         ? 0
+                //         : int.parse(textEditingControllers[0].text),
+                //     doubleSeat: textEditingControllers[1].text.isEmpty
+                //         ? 0
+                //         : int.parse(textEditingControllers[1].text),
+                //     largeSeat: textEditingControllers[2].text.isEmpty
+                //         ? 0
+                //         : int.parse(textEditingControllers[2].text),
+                //     facilities: facilitiesButton,
+                //     cafeTakePhotoSpot: cafeTakePhotoSpot,
+                //     cafeShopStyle: cafeShopStyle,
+                //     cafeNoiseLevel: cafeNoiseType);
 
-                setState(() {
-                  _vm
-                      .signUp(
-                          shop: context.read<ShopProvider>().shop,
-                          customer: context.read<CustomerProvider>().customer,
-                          userType: "Shop")
-                      .then((value) {
-                    if (!value) {
-                      return Utility.flushBarErrorMessage(
-                          message: "User Name Already In use",
-                          context: context);
-                    } else {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  const ShopRegisterEvaluated()));
-                    }
-                  });
-                });
+                setState(() {});
               },
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -232,21 +187,6 @@ class _ShopRegisterForthViewState extends State<ShopRegisterForthView> {
             ),
           ],
         ),
-        Row(
-          children: [
-            GestureDetector(
-              onTap: () {
-                Navigator.of(context).pop();
-              },
-              child: Container(
-                child: Text(
-                  " < ย้อนกลับ",
-                  style: kfontH2InterBlackColor(),
-                ),
-              ),
-            ),
-          ],
-        )
       ],
     );
   }
@@ -430,7 +370,7 @@ class _ShopRegisterForthViewState extends State<ShopRegisterForthView> {
   SizedBox _tableSelectionSection(
       BoxConstraints constraints, double width, double height) {
     return SizedBox(
-      height: constraints.maxHeight / 9,
+      height: constraints.maxHeight / 8,
       child: Row(
         children: [
           Expanded(
@@ -500,7 +440,7 @@ class _ShopRegisterForthViewState extends State<ShopRegisterForthView> {
       requestFocusOnTap: false,
       textStyle: kfontH2InterBoldBlackColor(),
 
-      hintText: "enter the customer group",
+      hintText: "กลุ่มลูกค้าที่เข้ามาในร้านของคุณ",
       onSelected: (CustomerGroup? group) {
         setState(() {
           groupValueSelect = group!;
