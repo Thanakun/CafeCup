@@ -1,4 +1,15 @@
+import 'package:carousel_slider/carousel_controller.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:coffee_application/data/widget/button_selection_animate.dart';
+import 'package:coffee_application/data/widget/dropdown_button_search_list.dart';
+import 'package:coffee_application/model/customer.dart';
+import 'package:coffee_application/utility/decoration.dart';
+import 'package:coffee_application/utility/my_constant.dart';
+import 'package:coffee_application/viewmodel/customer_edit_view_model.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 
 class CustomerEditView extends StatefulWidget {
   const CustomerEditView({super.key});
@@ -8,8 +19,989 @@ class CustomerEditView extends StatefulWidget {
 }
 
 class _CustomerEditViewState extends State<CustomerEditView> {
+  List<Map<String, dynamic>> subDistricts = [
+    {
+      "id": 4156,
+      "provinceCode": 50,
+      "districtCode": 5001,
+      "subdistrictCode": 500101,
+      "subdistrictNameEn": "Si Phum",
+      "subdistrictNameTh": "ศรีภูมิ",
+      "postalCode": 50200
+    },
+    {
+      "id": 4157,
+      "provinceCode": 50,
+      "districtCode": 5001,
+      "subdistrictCode": 500102,
+      "subdistrictNameEn": "Phra Sing",
+      "subdistrictNameTh": "พระสิงห์",
+      "postalCode": 50200
+    },
+    {
+      "id": 4158,
+      "provinceCode": 50,
+      "districtCode": 5001,
+      "subdistrictCode": 500103,
+      "subdistrictNameEn": "Hai Ya",
+      "subdistrictNameTh": "หายยา",
+      "postalCode": 50100
+    },
+    {
+      "id": 4159,
+      "provinceCode": 50,
+      "districtCode": 5001,
+      "subdistrictCode": 500104,
+      "subdistrictNameEn": "Chang Moi",
+      "subdistrictNameTh": "ช้างม่อย",
+      "postalCode": 50300
+    },
+    {
+      "id": 4160,
+      "provinceCode": 50,
+      "districtCode": 5001,
+      "subdistrictCode": 500105,
+      "subdistrictNameEn": "Chang Khlan",
+      "subdistrictNameTh": "ช้างคลาน",
+      "postalCode": 50100
+    },
+    {
+      "id": 4161,
+      "provinceCode": 50,
+      "districtCode": 5001,
+      "subdistrictCode": 500106,
+      "subdistrictNameEn": "Wat Ket",
+      "subdistrictNameTh": "วัดเกต",
+      "postalCode": 50000
+    },
+    {
+      "id": 4162,
+      "provinceCode": 50,
+      "districtCode": 5001,
+      "subdistrictCode": 500107,
+      "subdistrictNameEn": "Chang Phueak",
+      "subdistrictNameTh": "ช้างเผือก",
+      "postalCode": 50300
+    },
+    {
+      "id": 4163,
+      "provinceCode": 50,
+      "districtCode": 5001,
+      "subdistrictCode": 500108,
+      "subdistrictNameEn": "Su Thep",
+      "subdistrictNameTh": "สุเทพ",
+      "postalCode": 50200
+    },
+    {
+      "id": 4164,
+      "provinceCode": 50,
+      "districtCode": 5001,
+      "subdistrictCode": 500109,
+      "subdistrictNameEn": "Mae Hia",
+      "subdistrictNameTh": "แม่เหียะ",
+      "postalCode": 50100
+    },
+    {
+      "id": 4165,
+      "provinceCode": 50,
+      "districtCode": 5001,
+      "subdistrictCode": 500110,
+      "subdistrictNameEn": "Pa Daet",
+      "subdistrictNameTh": "ป่าแดด",
+      "postalCode": 50100
+    },
+    {
+      "id": 4166,
+      "provinceCode": 50,
+      "districtCode": 5001,
+      "subdistrictCode": 500111,
+      "subdistrictNameEn": "Nong Hoi",
+      "subdistrictNameTh": "หนองหอย",
+      "postalCode": 50000
+    },
+    {
+      "id": 4167,
+      "provinceCode": 50,
+      "districtCode": 5001,
+      "subdistrictCode": 500112,
+      "subdistrictNameEn": "Tha Sala",
+      "subdistrictNameTh": "ท่าศาลา",
+      "postalCode": 50000
+    },
+    {
+      "id": 4168,
+      "provinceCode": 50,
+      "districtCode": 5001,
+      "subdistrictCode": 500113,
+      "subdistrictNameEn": "Nong Pa Khrang",
+      "subdistrictNameTh": "หนองป่าครั่ง",
+      "postalCode": 50000
+    },
+    {
+      "id": 4169,
+      "provinceCode": 50,
+      "districtCode": 5001,
+      "subdistrictCode": 500114,
+      "subdistrictNameEn": "Fa Ham",
+      "subdistrictNameTh": "ฟ้าฮ่าม",
+      "postalCode": 50000
+    },
+    {
+      "id": 4170,
+      "provinceCode": 50,
+      "districtCode": 5001,
+      "subdistrictCode": 500115,
+      "subdistrictNameEn": "Pa Tan",
+      "subdistrictNameTh": "ป่าตัน",
+      "postalCode": 50300
+    },
+    {
+      "id": 4171,
+      "provinceCode": 50,
+      "districtCode": 5001,
+      "subdistrictCode": 500116,
+      "subdistrictNameEn": "San Phisuea",
+      "subdistrictNameTh": "สันผีเสื้อ",
+      "postalCode": 50300
+    },
+  ];
+
+  List<Map<String, dynamic>> priceRange = [
+    {
+      "id": 1,
+      "labelEn": "Cheap",
+      "labelTh": "ย่อมเยา",
+      "Description": "ราคาน้อยกว่า 60 บาท"
+    },
+    {
+      "id": 2,
+      "labelEn": "Medium",
+      "labelTh": "ปานกลาง",
+      "Description": "ราคาประมาณ 60 - 80 บาท"
+    },
+    {
+      "id": 3,
+      "labelEn": "High",
+      "labelTh": "สูง",
+      "Description": "ราคามากกว่า 80 บาท"
+    },
+  ];
+
+  List<Map<String, dynamic>> timeList = [
+    {
+      "id": 1,
+      "labelEn": "Early MORNING",
+      "labelTh": "เช้าตรู่",
+      "Description": "เปิดร้านประมาณ 04:00 - 08:00"
+    },
+    {
+      "id": 2,
+      "labelEn": "Morning",
+      "labelTh": "เช้าสาย",
+      "Description": "เปิดร้านประมาณ 9:00 - 10:00"
+    },
+    {
+      "id": 3,
+      "labelEn": "Afternoon",
+      "labelTh": "เที่ยงบ่าย",
+      "Description": "เปิดร้านประมาณ 11:00 - 12:00"
+    },
+    {
+      "id": 4,
+      "labelEn": "Evening",
+      "labelTh": "เย็นค่ำ",
+      "Description": "เปิดร้านประมาณ 13:00 - 15:00"
+    },
+    {
+      "id": 5,
+      "labelEn": "Night",
+      "labelTh": "กลางคืน",
+      "Description": "เปิดร้านประมาณ 19:00 - 23:00"
+    },
+  ];
+
+  List<Map<String, dynamic>> shopSize = [
+    {
+      "id": 1,
+      "labelEn": "Small",
+      "labelTh": "เล็ก",
+      "Description": "ไม่แออัดมีน้อยกว่า 10 ที่"
+    },
+    {
+      "id": 2,
+      "labelEn": "Large",
+      "labelTh": "ใหญ่",
+      "Description": "ที่นั่งมีมากกว่า 10 ที่"
+    },
+  ];
+
+  List<Map<String, dynamic>> sounds = [
+    {
+      "id": 1,
+      "labelEn": "Quiet",
+      "labelTh": "เงียบ",
+      "Description": "เงียบสงบ คนไม่ชุกชุม"
+    },
+    {
+      "id": 2,
+      "labelEn": "Normal",
+      "labelTh": "ใช้เสียงได้",
+      "Description": "มีเสียงบ้าง ไม่เงียบเหงา"
+    },
+  ];
+
+  List<Map<String, dynamic>> customerGroups = [
+    {
+      "id": 1,
+      "labelEn": "Student / Collegian",
+      "labelTh": "นักเรียน / นักศึกษา",
+      "Description": "นักเรียน / นักศึกษา หาที่อ่านหนังสือ"
+    },
+    {
+      "id": 2,
+      "labelEn": "Office worker",
+      "labelTh": "พนักงานออฟฟิศ",
+      "Description": "พนักงานออฟฟิศจิบกาแฟ ทำงานบางครั้ง"
+    },
+    {
+      "id": 3,
+      "labelEn": "Tourist",
+      "labelTh": "นักท่องเที่ยว",
+      "Description": "นักท่องเที่ยว ถ่ายรูป สร้างคอนเทนต์กัน"
+    },
+    {
+      "id": 4,
+      "labelEn": "Digital nomad",
+      "labelTh": "ดิจิทอล โนแมด",
+      "Description": "นั่งแช่ ทำงาน WFH"
+    },
+    {
+      "id": 5,
+      "labelEn": "Take away",
+      "labelTh": "ซื้อกลับบ้าน",
+      "Description": "ซื้อกลับ + Rider จากแอปต่างๆ"
+    },
+  ];
+
+  TextEditingController subdistrictController = TextEditingController();
+  TextEditingController priceRangeController = TextEditingController();
+  TextEditingController timeController = TextEditingController();
+  TextEditingController shopSizeController = TextEditingController();
+  TextEditingController soundController = TextEditingController();
+  TextEditingController customerGroupController = TextEditingController();
+
+  String? selectedSubDistrict;
+  String? selectedPriceRange;
+  String? selectedTime;
+  String? selectedShopSize;
+  String? selectedSound;
+  String? selectedCustomerGroup;
+
+  final Map<String, String> _tags = {
+    "1": "LOCATION",
+    "2": "PRICERANGE",
+    "3": "TIME",
+    "4": "SHOPSIZE",
+    "5": "SOUND",
+    "6": "CUSTOMERGROUP",
+  };
+
+  final CarouselController _controller = CarouselController();
+  int _current = 1;
+
+  late final CustomerEditVM _vm;
+
+  @override
+  void initState() {
+    super.initState();
+    _vm = CustomerEditVM();
+    _vm.getCurrentCustomer();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+
+    return SafeArea(
+      child: GestureDetector(
+        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          backgroundColor: const Color.fromRGBO(255, 245, 233, 1),
+          appBar: AppBar(
+            backgroundColor: const Color.fromRGBO(255, 245, 233, 1),
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back_ios),
+              onPressed: () {
+                // Handle back navigation
+                Navigator.pop(context);
+              },
+            ),
+          ),
+          body: Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(backgroundImagePath),
+                fit: BoxFit.cover,
+              ),
+            ),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return SizedBox(
+                  width: width,
+                  height: height,
+                  child: FutureBuilder(
+                    future: _vm.customerModel,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Shimmer.fromColors(
+                          baseColor: Colors.grey[400]!,
+                          highlightColor: Colors.grey[200]!,
+                          child: Column(
+                            children: [
+                              Container(
+                                width: double.infinity,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.2,
+                                color: Colors.grey[300],
+                              ),
+                              Container(
+                                width: double.infinity,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.2,
+                                color: Colors.grey[300],
+                              ),
+                              Container(
+                                width: double.infinity,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.2,
+                                color: Colors.grey[300],
+                              ),
+                            ],
+                          ),
+                        );
+                      } else if (snapshot.hasError) {
+                        return Center(
+                            child:
+                                Text("ERROR_MESSAGE.ERROR_LOADING_FAIL".tr()));
+                      } else if (snapshot.connectionState ==
+                              ConnectionState.done &&
+                          !snapshot.hasError) {
+                        CustomerModel customer = snapshot.data as CustomerModel;
+                        return Column(
+                          children: [
+                            Container(
+                                margin:
+                                    const EdgeInsets.only(top: 15, bottom: 15),
+                                child: headerContainer(
+                                  header: "แก้ไขข้อมูลความชอบ",
+                                )),
+                            sectionBufferHeight(bufferSection: 30),
+                            Theme(
+                              data: Theme.of(context).copyWith(
+                                canvasColor: Colors.transparent,
+                                shadowColor: Colors.transparent,
+                              ),
+                              child: Container(
+                                width: double.infinity,
+                                // height:,
+                                margin: EdgeInsets.symmetric(
+                                    horizontal: width * 0.07281,
+                                    vertical: height * 0.0163),
+                                child: _reorderListView(tags: customer.tags!),
+                              ),
+                            ),
+                            sectionBufferHeight(bufferSection: 100),
+                            _categoryTagsSection(
+                              context,
+                              height,
+                              width,
+                              customer.tags!,
+                            ),
+                            _sliderSection(context),
+                            const Spacer(),
+                            _confirmTags(
+                                context, width, constraints, customer.tags!),
+                          ],
+                        );
+                      }
+                      return Container();
+                    },
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Row _confirmTags(BuildContext context, double width,
+      BoxConstraints constraints, List<Tags> tags) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        GestureDetector(
+          onTap: () {
+            if (tags.isEmpty) {
+              Utility.toastMessage("ERROR_MESSAGE.PLEASE_SELECT_ITEM".tr());
+              return;
+            } else if (tags.length < 3) {
+              Utility.toastMessage("ERROR_MESSAGE.PICK_ONLY_THREE_ITEM".tr());
+            }
+
+            _vm.onUserTapUpdateCustomerTag(tags: tags);
+            Navigator.pop(context, false);
+          },
+          child: Container(
+            margin: const EdgeInsets.only(bottom: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            width: width / 1.7,
+            height: constraints.maxHeight * 0.07,
+            decoration: const BoxDecoration(
+                color: kcolorAcceptButton,
+                borderRadius: BorderRadius.all(Radius.circular(20.0))),
+            child: Center(
+              child: Text(
+                tr("CUSTOMER_REGISTER.CONFIRM_BUTTON"),
+                style: kfontH1InterBoldBlackColor(),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Row _sliderSection(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: _tags.entries.map((entry) {
+        return AnimatedContainer(
+          curve: Curves.decelerate,
+          duration: const Duration(milliseconds: 300),
+          width: _current == int.parse(entry.key) ? 36 : 12,
+          height: 12.0,
+          margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(30),
+            color: (Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : brownBorderButton)
+                .withOpacity(_current == int.parse(entry.key) ? 0.9 : 0.4),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  SizedBox _categoryTagsSection(
+      BuildContext context, double height, double width, List<Tags> tags) {
+    return SizedBox(
+      width: double.infinity,
+      height: 100,
+      child: CarouselSlider(
+        carouselController: _controller,
+        options: CarouselOptions(
+          enlargeCenterPage: true,
+          height: 100,
+          enableInfiniteScroll: true,
+          viewportFraction: 0.44,
+          initialPage: 0,
+          onPageChanged: (index, reason) {
+            setState(() {
+              _current = int.parse(_tags.entries.elementAt(index).key);
+            });
+          },
+        ),
+        items: _tags.entries.map((MapEntry<String, String> entry) {
+          return AnimatedContainer(
+            duration: const Duration(microseconds: 300),
+            margin: const EdgeInsets.only(left: 15, right: 15, top: 15),
+            child: ButtonSelectionAnimation(
+                onTap: () {
+                  setState(() {
+                    setState(() {
+                      switch (entry.key) {
+                        case "1":
+                          showModal(
+                            tags: tags,
+                            context: context,
+                            height: height,
+                            entry: entry,
+                            width: width,
+                            valueToShow: Localizations.localeOf(context) ==
+                                    const Locale('th', 'TH')
+                                ? "subdistrictNameTh"
+                                : "subdistrictNameEn",
+                            textInDropdown: Localizations.localeOf(context) ==
+                                    const Locale('th', 'TH')
+                                ? "subdistrictNameTh"
+                                : "subdistrictNameEn",
+                            listItem: subDistricts,
+                            selectedItem: selectedSubDistrict,
+                            selectedController: subdistrictController,
+                          ).whenComplete(() => selectedSubDistrict = null);
+                          break;
+                        case "2":
+                          showModal(
+                            tags: tags,
+                            context: context,
+                            height: height,
+                            entry: entry,
+                            width: width,
+                            valueToShow: Localizations.localeOf(context) ==
+                                    const Locale('th', 'TH')
+                                ? "labelTh"
+                                : "labelEn",
+                            textInDropdown: Localizations.localeOf(context) ==
+                                    const Locale('th', 'TH')
+                                ? "labelTh"
+                                : "labelEn",
+                            listItem: priceRange,
+                            selectedItem: selectedPriceRange,
+                            selectedController: priceRangeController,
+                          ).whenComplete(() => selectedPriceRange = null);
+                          break;
+                        case "3":
+                          showModal(
+                            tags: tags,
+                            context: context,
+                            height: height,
+                            entry: entry,
+                            width: width,
+                            valueToShow: Localizations.localeOf(context) ==
+                                    const Locale('th', 'TH')
+                                ? "labelTh"
+                                : "labelEn",
+                            textInDropdown: Localizations.localeOf(context) ==
+                                    const Locale('th', 'TH')
+                                ? "labelTh"
+                                : "labelEn",
+                            listItem: timeList,
+                            selectedItem: selectedTime,
+                            selectedController: timeController,
+                          ).whenComplete(() => selectedTime = null);
+                          break;
+                        case "4":
+                          showModal(
+                            tags: tags,
+                            context: context,
+                            height: height,
+                            entry: entry,
+                            width: width,
+                            valueToShow: Localizations.localeOf(context) ==
+                                    const Locale('th', 'TH')
+                                ? "labelTh"
+                                : "labelEn",
+                            textInDropdown: Localizations.localeOf(context) ==
+                                    const Locale('th', 'TH')
+                                ? "labelTh"
+                                : "labelEn",
+                            listItem: shopSize,
+                            selectedItem: selectedShopSize,
+                            selectedController: shopSizeController,
+                          ).whenComplete(() => selectedShopSize = null);
+                          break;
+                        case "5":
+                          showModal(
+                            tags: tags,
+                            context: context,
+                            height: height,
+                            entry: entry,
+                            width: width,
+                            valueToShow: Localizations.localeOf(context) ==
+                                    const Locale('th', 'TH')
+                                ? "labelTh"
+                                : "labelEn",
+                            textInDropdown: Localizations.localeOf(context) ==
+                                    const Locale('th', 'TH')
+                                ? "labelTh"
+                                : "labelEn",
+                            listItem: sounds,
+                            selectedItem: selectedSound,
+                            selectedController: soundController,
+                          ).whenComplete(() => selectedSound = null);
+                          break;
+                        case "6":
+                          showModal(
+                            tags: tags,
+                            context: context,
+                            height: height,
+                            entry: entry,
+                            width: width,
+                            valueToShow: Localizations.localeOf(context) ==
+                                    const Locale('th', 'TH')
+                                ? "labelTh"
+                                : "labelEn",
+                            textInDropdown: Localizations.localeOf(context) ==
+                                    const Locale('th', 'TH')
+                                ? "labelTh"
+                                : "labelEn",
+                            listItem: customerGroups,
+                            selectedItem: selectedCustomerGroup,
+                            selectedController: customerGroupController,
+                          ).whenComplete(() => selectedCustomerGroup = null);
+                          break;
+                        default:
+                        // Default case or do nothing for other cases
+                      }
+                    });
+                  });
+                },
+                isButtonPressed: tags.any(
+                  (element) => element.key.toString() == entry.key,
+                ),
+                nameButton: "CUSTOMER_TAG.${entry.value}".tr()),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _reorderListView({required List<Tags> tags}) {
+    return ReorderableListView.builder(
+      buildDefaultDragHandles: false,
+      onReorder: (oldIndex, newIndex) {
+        setState(() {
+          if (oldIndex < newIndex) {
+            newIndex -= 1;
+          }
+          final item = tags.removeAt(oldIndex);
+          tags.insert(newIndex, item);
+        });
+      },
+      shrinkWrap: true,
+      itemCount: tags.length,
+      itemBuilder: (context, index) {
+        final item = tags[index];
+        return Dismissible(
+          key: ValueKey(item),
+          direction: DismissDirection.endToStart,
+          onDismissed: (direction) {
+            setState(() {
+              tags.removeAt(index);
+            });
+          },
+          background: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  backgroundActiveButton,
+                  Colors.red,
+                ],
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+              ),
+            ),
+            alignment: Alignment.centerRight,
+            padding: const EdgeInsets.only(right: 20),
+            child: const Icon(
+              Icons.delete_outline_outlined,
+              color: Colors.white,
+              size: 40,
+            ),
+          ),
+          child: Container(
+            padding: const EdgeInsets.only(
+              top: 10,
+              bottom: 10,
+              left: 10,
+            ),
+            margin: const EdgeInsets.only(bottom: 5),
+            decoration: kdecorationForContainerActiveItem,
+            child: Row(
+              children: [
+                Container(
+                  width: 100,
+                  height: 100,
+                  decoration: kdecorationForContainerActiveBeingSelected,
+                  child: Center(
+                      child: Text(
+                    (index + 1).toString(),
+                    style: kfontH0InterWhiteColor(),
+                  )),
+                ),
+                sectionBufferWidth(bufferSection: 20),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: 150,
+                      child: _tags[item.key].toString() != "LOCATION"
+                          ? Text(
+                              "CUSTOMER_TAG_VALUE.${item.value}".tr(),
+                              overflow: TextOverflow.ellipsis,
+                              style: kfont22w_400black(),
+                            )
+                          : Text(
+                              item.value!,
+                              overflow: TextOverflow.ellipsis,
+                              style: kfont22w_400black(),
+                            ),
+                    ),
+                    SizedBox(
+                      width: 100,
+                      child: Text(
+                        "CUSTOMER_TAG.${_tags[item.key].toString()}".tr(),
+                        overflow: TextOverflow.ellipsis,
+                        style: kfontH3InterBlackColor(),
+                      ),
+                    )
+                  ],
+                ),
+                const Spacer(),
+                ReorderableDragStartListener(
+                  key: ValueKey(item),
+                  index: index,
+                  child: SizedBox(
+                    height: 100,
+                    width: 50,
+                    // color: Colors.red,
+                    child: const Icon(
+                      Icons.reorder_outlined,
+                      size: 20,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<dynamic> showModal(
+      {required BuildContext context,
+      required double height,
+      required MapEntry<String, String> entry,
+      required double width,
+      required String valueToShow,
+      required String textInDropdown,
+      required String? selectedItem,
+      required TextEditingController selectedController,
+      required List<Map<String, dynamic>> listItem,
+      required List<Tags> tags}) {
+    return showModalBottomSheet(
+      elevation: 1,
+      context: context,
+      builder: (modalContext) {
+        return StatefulBuilder(
+          builder: (modalContext, StateSetter modalSetState) {
+            return Container(
+              padding: const EdgeInsets.all(24),
+              height: height / 2,
+              decoration: kdecorationForContainerActiveItem,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Text(
+                    "CUSTOMER_TAG.${entry.value}".tr(),
+                    style: kfontH0InterBlackColor(),
+                  ),
+                  sectionBufferHeight(bufferSection: 24),
+                  DropDownSearchListWidget(
+                      isEnableSearch: false,
+                      width: width,
+                      height: height,
+                      header: "CUSTOMER_TAG.${entry.value}".tr(),
+                      listOfItem: listItem.map((item) {
+                        return DropdownMenuItem<String>(
+                          value: item[
+                              valueToShow], // or any other key you want to use
+                          child: Text(item[textInDropdown]),
+                        );
+                      }).toList(),
+                      selectedItem: selectedItem,
+                      searchTextMenuList: selectedController,
+                      onSelectMenuItem: (value) {
+                        modalSetState(() {
+                          selectedItem = value;
+                        });
+                      }),
+                  sectionBufferHeight(bufferSection: 24),
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: kdecorationForContainerApplication,
+                    child: Text(
+                      listItem
+                              .where((element) =>
+                                  element[valueToShow] == selectedItem)
+                              .isEmpty
+                          ? (Localizations.localeOf(context) ==
+                                  const Locale('th', 'TH')
+                              ? "คุณสนใจที่จะค้นหาร้านกาแฟตำบล  \n ${selectedItem ?? "ไหนดีจ๊ะ"}"
+                              : "You interested in subdistrict  \n ${selectedItem ?? "where else ?"}")
+                          : listItem.firstWhere(
+                                (element) =>
+                                    element[valueToShow] == selectedItem,
+                                orElse: () => {
+                                  "Description": null
+                                }, // Default value if not found
+                              )["Description"] ??
+                              (Localizations.localeOf(context) ==
+                                      const Locale('th', 'TH')
+                                  ? "คุณสนใจที่จะค้นหาร้านกาแฟตำบล  \n ${selectedItem ?? "ไหนดีจ๊ะ"}"
+                                  : "You interested in subdistrict  \n ${selectedItem ?? "where else ?"}"),
+                      style: kfont26_400(),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  const Spacer(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          setState(() {
+                            tags.removeWhere((element) =>
+                                element.key.toString() == entry.key);
+                            modalSetState(() {
+                              Navigator.pop(modalContext);
+                            });
+                          });
+                        },
+                        child: Container(
+                          decoration:
+                              kdecorationForContainerActiveBeingSelected,
+                          padding: const EdgeInsets.all(16),
+                          child: Text(
+                            tr("CUSTOMER_REGISTER.DELETE_TAGS_BUTTON"),
+                            style: kfontH0InterWhiteColor(),
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          setState(
+                            () {
+                              String _selectedTags = "";
+                              if (entry.key != "1") {
+                                switch (selectedItem) {
+                                  case "นักเรียน / นักศึกษา":
+                                    _selectedTags = "STUDENT";
+                                    break;
+                                  case "พนักงานออฟฟิศ":
+                                    _selectedTags = "OFFICE_WORKER";
+                                    break;
+                                  case "นักท่องเที่ยว":
+                                    _selectedTags = "TOURIST";
+                                    break;
+
+                                  case "ดิจิทอล โนแมด":
+                                    _selectedTags = "DIGITAL_NORMAD";
+                                    break;
+
+                                  case "ซื้อกลับบ้าน":
+                                    _selectedTags = "TAKEAWAY";
+                                    break;
+                                  case "เงียบ":
+                                    _selectedTags = "QUITE";
+                                    break;
+                                  case "ใช้เสียงได้":
+                                    _selectedTags = "NORMAL";
+                                    break;
+                                  case "เล็ก":
+                                    _selectedTags = "SMALL";
+                                    break;
+                                  case "ใหญ่":
+                                    _selectedTags = "LARGE";
+                                    break;
+                                  case "เช้าตรู่":
+                                    _selectedTags = "EARLYMORNING";
+                                    break;
+                                  case "เช้าสาย":
+                                    _selectedTags = "MORNING";
+                                    break;
+                                  case "เที่ยงบ่าย":
+                                    _selectedTags = "AFTERNOON";
+                                    break;
+                                  case "เย็นค่ำ":
+                                    _selectedTags = "EVENING";
+                                    break;
+                                  case "กลางคืน":
+                                    _selectedTags = "NIGHT";
+                                    break;
+                                  case "ย่อมเยา":
+                                    _selectedTags = "CHEAP";
+                                    break;
+                                  case "ปานกลาง":
+                                    _selectedTags = "MEDIUM";
+                                    break;
+                                  case "สูง":
+                                    _selectedTags = "HIGH";
+                                    break;
+
+                                  default:
+                                    break;
+                                }
+                                if (selectedItem != null && tags.length < 3) {
+                                  tags.add(Tags(
+                                      key: int.parse(entry.key),
+                                      value: _selectedTags));
+
+                                  modalSetState(() {
+                                    Navigator.pop(modalContext);
+                                  });
+                                  Utility.flushBarGrantedMessage(
+                                      message: "Added", context: context);
+                                } else if (selectedItem == null) {
+                                  Utility.toastMessage(
+                                    "ERROR_MESSAGE.PLEASE_ENTER_VALUE".tr(),
+                                  );
+                                } else if (tags.length >= 3) {
+                                  Utility.toastMessage(
+                                    "ERROR_MESSAGE.PICK_ONLY_THREE_ITEM".tr(),
+                                  );
+                                }
+                              } else {
+                                if (selectedItem != null && tags.length < 3) {
+                                  tags.add(Tags(
+                                      key: int.parse(entry.key),
+                                      value: _selectedTags));
+
+                                  modalSetState(() {
+                                    Navigator.pop(modalContext);
+                                  });
+                                  Utility.flushBarGrantedMessage(
+                                      message: "Added", context: context);
+                                } else if (selectedItem == null) {
+                                  Utility.toastMessage(
+                                    "ERROR_MESSAGE.PLEASE_ENTER_VALUE".tr(),
+                                  );
+                                } else if (tags.length >= 3) {
+                                  Utility.toastMessage(
+                                    "ERROR_MESSAGE.PICK_ONLY_THREE_ITEM".tr(),
+                                  );
+                                }
+                              }
+                            },
+                          );
+                        },
+                        child: Container(
+                          decoration: tags.length >= 3
+                              ? kdecorationForContainerDisabled
+                              : kdecorationForContainerAcceptButton,
+                          padding: const EdgeInsets.only(
+                              top: 16, bottom: 16, left: 60, right: 60),
+                          child: Text(
+                            "CUSTOMER_REGISTER.ADD_TAGS_BUTTON".tr(),
+                            style: kfontH0InterWhiteColor(),
+                          ),
+                        ),
+                      )
+                    ],
+                  )
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 }

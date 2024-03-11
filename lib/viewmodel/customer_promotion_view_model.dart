@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:coffee_application/model/customer.dart';
 import 'package:coffee_application/model/response/promotion.dart';
 import 'package:coffee_application/model/response/promotion_claim_response.dart';
+import 'package:coffee_application/model/response/reviewpoints_response.dart';
 import 'package:coffee_application/service/customer/customer_promotion_service.dart';
 
 class CustomerPromotionVM {
@@ -12,10 +13,11 @@ class CustomerPromotionVM {
   late List<Promotion> promotionList;
   late List<Promotion> filteredPromotions;
   late Future<CustomerModel> customerModel;
+  late Future<ReviewPointsResponse> reviewPoints;
 
   void onUserEnterThePromotionPage() {
     getApiPromotion();
-    getCurrentCustomer();
+    getCurrentCustomer();getCustomerReviewPoints();
   }
 
   Future<void> getApiPromotion() async {
@@ -45,10 +47,10 @@ class CustomerPromotionVM {
     customerModel = service.getCurrentCustomer();
   }
 
-  Future<void> updateCustomerReviewPointAfterClaim(
-      {required int points}) async {
-    service.updateCustomerReviewPointAfterClaim(points: points);
-  }
+  // Future<void> updateCustomerReviewPointAfterClaim(
+  //     {required int points}) async {
+  //   service.updateCustomerReviewPointAfterClaim(points: points);
+  // }
 
   Future<bool> onUserClaimingPromotionCode() async {
     try {
@@ -64,6 +66,14 @@ class CustomerPromotionVM {
       return false;
     } catch (error) {
       // Handle errors
+      rethrow;
+    }
+  }
+
+  Future<void> getCustomerReviewPoints() async {
+    try {
+      reviewPoints = service.getCustomerReviewPoints();
+    } catch (_) {
       rethrow;
     }
   }

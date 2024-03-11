@@ -31,7 +31,7 @@ class ShopInformationVM {
     _service.addMenuToShopId(menu, shopId);
   }
 
-  void onUserAddImagesShop({
+  Future onUserAddImagesShop({
     required int shopId,
     required List<String> shopImages,
     required List<String> menuImages,
@@ -66,10 +66,8 @@ class ShopInformationVM {
     required int shopId,
     required String objectName,
   }) async {
-    shopCoverImage =
-        _service.shopGetObjectFromMinio(shopId: shopId, objectName: objectName);
-
-    return shopCoverImage;
+    return Future.value(await _service.shopGetObjectFromMinio(
+        shopId: shopId, objectName: objectName));
   }
 
   Future<List<String>> shopGetMenuImageFromMinio({

@@ -95,7 +95,7 @@ class _LinearChartPageState extends State<LinearChartPage> {
           child: CustomScrollView(
             slivers: [
               SliverMultilineAppBar(
-                title: "CHART.BAR_CHART_PAGE.BAR_CHART_TITLE".tr(),
+                title: "CHART.BAR_CHART_PAGE.LINEAR_CHART_TITLE".tr(),
                 leading: IconButton(
                   icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
                   onPressed: () {
@@ -624,7 +624,9 @@ class _LinearChartPageState extends State<LinearChartPage> {
                                 ),
                                 sectionBufferHeight(bufferSection: 20),
                                 _barChart(
-                                    _getChartDataBySelectName(rankChartData)),
+                                    _getChartDataBySelectName(rankChartData),
+                                    _getChartDataDashBySelectName(
+                                        rankChartData)),
                                 Center(
                                   child: Container(
                                       decoration: BoxDecoration(
@@ -635,7 +637,7 @@ class _LinearChartPageState extends State<LinearChartPage> {
                                       alignment: Alignment.center,
                                       padding: const EdgeInsets.all(30),
                                       child: Text(
-                                        "กราฟแสดงจำนวนลูกค้าเฉลี่ยใน วันจันทร์ ตลอดระยะเวลาที่ผ่านมาเฉลี่ยตลอด \n \n วันคิดเป็น 30 คน/ชั่วโมงในช่วงพีคมีลูกค้า 80 คน/ชั่วโมง",
+                                        "กราฟแสดงรีวิวจากลูกค้าที่เข้ามาใช้บริการของร้าน \n \n จากกราฟสีต่างๆแสดงให้เห็นถึงรายละเอียดของคะแนนต่างๆของร้าน",
                                         style: kfontH2InterBlackColor(),
                                         textAlign: TextAlign.center,
                                       )),
@@ -665,7 +667,8 @@ class _LinearChartPageState extends State<LinearChartPage> {
           width: 20,
           height: 20,
           margin: EdgeInsets.only(right: width * 0.01, left: width * 0.01),
-          decoration: ShapeDecoration(shape: const StadiumBorder(), color: color),
+          decoration:
+              ShapeDecoration(shape: const StadiumBorder(), color: color),
         ),
       ),
       WidgetSpan(
@@ -679,64 +682,101 @@ class _LinearChartPageState extends State<LinearChartPage> {
 
   List<ChartData> _getChartDataBySelectName(
       ReviewRankBarChartResponse chartData) {
-    if (selectDataFilterType == "ALL" && chartData.data!.totalScore != null) {
-      List<ChartData> chartDataList = [
-        ChartData("MIN", chartData.data!.totalScore!.min!, Colors.blue),
-        ChartData("MAX", chartData.data!.totalScore!.max!, Colors.red),
-        ChartData(
-            "SHOP AVG", chartData.data!.totalScore!.shopAvg!, Colors.green),
-        ChartData("MY AVG", chartData.data!.totalScore!.avg!, Colors.purple),
-      ];
-      return chartDataList;
-    } else if (selectDataFilterType == "FLAVOUR" &&
-        chartData.data!.flavour != null) {
-      List<ChartData> chartDataList = [
-        ChartData("MIN", chartData.data!.flavour!.min!, Colors.blue),
-        ChartData("MAX", chartData.data!.flavour!.max!, Colors.red),
-        ChartData("SHOP AVG", chartData.data!.flavour!.shopAvg!, Colors.green),
-        ChartData("MY AVG", chartData.data!.flavour!.avg!, Colors.purple),
-      ];
-      return chartDataList;
-    } else if (selectDataFilterType == "PLACE" &&
-        chartData.data!.place != null) {
-      List<ChartData> chartDataList = [
-        ChartData("MIN", chartData.data!.place!.min!, Colors.blue),
-        ChartData("MAX", chartData.data!.place!.max!, Colors.red),
-        ChartData("SHOP AVG", chartData.data!.place!.shopAvg!, Colors.green),
-        ChartData("MY AVG", chartData.data!.place!.avg!, Colors.purple),
-      ];
-      return chartDataList;
-    } else if (selectDataFilterType == "SERVICE" &&
-        chartData.data!.service != null) {
-      List<ChartData> chartDataList = [
-        ChartData("MIN", chartData.data!.service!.min!, Colors.blue),
-        ChartData("MAX", chartData.data!.service!.max!, Colors.red),
-        ChartData("SHOP AVG", chartData.data!.service!.shopAvg!, Colors.green),
-        ChartData("MY AVG", chartData.data!.service!.avg!, Colors.purple),
-      ];
-      return chartDataList;
-    } else if (selectDataFilterType == "PARKING" &&
-        chartData.data!.parking != null) {
-      List<ChartData> chartDataList = [
-        ChartData("MIN", chartData.data!.parking!.min!, Colors.blue),
-        ChartData("MAX", chartData.data!.parking!.max!, Colors.red),
-        ChartData("SHOP AVG", chartData.data!.parking!.shopAvg!, Colors.green),
-        ChartData("MY AVG", chartData.data!.parking!.avg!, Colors.purple),
-      ];
-      return chartDataList;
-    } else if (selectDataFilterType == "WORTHINESS" &&
-        chartData.data!.worthiness != null) {
-      List<ChartData> chartDataList = [
-        ChartData("MIN", chartData.data!.worthiness!.min!, Colors.blue),
-        ChartData("MAX", chartData.data!.worthiness!.max!, Colors.red),
-        ChartData(
-            "SHOP AVG", chartData.data!.worthiness!.shopAvg!, Colors.green),
-        ChartData("MY AVG", chartData.data!.worthiness!.avg!, Colors.purple),
-      ];
-      return chartDataList;
-    } else {
+    switch (selectDataFilterType) {
+      case "ALL":
+        return _createChartDataOwnShop(
+          chartData.data?.totalScore?.avg,
+          chartData.data?.totalScore?.shopAvg,
+        );
+      case "FLAVOUR":
+        return _createChartDataOwnShop(
+          chartData.data?.flavour?.avg,
+          chartData.data?.flavour?.shopAvg,
+        );
+      case "PLACE":
+        return _createChartDataOwnShop(
+          chartData.data?.place?.avg,
+          chartData.data?.place?.shopAvg,
+        );
+      case "SERVICE":
+        return _createChartDataOwnShop(
+          chartData.data?.service?.avg,
+          chartData.data?.service?.shopAvg,
+        );
+      case "PARKING":
+        return _createChartDataOwnShop(
+          chartData.data?.parking?.avg,
+          chartData.data?.parking?.shopAvg,
+        );
+      case "WORTHINESS":
+        return _createChartDataOwnShop(
+          chartData.data?.worthiness?.avg,
+          chartData.data?.worthiness?.shopAvg,
+        );
+      default:
+        return [];
+    }
+  }
+
+  List<ChartData> _getChartDataDashBySelectName(
+      ReviewRankBarChartResponse chartData) {
+    switch (selectDataFilterType) {
+      case "ALL":
+        return _createChartDataDashLine(
+          chartData.data?.totalScore?.min,
+          chartData.data?.totalScore?.max,
+        );
+      case "FLAVOUR":
+        return _createChartDataDashLine(
+          chartData.data?.flavour?.min,
+          chartData.data?.flavour?.max,
+        );
+      case "PLACE":
+        return _createChartDataDashLine(
+          chartData.data?.place?.min,
+          chartData.data?.place?.max,
+        );
+      case "SERVICE":
+        return _createChartDataDashLine(
+          chartData.data?.service?.min,
+          chartData.data?.service?.max,
+        );
+      case "PARKING":
+        return _createChartDataDashLine(
+          chartData.data?.parking?.min,
+          chartData.data?.parking?.max,
+        );
+      case "WORTHINESS":
+        return _createChartDataDashLine(
+          chartData.data?.worthiness?.min,
+          chartData.data?.worthiness?.max,
+        );
+      default:
+        return [];
+    }
+  }
+
+  List<ChartData> _createChartDataOwnShop(double? shopAvg, double? avg) {
+    if (avg == null|| shopAvg == null) {
       return [];
     }
+
+    return [
+      ChartData("ร้านของฉัน", avg, Colors.purple),
+      ChartData("เฉลี่ยทุกร้าน", shopAvg, Colors.green.shade300),
+    ];
+  }
+
+  List<ChartData> _createChartDataDashLine(
+      double? min, double? max) {
+    if (min == null || max == null ) {
+      return [];
+    }
+
+    return [
+      ChartData("MIN", min, Colors.blue),
+      ChartData("MAX", max, Colors.red),
+    ];
   }
 
   Center _graphDescription() {
@@ -782,6 +822,7 @@ class _LinearChartPageState extends State<LinearChartPage> {
 
   Center _barChart(
     List<ChartData> chartData,
+    List<ChartData> dashData,
   ) {
     return Center(
       child: Container(
@@ -790,9 +831,44 @@ class _LinearChartPageState extends State<LinearChartPage> {
               labelStyle: kfontH2InterBlackColor(),
             ),
             primaryYAxis: NumericAxis(
-              // minimum: 0,
+              plotBands: [
+                PlotBand(
+                    color: Colors.grey.withOpacity(0.0),
+                    start: dashData[0].y,
+                    end: 20,
+                    
+                    text: dashData[0].y.toStringAsFixed(2),
+                    verticalTextAlignment: TextAnchor.end,
+                    horizontalTextAlignment: TextAnchor.end,
+                    textStyle: kfontH2InterBoldBlackColor()
+                        .copyWith(color: Colors.blue),
+
+                    //Specify the width for the line
+                    borderWidth: 3,
+                    //Specify the color for the line
+                    borderColor: Colors.blue,
+                    //Specify the dash array for the line
+                    dashArray: const <double>[4, 5]),
+                PlotBand(
+                    color: Colors.grey.withOpacity(0.0),
+                    start: dashData[1].y,
+                    end: 20,
+                    
+                    text: dashData[1].y.toStringAsFixed(2),
+                    verticalTextAlignment: TextAnchor.end,
+                    horizontalTextAlignment: TextAnchor.end,
+                    textStyle: kfontH2InterBoldBlackColor()
+                        .copyWith(color: Colors.red),
+
+                    //Specify the width for the line
+                    borderWidth: 3,
+                    //Specify the color for the line
+                    borderColor: Colors.red,
+                    //Specify the dash array for the line
+                    dashArray: const <double>[4, 5])
+              ],
               maximum: 5,
-              // interval: 0.5,
+              minimum: 0,
               labelStyle: kfontH2InterBlackColor(),
               numberFormat: NumberFormat.decimalPatternDigits(
                 decimalDigits: 1,
@@ -808,11 +884,12 @@ class _LinearChartPageState extends State<LinearChartPage> {
                 dataSource: chartData,
                 xValueMapper: (ChartData data, _) => data.x,
                 yValueMapper: (ChartData data, _) => data.y,
+                width: 0.35,
                 borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(10),
                     topRight: Radius.circular(10)),
                 pointColorMapper: (ChartData data, _) => data.color,
-              )
+              ),
             ]),
       ),
     );

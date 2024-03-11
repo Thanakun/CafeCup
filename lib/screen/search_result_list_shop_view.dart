@@ -424,7 +424,7 @@ class _SearchResultViewState extends State<SearchResultView> {
                     Row(
                       children: [
                         Container(
-                          width: constraints.maxWidth * 0.25,
+                          width: constraints.maxWidth * 0.275,
                           child: Text(
                             shop.name ?? "",
                             // "shop.name!",
@@ -435,7 +435,7 @@ class _SearchResultViewState extends State<SearchResultView> {
                           ),
                         ),
                         sectionBufferWidth(bufferSection: width * 0.1),
-                        Icon(
+                        shop.reviewNum == 0 ? Container() : Icon(
                           Icons.star,
                           size: constraints.maxWidth * 0.05,
                           color: Colors.amber,
@@ -443,7 +443,7 @@ class _SearchResultViewState extends State<SearchResultView> {
                         Container(
                           width: constraints.maxWidth * 0.18,
                           child: Text(
-                            "4.7 (5000)",
+                            "${shop.reviewScoreMean == 0 ? "" : shop.reviewScoreMean!.toStringAsFixed(1)} ${shop.reviewNum == 0 ? "" : "(${shop.reviewNum.toString()})"}",
                             style: kfontH2InterBoldBlackColor(),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,

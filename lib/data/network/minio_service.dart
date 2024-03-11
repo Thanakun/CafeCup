@@ -55,7 +55,7 @@ class MinioService {
 
       return await _minioClient.presignedGetObject(
         bucketLowerCase,
-        objectName,
+        objectName + '.jpg',
         respHeaders: {"Content-Type": "image/jpeg"},
       );
     } catch (e) {
@@ -108,7 +108,7 @@ class MinioService {
           // Handle Web
           uploadType = _minioClient.putObject(
             bucketLowerCase,
-            objectNames[i],
+            objectNames[i] + '.jpg',
             xfiles[i].openRead(),
             metadata: {"Content-type": "image/jpeg"},
             onProgress: (p0) {},
@@ -117,7 +117,7 @@ class MinioService {
           // Handle non-web environments
           uploadType = _minioClient.fPutObject(
             bucketLowerCase,
-            objectNames[i],
+            objectNames[i] + '.jpg',
             filePaths[i],
           );
         }
@@ -157,7 +157,7 @@ class MinioService {
       if (kIsWeb) {
         uploadType = _minioClient.putObject(
           bucketLowerCase,
-          objectName,
+          objectName + '.jpg',
           Helper.pathToXFile(filePath).openRead(),
           onProgress: (p0) {
             print("p0");
@@ -166,8 +166,8 @@ class MinioService {
         );
       } else {
         // Handle non-web environments
-        uploadType =
-            _minioClient.fPutObject(bucketLowerCase, objectName, filePath);
+        uploadType = _minioClient.fPutObject(
+            bucketLowerCase, objectName + '.jpg', filePath);
       }
 
       // Construct and return the URL for the uploaded object

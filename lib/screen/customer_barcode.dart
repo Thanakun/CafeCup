@@ -100,7 +100,7 @@ class _CustomerBarcodeViewState extends State<CustomerBarcodeView> {
                           Navigator.of(context).pop();
                         },
                         child: Text(
-                          " CUSTOMER_BARCODE.BACK".tr(),
+                          "CUSTOMER_BARCODE.BACK".tr(),
                           style: kfontH1InterBoldBlackColor(),
                         ),
                       ),

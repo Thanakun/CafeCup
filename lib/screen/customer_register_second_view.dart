@@ -173,7 +173,7 @@ class _CustomerRegisterSecondState extends State<CustomerRegisterSecond> {
     {
       "id": 1,
       "labelEn": "Cheap",
-      "labelTh": "ย่อยเยา",
+      "labelTh": "ย่อมเยา",
       "Description": "ราคาน้อยกว่า 60 บาท"
     },
     {
@@ -301,12 +301,12 @@ class _CustomerRegisterSecondState extends State<CustomerRegisterSecond> {
   String? selectedCustomerGroup;
 
   final Map<String, String> _tags = {
-    "1": "Location",
-    "2": "Price range",
-    "3": "Time",
-    "4": "Shop size",
-    "5": "Sound",
-    "6": "Customer group",
+    "1": "LOCATION",
+    "2": "PRICERANGE",
+    "3": "TIME",
+    "4": "SHOPSIZE",
+    "5": "SOUND",
+    "6": "CUSTOMERGROUP",
   };
 
   List<Map<String, String>> orderSelectedTags = [];
@@ -440,16 +440,28 @@ class _CustomerRegisterSecondState extends State<CustomerRegisterSecond> {
                                         children: [
                                           Container(
                                             width: 150,
-                                            child: Text(
-                                              item["value"].toString(),
-                                              overflow: TextOverflow.ellipsis,
-                                              style: kfont22w_400black(),
-                                            ),
+                                            child: _tags[item["key"]]
+                                                        .toString() !=
+                                                    "LOCATION"
+                                                ? Text(
+                                                    "CUSTOMER_TAG_VALUE.${item["value"].toString()}"
+                                                        .tr(),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: kfont22w_400black(),
+                                                  )
+                                                : Text(
+                                                    item["value"].toString(),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: kfont22w_400black(),
+                                                  ),
                                           ),
                                           Container(
                                             width: 100,
                                             child: Text(
-                                              _tags[item["key"]].toString(),
+                                              "CUSTOMER_TAG.${_tags[item["key"]].toString()}"
+                                                  .tr(),
                                               overflow: TextOverflow.ellipsis,
                                               style: kfontH3InterBlackColor(),
                                             ),
@@ -659,7 +671,8 @@ class _CustomerRegisterSecondState extends State<CustomerRegisterSecond> {
                                   isButtonPressed: orderSelectedTags.any(
                                     (element) => element["key"] == entry.key,
                                   ),
-                                  nameButton: entry.value),
+                                  nameButton:
+                                      "CUSTOMER_TAG.${entry.value}".tr()),
                             );
                           }).toList(),
                         ),
@@ -772,7 +785,7 @@ class _CustomerRegisterSecondState extends State<CustomerRegisterSecond> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Text(
-                    entry.value,
+                    "CUSTOMER_TAG.${entry.value}".tr(),
                     style: kfontH0InterBlackColor(),
                   ),
                   sectionBufferHeight(bufferSection: 24),
@@ -780,7 +793,7 @@ class _CustomerRegisterSecondState extends State<CustomerRegisterSecond> {
                       isEnableSearch: false,
                       width: width,
                       height: height,
-                      header: entry.value,
+                      header: "CUSTOMER_TAG.${entry.value}".tr(),
                       listOfItem: listItem.map((item) {
                         return DropdownMenuItem<String>(
                           value: item[
@@ -907,6 +920,7 @@ class _CustomerRegisterSecondState extends State<CustomerRegisterSecond> {
                                   case "สูง":
                                     _selectedTags = "HIGH";
                                     break;
+
                                   default:
                                     break;
                                 }

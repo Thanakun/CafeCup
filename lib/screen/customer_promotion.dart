@@ -1,5 +1,6 @@
 import 'package:coffee_application/model/customer.dart';
 import 'package:coffee_application/model/response/promotion.dart';
+import 'package:coffee_application/model/response/reviewpoints_response.dart';
 import 'package:coffee_application/screen/customer_barcode.dart';
 import 'package:coffee_application/screen/my_component/bottom_navigationbar_customer.dart';
 import 'package:coffee_application/utility/decoration.dart';
@@ -88,7 +89,8 @@ class _CustomerPromotionViewState extends State<CustomerPromotionView> {
                                 bottom: height * 0.02),
                             decoration: kdecorationForContainerActiveItem,
                             child: FutureBuilder(
-                                future: _vm.customerModel,
+                                future: Future.wait(
+                                    [_vm.customerModel, _vm.reviewPoints]),
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {
@@ -111,7 +113,10 @@ class _CustomerPromotionViewState extends State<CustomerPromotionView> {
                                           ConnectionState.done &&
                                       !snapshot.hasError) {
                                     CustomerModel customerModel =
-                                        snapshot.data!;
+                                        snapshot.data![0] as CustomerModel;
+
+                                    ReviewPointsResponse reviewPoints = snapshot
+                                        .data![1] as ReviewPointsResponse;
                                     return Column(
                                       children: [
                                         Text(
@@ -143,9 +148,10 @@ class _CustomerPromotionViewState extends State<CustomerPromotionView> {
                                                         children: [
                                                           Positioned(
                                                             child: AnimatedContainer(
-                                                                duration: const Duration(
-                                                                    milliseconds:
-                                                                        500),
+                                                                duration:
+                                                                    const Duration(
+                                                                        milliseconds:
+                                                                            500),
                                                                 margin: EdgeInsets.only(
                                                                     left: constraints
                                                                             .minWidth *
@@ -155,16 +161,15 @@ class _CustomerPromotionViewState extends State<CustomerPromotionView> {
                                                                         0.005),
                                                                 width: constraints
                                                                         .maxWidth *
-                                                                    (0.2 *
-                                                                        customerModel
-                                                                            .reviewPoints!),
+                                                                    (0.1 *
+                                                                        (customerModel.reviewPoints ??
+                                                                            0)),
                                                                 height: height *
                                                                     0.026,
                                                                 decoration: BoxDecoration(
                                                                     borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            100),
-                                                                    color: getColorByCurrentCustomerReviewPoint(customerModel.reviewPoints!))),
+                                                                        BorderRadius.circular(100),
+                                                                    color: getColorByCurrentCustomerReviewPoint(customerModel.reviewPoints ?? 0))),
                                                           ),
                                                         ],
                                                       ),
@@ -182,7 +187,11 @@ class _CustomerPromotionViewState extends State<CustomerPromotionView> {
                                                   child: Text(
                                                     getCurrentCustomerReviewPointToPercent(
                                                         customerModel
-                                                            .reviewPoints!),
+                                                                    .reviewPoints ==
+                                                                null
+                                                            ? 0
+                                                            : customerModel
+                                                                .reviewPoints),
                                                     style:
                                                         kfontH2InterBoldBlackColor(),
                                                   ),
@@ -190,7 +199,9 @@ class _CustomerPromotionViewState extends State<CustomerPromotionView> {
                                           ],
                                         ),
                                         Text(
-                                          "รีเซ้ตในอีก 3 วัน",
+                                          reviewPoints.data!.daysToRefresh! == 0
+                                              ? ""
+                                              : "รีเซ้ตในอีก ${reviewPoints.data!.daysToRefresh!} วัน",
                                           style: kfontH2InterBlackColor(),
                                         ),
                                         sectionBufferHeight(
@@ -198,36 +209,43 @@ class _CustomerPromotionViewState extends State<CustomerPromotionView> {
                                         ),
                                         GestureDetector(
                                           onTap: () {
-                                            setState(()  {
-                                              if (customerModel.reviewPoints! <
-                                                  5) {
+                                            setState(() {
+                                              if ((customerModel.reviewPoints ??
+                                                          0) <
+                                                      10 &&
+                                                  !reviewPoints.data!
+                                                      .canClaimCode!) {
                                                 return Utility.toastMessage(
                                                     "ERROR_MESSAGE.CLAIM_CODE_FAIL"
                                                         .tr());
                                               } else {
                                                 _vm
-                                                    .onUserClaimingPromotionCode().then((value) => 
-                                                    setState(() {
-                                                  _vm.getApiPromotion();
+                                                    .onUserClaimingPromotionCode()
+                                                    .then(
+                                                      (value) => setState(
+                                                        () {
+                                                          _vm.getApiPromotion();
 
-                                                  if (value) {
-                                                    _vm.updateCustomerReviewPointAfterClaim(
-                                                        points: customerModel
-                                                            .reviewPoints!);
-                                                    _vm.getCurrentCustomer();
+                                                          if (value) {
+                                                            // _vm.updateCustomerReviewPointAfterClaim(
+                                                            //     points: customerModel
+                                                            //             .reviewPoints ??
+                                                            //         0);
+                                                            _vm.getCurrentCustomer();
 
-                                                    Utility.toastMessage(
-                                                      "ERROR_MESSAGE.CLAIM_CODE_SUCCESS"
-                                                          .tr(),
+                                                            Utility
+                                                                .toastMessage(
+                                                              "ERROR_MESSAGE.CLAIM_CODE_SUCCESS"
+                                                                  .tr(),
+                                                            );
+                                                          } else {
+                                                            Utility.toastMessage(
+                                                                "ERROR_MESSAGE.CLAIM_CODE_FAIL"
+                                                                    .tr());
+                                                          }
+                                                        },
+                                                      ),
                                                     );
-                                                  } else {
-                                                    Utility.toastMessage(
-                                                        "ERROR_MESSAGE.CLAIM_CODE_FAIL"
-                                                            .tr());
-                                                  }
-                                                })
-                                                    );
-                                                
                                               }
                                             });
                                           },
@@ -236,17 +254,19 @@ class _CustomerPromotionViewState extends State<CustomerPromotionView> {
                                               horizontal: width * 0.05,
                                               vertical: height * 0.01,
                                             ),
-                                            decoration: customerModel
-                                                        .reviewPoints! >=
-                                                    5
+                                            decoration: (customerModel
+                                                            .reviewPoints ??
+                                                        0) >=
+                                                    10
                                                 ? kdecorationForContainerAcceptButton
                                                 : kdecorationButtonDisableContainer,
                                             child: Text(
                                                 "CUSTOMER_PROMOTION.CLAIM_CODE"
                                                     .tr(),
-                                                style: customerModel
-                                                            .reviewPoints! >=
-                                                        5
+                                                style: (customerModel
+                                                                .reviewPoints ??
+                                                            0) >=
+                                                        10
                                                     ? kfont22w_400black()
                                                         .copyWith(
                                                             color: Colors.white)
@@ -563,39 +583,25 @@ class _CustomerPromotionViewState extends State<CustomerPromotionView> {
   }
 
   String getCurrentCustomerReviewPointToPercent(
-    int currentCustomerReviewPoint,
-  ) {
-    if (currentCustomerReviewPoint == 0) {
+      int? currentCustomerReviewPoint) {
+    if (currentCustomerReviewPoint == null) {
       return "0%";
-    } else if (currentCustomerReviewPoint == 1) {
-      return "20%";
-    } else if (currentCustomerReviewPoint == 2) {
-      return "40%";
-    } else if (currentCustomerReviewPoint == 3) {
-      return "60%";
-    } else if (currentCustomerReviewPoint == 4) {
-      return "80%";
-    } else if (currentCustomerReviewPoint == 5) {
-      return "100%";
+    } else if (currentCustomerReviewPoint >= 0 &&
+        currentCustomerReviewPoint <= 100) {
+      return "${currentCustomerReviewPoint * 10}%";
     } else {
       return "0%";
     }
   }
 
-  Color getColorByCurrentCustomerReviewPoint(
-    int currentCustomerReviewPoint,
-  ) {
-    if (currentCustomerReviewPoint == 0) {
+  Color getColorByCurrentCustomerReviewPoint(int currentCustomerReviewPoint) {
+    if (currentCustomerReviewPoint >= 0 && currentCustomerReviewPoint <= 3) {
       return Colors.red;
-    } else if (currentCustomerReviewPoint == 1) {
+    } else if (currentCustomerReviewPoint >= 4 &&
+        currentCustomerReviewPoint <= 6) {
       return Colors.yellow;
-    } else if (currentCustomerReviewPoint == 2) {
-      return Colors.yellow;
-    } else if (currentCustomerReviewPoint == 3) {
-      return Colors.yellow;
-    } else if (currentCustomerReviewPoint == 4) {
-      return Colors.green;
-    } else if (currentCustomerReviewPoint == 5) {
+    } else if (currentCustomerReviewPoint >= 7 &&
+        currentCustomerReviewPoint <= 100) {
       return Colors.green;
     } else {
       return Colors.red;

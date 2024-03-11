@@ -23,7 +23,7 @@ class DropDownSearchListWidget extends StatefulWidget {
   final double height;
   final String header;
   final List<DropdownMenuItem> listOfItem;
-  
+
   @override
   State<DropDownSearchListWidget> createState() =>
       _DropDownSearchListWidgetState();
@@ -36,10 +36,12 @@ class _DropDownSearchListWidgetState extends State<DropDownSearchListWidget> {
       child: DropdownButton2(
         items: widget.listOfItem,
         value: widget.selectedItem,
+
         hint: Text(
           widget.header,
           style: kfontH2InterBlackColorHalfOpacity(),
         ),
+
         onChanged: (value) {
           widget.onSelectMenuItem(value);
         },
@@ -52,8 +54,9 @@ class _DropDownSearchListWidgetState extends State<DropDownSearchListWidget> {
         menuItemStyleData: menuItemStyleBox(
           height: widget.height,
         ),
-        dropdownSearchData: widget.isEnableSearch ?
-            dropdownSearchBox(height: widget.height, width: widget.width) : DropdownSearchData(),
+        dropdownSearchData: widget.isEnableSearch
+            ? dropdownSearchBox(height: widget.height, width: widget.width)
+            : DropdownSearchData(),
         //This to clear the search value when you close the menu
         onMenuStateChange: (isOpen) {
           if (!isOpen) {

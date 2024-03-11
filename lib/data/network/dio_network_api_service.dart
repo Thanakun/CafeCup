@@ -164,7 +164,6 @@ class DioApiService implements BaseApiService {
   ) async {
     dynamic responseJson;
     try {
-      if (boxUsers.isEmpty) return;
       final response = await _dioAuthService
           .get(url, queryParameters: {"_id": boxUsers.get(0).id});
       responseJson = returnResponse(response);

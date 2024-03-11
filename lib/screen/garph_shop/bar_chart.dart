@@ -629,20 +629,44 @@ class _BarChartPageState extends State<BarChartPage> {
                                     // backgroundColor: Colors.white.withOpacity(0.5),
 
                                     primaryXAxis: NumericAxis(
-                                        numberFormat:
-                                            NumberFormat.decimalPatternDigits(
-                                          decimalDigits: 0,
-                                        ),
+                                      numberFormat: NumberFormat('00:00'),
+                                      axisLabelFormatter:
+                                          (AxisLabelRenderDetails
+                                              axisLabelRenderDetails) {
+                                        // Format the x-axis labels as "00:00" to "24:00"
+                                        int hours = axisLabelRenderDetails.value
+                                            .toInt();
+                                        int minutes =
+                                            ((axisLabelRenderDetails.value -
+                                                        hours) *
+                                                    60)
+                                                .toInt();
+
+                                        return ChartAxisLabel(
+                                          '$hours:${minutes.toString().padLeft(2, '0')} น',
+
+                                          kfontH3InterBlackColor(), // Add your desired text style here
+                                        );
+                                      },
+                                      title: AxisTitle(
+                                        text: 'เวลา (กี่โมง)',
+                                        textStyle: kfontH1InterBoldBlackColor(),
+                                      ),
+                                    ),
+
+                                    primaryYAxis: CategoryAxis(
+                                        axisLabelFormatter:
+                                            (axisLabelRenderArgs) {
+                                          return ChartAxisLabel(
+                                              axisLabelRenderArgs.value
+                                                  .toString(),
+                                              kfontH3InterBlackColor());
+                                        },
                                         title: AxisTitle(
-                                          text: 'เวลา (กี่โมง)',
+                                          text: 'จำนวนลูกค้า',
                                           textStyle:
                                               kfontH1InterBoldBlackColor(),
                                         )),
-                                    primaryYAxis: CategoryAxis(
-                                        title: AxisTitle(
-                                      text: 'จำนวนลูกค้า',
-                                      textStyle: kfontH1InterBoldBlackColor(),
-                                    )),
                                     series: <CartesianSeries>[
                                       ColumnSeries<ChartDataModel, double>(
                                           xValueMapper:
@@ -704,7 +728,7 @@ class _BarChartPageState extends State<BarChartPage> {
                                       alignment: Alignment.center,
                                       padding: EdgeInsets.all(30),
                                       child: Text(
-                                        "กราฟแสดงจำนวนลูกค้าเฉลี่ยใน วันจันทร์ ตลอดระยะเวลาที่ผ่านมาเฉลี่ยตลอด \n \n วันคิดเป็น 30 คน/ชั่วโมงในช่วงพีคมีลูกค้า 80 คน/ชั่วโมง",
+                                        "กราฟแสดงข้อมูล จำนวนลูกค้าเข้ามาใช้บริการในช่วงเวลาใดมากที่สุด โดยแนวนอนจะบอกเวลาที่ลูกค้าเข้ามาใช้บริการ",
                                         style: kfontH2InterBlackColor(),
                                         textAlign: TextAlign.center,
                                       )),
@@ -756,15 +780,9 @@ class _BarChartPageState extends State<BarChartPage> {
                   (entry) => entry.key == selectMonthString,
                 );
 
-                _vm.getBarChartData(
-                  int.parse(selectedYearMonth),
-                  null,
-                  matchingMonth.value,
-                  selectedValue
-                );
-                setState(() {
-                  
-                });
+                _vm.getBarChartData(int.parse(selectedYearMonth), null,
+                    matchingMonth.value, selectedValue);
+                setState(() {});
               } else if (selectDateType == "Year") {
                 _vm.getBarChartData(
                     int.parse(selectedYear), null, null, selectedValue);

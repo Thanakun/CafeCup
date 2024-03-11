@@ -3,6 +3,7 @@ import 'package:coffee_application/hive/boxes.dart';
 import 'package:coffee_application/model/customer.dart';
 import 'package:coffee_application/model/response/promotion.dart';
 import 'package:coffee_application/model/response/promotion_claim_response.dart';
+import 'package:coffee_application/model/response/reviewpoints_response.dart';
 import 'package:coffee_application/model/review.dart';
 import 'package:coffee_application/model/shop.dart';
 
@@ -15,6 +16,8 @@ class CustomerPromtionService {
 
   Future<List<Promotion>> getCustomerPromotionShopCode() async {
     try {
+      print("boxUsers.get(0).id");
+      print(boxUsers.get(0).id);
       final response = await _dio.getApiPromotion(
           "/promo/getCustomerCodes", {"_customerId": boxUsers.get(0).id});
       List<dynamic> responseData = response;
@@ -39,22 +42,32 @@ class CustomerPromtionService {
     }
   }
 
-  Future<void> updateCustomerReviewPointAfterClaim(
-      {required int points}) async {
-    try {
-      int newPoint = points - 5;
-      final response = await _dio.putAuthApi(
-          "/customer/update", {"reviewPoints": newPoint}, {"_id": boxUsers.get(0).id});
-    } catch (_) {
-      rethrow;
-    }
-  }
+  // Future<void> updateCustomerReviewPointAfterClaim(
+  //     {required int points}) async {
+  //   try {
+  //     int newPoint = points - 10;
+  //     final response = await _dio.putApiPromotion("/promo/customerClaimCode",
+  //         {"_customerId": boxUsers.get(0).id});
+  //   } catch (_) {
+  //     rethrow;
+  //   }
+  // }
 
   Future<CustomerModel> getCurrentCustomer() async {
     try {
       final response = await _dio
           .getApiAuth("/customer/getById", {"_id": boxUsers.get(0).id});
       return CustomerModel.fromJson(response);
+    } catch (_) {
+      rethrow;
+    }
+  }
+
+  Future<ReviewPointsResponse> getCustomerReviewPoints() async {
+    try {
+      final response = await _dio.getApiAuth(
+          "/customer/getReviewPoints", {"_id": boxUsers.get(0).id});
+      return ReviewPointsResponse.fromJson(response);
     } catch (_) {
       rethrow;
     }

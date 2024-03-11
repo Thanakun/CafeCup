@@ -193,7 +193,25 @@ class _CustomerShopViewState extends State<CustomerShopView> {
                           delegate: SliverChildListDelegate([
                         sectionBufferHeight(bufferSection: 20),
                         _shopNameSection(shop),
-                        sectionBufferHeight(bufferSection: 20),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            shop.reviewNum == 0
+                                ? Container()
+                                : Icon(
+                                    Icons.star,
+                                    size: width * 0.05,
+                                    color: Colors.amber,
+                                  ),
+                            Text(
+                              "${shop.reviewScoreMean == 0 ? "" : shop.reviewScoreMean!.toStringAsFixed(1)} ${shop.reviewNum == 0 ? "" : "(${shop.reviewNum.toString()})"}",
+                              style: kfontH2InterBoldBlackColor(),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              softWrap: true,
+                            ),
+                          ],
+                        ),
                         _shopAddress(height, shop, context),
                         sectionBufferHeight(bufferSection: 20),
                         _shopDescriptionSection(shop),
@@ -1168,125 +1186,109 @@ class _CustomerShopViewState extends State<CustomerShopView> {
     );
   }
 
-  Stack menuCard(
+  SizedBox menuCard(
       {required double width,
-      required Menus menu,
       required double height,
+      required Menus menu,
       required String image}) {
-    return Stack(
-      alignment: Alignment.topCenter,
-      children: [
-        Positioned(
-          // left: 0,
-          top: 60,
-          child: Container(
-            width: 260,
-            height: 180,
-            decoration: ShapeDecoration(
-              color: const Color(0xFFFFF5E9),
-              shape: RoundedRectangleBorder(
-                side: BorderSide(
-                  width: 3,
-                  strokeAlign: BorderSide.strokeAlignCenter,
-                  color: Colors.black.withOpacity(0.20000000298023224),
+    return SizedBox(
+      width: width,
+      child: Stack(
+        alignment: Alignment.topCenter,
+        children: [
+          Positioned(
+            top: 100,
+            child: Container(
+              width: width * 0.6,
+              height: height * 0.175,
+              decoration: ShapeDecoration(
+                color: const Color(0xFFFFF5E9),
+                shape: RoundedRectangleBorder(
+                  side: BorderSide(
+                    width: 3,
+                    strokeAlign: BorderSide.strokeAlignCenter,
+                    color: Colors.black.withOpacity(0.20000000298023224),
+                  ),
+                  borderRadius: BorderRadius.circular(20),
                 ),
-                borderRadius: BorderRadius.circular(20),
+                shadows: [
+                  const BoxShadow(
+                    color: Color(0x3F000000),
+                    blurRadius: 4,
+                    offset: Offset(0, 4),
+                    spreadRadius: 0,
+                  )
+                ],
               ),
-              shadows: [
-                const BoxShadow(
-                  color: Color(0x3F000000),
-                  blurRadius: 4,
-                  offset: Offset(0, 4),
-                  spreadRadius: 0,
+              child: Column(children: [
+                const Spacer(),
+                Text(menu.name ?? "",
+                    textAlign: TextAlign.center, style: kfontNameMenu()),
+                Text(menu.category ?? "",
+                    textAlign: TextAlign.center, style: kfontMenuDescription()),
+                Text("${menu.price.toString()} ฿",
+                    textAlign: TextAlign.center, style: kfontMenuPrice()),
+                sectionBufferHeight(
+                  bufferSection: height * 0.025,
                 )
-              ],
+              ]),
             ),
           ),
-        ),
-        Positioned(
-          // left: 5,
-          top: 129,
-          child: SizedBox(
-            width: 249,
-            height: 30,
-            child: Text(menu.name ?? "",
-                textAlign: TextAlign.center, style: kfontNameMenu()),
-          ),
-        ),
-        Positioned(
-          // left: 5,
-          top: 159,
-          child: SizedBox(
-            width: 249,
-            height: 30,
-            child: Text(menu.category ?? "",
-                textAlign: TextAlign.center, style: kfontMenuDescription()),
-          ),
-        ),
-        Positioned(
-          // left: 79,
-          top: 179,
-          child: SizedBox(
-            width: 102,
-            height: 51,
-            child: Text(menu.price == null ? "" : menu.price.toString(),
-                textAlign: TextAlign.center, style: kfontMenuPrice()),
-          ),
-        ),
-        Positioned(
-          // left: 70,
-          top: 0,
-          child: Container(
-            width: 120,
-            height: 120,
-            decoration: ShapeDecoration(
-              // image: const DecorationImage(
-              //   image: AssetImage(americanoImagePath),
-              //   fit: BoxFit.fill,
-              // ),
-              shape: RoundedRectangleBorder(
+          Positioned(
+            // left: 70,
+            top: 20,
+            child: Container(
+              width: 150,
+              height: 150,
+              decoration: ShapeDecoration(
+                // image: DecorationImage(
+                //   image: AssetImage(americanoImagePath),
+                //   fit: BoxFit.fill,
+                // ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                shadows: [
+                  const BoxShadow(
+                    color: Color(0x3F000000),
+                    blurRadius: 4,
+                    offset: Offset(0, 4),
+                    spreadRadius: 0,
+                  )
+                ],
+              ),
+              child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-              ),
-              shadows: [
-                const BoxShadow(
-                  color: Color(0x3F000000),
-                  blurRadius: 4,
-                  offset: Offset(0, 4),
-                  spreadRadius: 0,
-                )
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.network(
-                image,
-                fit: BoxFit.fill,
-                loadingBuilder: (BuildContext context, Widget child,
-                    ImageChunkEvent? loadingProgress) {
-                  if (loadingProgress == null) {
-                    return child;
-                  } else {
-                    // You can display a loading indicator or progress bar here if needed.
-                    return Center(
-                      child: CircularProgressIndicator(
-                        value: loadingProgress.expectedTotalBytes != null
-                            ? loadingProgress.cumulativeBytesLoaded /
-                                (loadingProgress.expectedTotalBytes ?? 1)
-                            : null,
-                      ),
-                    );
-                  }
-                },
-                errorBuilder: (BuildContext context, Object error,
-                    StackTrace? stackTrace) {
-                  // You can handle the error here and display a placeholder or custom error widget.
-                  return Image.asset(imageNotFound);
-                },
+                child: Image.network(
+                  image,
+                  fit: BoxFit.fill,
+                  loadingBuilder: (BuildContext context, Widget child,
+                      ImageChunkEvent? loadingProgress) {
+                    if (loadingProgress == null) {
+                      return child;
+                    } else {
+                      // You can display a loading indicator or progress bar here if needed.
+                      return Center(
+                        child: CircularProgressIndicator(
+                          value: loadingProgress.expectedTotalBytes != null
+                              ? loadingProgress.cumulativeBytesLoaded /
+                                  (loadingProgress.expectedTotalBytes ?? 1)
+                              : null,
+                        ),
+                      );
+                    }
+                  },
+                  errorBuilder: (BuildContext context, Object error,
+                      StackTrace? stackTrace) {
+                    // You can handle the error here and display a placeholder or custom error widget.
+                    return Image.asset(imageNotFound);
+                  },
+                ),
               ),
             ),
-          ),
-        ),
-      ],
+          )
+        ],
+      ),
     );
   }
 

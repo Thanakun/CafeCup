@@ -1,28 +1,22 @@
-class ShopModelResponse {
+class ShopTopReachModelResponse {
   int? status;
-  Metadata? metadata;
-  List<ShopModel>? data;
+  List<ShopReachModel>? data;
 
-  ShopModelResponse({this.status, this.metadata, this.data});
+  ShopTopReachModelResponse({this.status, this.data});
 
-  ShopModelResponse.fromJson(Map<String, dynamic> json) {
+  ShopTopReachModelResponse.fromJson(Map<String, dynamic> json) {
     status = json['status'];
-    metadata =
-        json['metadata'] != null ? Metadata.fromJson(json['metadata']) : null;
     if (json['data'] != null) {
-      data = <ShopModel>[];
+      data = <ShopReachModel>[];
       json['data'].forEach((v) {
-        data!.add(ShopModel.fromJson(v));
+        data!.add(ShopReachModel.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['status'] = status;
-    if (metadata != null) {
-      data['metadata'] = metadata!.toJson();
-    }
     if (this.data != null) {
       data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
@@ -30,30 +24,9 @@ class ShopModelResponse {
   }
 }
 
-class Metadata {
-  int? totalCount;
-  int? page;
-  int? pageSize;
-
-  Metadata({this.totalCount, this.page, this.pageSize});
-
-  Metadata.fromJson(Map<String, dynamic> json) {
-    totalCount = json['totalCount'];
-    page = json['page'];
-    pageSize = json['pageSize'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['totalCount'] = totalCount;
-    data['page'] = page;
-    data['pageSize'] = pageSize;
-    return data;
-  }
-}
-
-class ShopModel {
+class ShopReachModel {
   int? iId;
+  int? count;
   String? username;
   String? password;
   String? name;
@@ -61,7 +34,7 @@ class ShopModel {
   Address? address;
   List<Menus>? menus;
   String? coverImage;
-  List<String>? shopImage;
+  List<String>? shopImages;
   List<String>? menuImages;
   List<String>? foodImages;
   List<String>? otherImages;
@@ -79,13 +52,10 @@ class ShopModel {
   String? photoSpots;
   String? noice;
   String? customerGroup;
-  int? minuteOpen;
-  int? minuteClose;
-  int? reviewNum;
-  double? reviewScoreMean;
 
-  ShopModel(
+  ShopReachModel(
       {this.iId,
+      this.count,
       this.username,
       this.password,
       this.name,
@@ -93,7 +63,7 @@ class ShopModel {
       this.address,
       this.menus,
       this.coverImage,
-      this.shopImage,
+      this.shopImages,
       this.menuImages,
       this.foodImages,
       this.otherImages,
@@ -110,18 +80,13 @@ class ShopModel {
       this.smokingZone,
       this.photoSpots,
       this.noice,
-      this.customerGroup,
-      this.minuteOpen,
-      this.minuteClose,
-      this.reviewNum,
-      this.reviewScoreMean});
+      this.customerGroup});
 
-  ShopModel.fromJson(Map<String, dynamic> json) {
+  ShopReachModel.fromJson(Map<String, dynamic> json) {
     iId = json['_id'];
     username = json['username'];
     password = json['password'];
     name = json['name'];
-    description = json['description'];
     address =
         json['address'] != null ? Address.fromJson(json['address']) : null;
     if (json['menus'] != null) {
@@ -131,9 +96,9 @@ class ShopModel {
       });
     }
     if (json['shopImages'] != null) {
-      shopImage = <String>[];
+      shopImages = <String>[];
       json['shopImages'].forEach((v) {
-        shopImage!.add(v);
+        shopImages!.add(v);
       });
     }
     if (json['menuImages'] != null) {
@@ -154,8 +119,10 @@ class ShopModel {
         otherImages!.add(v);
       });
     }
+    name = json['name'];
+    description = json['description'];
     coverImage = json['coverImage'];
-    daysOpen = json['daysOpen'].cast<int>();
+    daysOpen = json['daysOpen'] == null ? [] : json['daysOpen'].cast<int>();
     timeOpen = json['timeOpen'];
     timeClose = json['timeClose'];
     singleSeat = json['singleSeat'];
@@ -166,18 +133,13 @@ class ShopModel {
     conferenceRoom = json['conferenceRoom'];
     toilet = json['toilet'];
     smokingZone = json['smokingZone'];
-    photoSpots = json['photoSpots'];
     noice = json['noice'];
-    customerGroup = json['customerGroup'];
-    minuteOpen = json['minuteOpen'];
-    minuteClose = json['minuteClose'];
-    reviewNum = (json['reviewNum'] as num?)?.toInt() ?? 0;
-    reviewScoreMean = (json['reviewScoreMean'] as num?)?.toDouble() ?? 0.0;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['_id'] = iId;
+    data['count'] = count;
     data['username'] = username;
     data['password'] = password;
     data['name'] = name;
@@ -189,10 +151,14 @@ class ShopModel {
       data['menus'] = menus!.map((v) => v.toJson()).toList();
     }
     data['coverImage'] = coverImage;
-    data['shopImage'] = shopImage;
-    data['menuImages'] = menuImages;
+    data['shopImages'] = shopImages;
+    if (menuImages != null) {
+      data['menuImages'] = menuImages!.map((v) => v).toList();
+    }
     data['foodImages'] = foodImages;
-    data['otherImages'] = otherImages;
+    if (otherImages != null) {
+      data['otherImages'] = otherImages!.map((v) => v).toList();
+    }
     data['daysOpen'] = daysOpen;
     data['timeOpen'] = timeOpen;
     data['timeClose'] = timeClose;
@@ -207,15 +173,7 @@ class ShopModel {
     data['photoSpots'] = photoSpots;
     data['noice'] = noice;
     data['customerGroup'] = customerGroup;
-    data['minuteOpen'] = minuteOpen;
-    data['minuteClose'] = minuteClose;
-    data['reviewNum'] = reviewNum;
-    data['reviewScoreMean'] = reviewScoreMean;
     return data;
-  }
-
-  static ShopModel defaultWithIdNegativeOne() {
-    return ShopModel(iId: -1);
   }
 }
 
@@ -225,7 +183,7 @@ class Address {
   String? district;
   String? subDistrict;
   String? road;
-  String? postelCode;
+  int? postelCode;
   String? addressText;
   String? sId;
 
@@ -251,8 +209,7 @@ class Address {
   }
 
   Map<String, dynamic> toJson() {
-    // ignore: prefer_collection_literals
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['country'] = country;
     data['province'] = province;
     data['district'] = district;
@@ -291,7 +248,7 @@ class Menus {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['name'] = name;
     data['category'] = category;
     data['description'] = description;

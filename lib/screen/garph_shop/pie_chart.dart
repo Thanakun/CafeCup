@@ -643,7 +643,7 @@ class _PieChartPageState extends State<PieChartPage> {
                                           
                                             explode: true,
                                             explodeAll: true,
-                                            explodeOffset: '10%',
+                                            explodeOffset: '3%',
                                             strokeWidth: 1.5,
                                             strokeColor:
                                                 Colors.black.withOpacity(0.5),
@@ -674,7 +674,7 @@ class _PieChartPageState extends State<PieChartPage> {
                                       alignment: Alignment.center,
                                       padding: EdgeInsets.all(30),
                                       child: Text(
-                                        "กราฟแสดงจำนวนลูกค้าเฉลี่ยใน วันจันทร์ ตลอดระยะเวลาที่ผ่านมาเฉลี่ยตลอด \n \n วันคิดเป็น 30 คน/ชั่วโมงในช่วงพีคมีลูกค้า 80 คน/ชั่วโมง",
+                                        "กราฟแสดงช่วงอายุของลูกค้าที่เข้ามาใช้บริการระบุถึง ช่วงอายุใดบ้านเข้ามาใช้บริการ \n \n สามารถระบุวันเวลาที่ต้องการเพื่อดูระยะเวลาที่ หรือช่วงใดทีเข้ามาใช้งานได้",
                                         style: kfontH2InterBlackColor(),
                                         textAlign: TextAlign.center,
                                       )),

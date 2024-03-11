@@ -2,7 +2,6 @@ enum Gender { MALE, FEMALE }
 
 class CustomerModel {
   int? iId;
-  int? reviewPoints;
   String? username;
   String? password;
   String? name;
@@ -10,28 +9,37 @@ class CustomerModel {
   String? age;
   String? occupation;
   List<Favourites>? favourites;
+  int? iClusterId;
+  int? reviewPoints;
+  bool? canClaimCode;
+  String? lastClaim;
   List<Tags>? tags;
 
   CustomerModel(
-      {this.reviewPoints,
-      this.iId,
+      {this.iId,
       this.username,
       this.password,
       this.name,
       this.gender,
       this.age,
       this.occupation,
+      this.tags,
+      this.iClusterId,
+      this.reviewPoints,
+      this.canClaimCode,
       this.favourites,
-      this.tags});
+      this.lastClaim});
 
   CustomerModel.fromJson(Map<String, dynamic> json) {
-    reviewPoints = json['reviewPoints'];
     iId = json['_id'];
     username = json['username'];
     password = json['password'];
     name = json['name'];
     gender = json['gender'];
     age = json['age'];
+    iClusterId = json['_clusterId'];
+    reviewPoints = json['reviewPoints'];
+    canClaimCode = json['canClaimCode'];
     occupation = json['occupation'];
     if (json['favourites'] != null) {
       favourites = <Favourites>[];
@@ -45,25 +53,22 @@ class CustomerModel {
         tags!.add(Tags.fromJson(v));
       });
     }
+    lastClaim = json['lastClaim'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['reviewPoints'] = reviewPoints;
-    data['_id'] = iId;
+    final Map<String, dynamic> data = new Map<String, dynamic>();
     data['username'] = username;
     data['password'] = password;
     data['name'] = name;
     data['gender'] = gender;
     data['age'] = age;
     data['occupation'] = occupation;
-    if (favourites != null) {
-      data['favourites'] = favourites!.map((v) => v.toJson()).toList();
-    } else {
-      data['favourites'] = [];
-    }
     if (tags != null) {
       data['tags'] = tags!.map((v) => v.toJson()).toList();
+    }
+    if (favourites != null) {
+      data['favourites'] = favourites!.map((v) => v.toJson()).toList();
     }
     return data;
   }

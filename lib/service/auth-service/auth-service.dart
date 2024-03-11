@@ -160,6 +160,8 @@ class AuthService {
       print(data);
       return true;
     } catch (e) {
+      print("e");
+      print(e);
       return false;
     }
   }

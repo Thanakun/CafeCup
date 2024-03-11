@@ -25,7 +25,6 @@ class _CustomerRegisterState extends State<CustomerRegister> {
   final TextEditingController searchTextMenuGenders = TextEditingController();
   final TextEditingController searchTextMenuAges = TextEditingController();
   final TextEditingController searchTextMenuJobs = TextEditingController();
-  final TextEditingController searchTextMenuFavorites = TextEditingController();
 
   final TextEditingController usernameController = TextEditingController();
 
@@ -107,19 +106,8 @@ class _CustomerRegisterState extends State<CustomerRegister> {
                                 header: "CUSTOMER_REGISTER.GENDER".tr()),
                           ),
                           sectionBufferHeight(bufferSection: 16),
-                          DropDownSearchListWidget(
-                            isEnableSearch: true,
-                            width: width,
-                            height: height,
-                            header: "CUSTOMER_REGISTER.HINT_TEXT.GENDER".tr(),
-                            listOfItem: Helper.listToDropDownMenuItem(genders),
-                            selectedItem: selectedGender,
-                            searchTextMenuList: searchTextMenuGenders,
-                            onSelectMenuItem: (value) {
-                              setState(() {
-                                selectedGender = value;
-                              });
-                            },
+                          _gendersSection(
+                            width,
                           ),
                           sectionBufferHeight(bufferSection: 16),
                           Align(
@@ -128,20 +116,7 @@ class _CustomerRegisterState extends State<CustomerRegister> {
                                 header: "CUSTOMER_REGISTER.AGE".tr()),
                           ),
                           sectionBufferHeight(bufferSection: 16),
-                          DropDownSearchListWidget(
-                            isEnableSearch: true,
-                            width: width,
-                            height: height,
-                            header: "CUSTOMER_REGISTER.HINT_TEXT.AGE".tr(),
-                            listOfItem: Helper.listToDropDownMenuItem(ages),
-                            selectedItem: selectedAges,
-                            searchTextMenuList: searchTextMenuAges,
-                            onSelectMenuItem: (value) {
-                              setState(() {
-                                selectedAges = value;
-                              });
-                            },
-                          ),
+                          _ageSection(width),
                           sectionBufferHeight(bufferSection: 16),
                           Align(
                             alignment: Alignment.centerLeft,
@@ -149,21 +124,7 @@ class _CustomerRegisterState extends State<CustomerRegister> {
                                 header: "CUSTOMER_REGISTER.OCCUPATION".tr()),
                           ),
                           sectionBufferHeight(bufferSection: 16),
-                          DropDownSearchListWidget(
-                            isEnableSearch: true,
-                            width: width,
-                            height: height,
-                            header:
-                                "CUSTOMER_REGISTER.HINT_TEXT.OCCUPATION".tr(),
-                            listOfItem: Helper.listToDropDownMenuItem(jobs),
-                            selectedItem: selectedJobs,
-                            searchTextMenuList: searchTextMenuJobs,
-                            onSelectMenuItem: (value) {
-                              setState(() {
-                                selectedJobs = value;
-                              });
-                            },
-                          ),
+                          _occupationSection(width),
                           sectionBufferHeight(bufferSection: 16),
                           const Spacer(),
                           InkWell(
@@ -221,6 +182,147 @@ class _CustomerRegisterState extends State<CustomerRegister> {
           ),
         ),
       ),
+    );
+  }
+
+  DropdownMenu<String> _gendersSection(double width) {
+    return DropdownMenu<String>(
+      width: width * 0.849,
+
+      inputDecorationTheme: InputDecorationTheme(
+          floatingLabelStyle: kfontH2InterBlackColor(),
+          filled: true,
+          labelStyle: kfontH3InterBlackColor(),
+          border: OutlineInputBorder(
+              borderSide: BorderSide.none,
+              borderRadius: BorderRadius.circular(20)),
+          constraints: const BoxConstraints(
+            minWidth: double.infinity,
+            maxWidth: double.infinity,
+          ),
+          outlineBorder: const BorderSide(),
+          fillColor: backgroundActiveButton),
+
+      // initialSelection: ,
+      menuStyle: const MenuStyle(
+          backgroundColor: MaterialStatePropertyAll(backgroundActiveButton)),
+      leadingIcon: const Icon(Icons.people_alt),
+      controller: searchTextMenuGenders,
+
+      requestFocusOnTap: false,
+      textStyle: kfontH2InterBoldBlackColor(),
+
+      hintText: "กรุณาเลือกเพศ",
+      onSelected: (String? group) {
+        setState(() {
+          selectedGender = group!;
+        });
+      },
+      dropdownMenuEntries:
+          genders.map<DropdownMenuEntry<String>>((String group) {
+        return DropdownMenuEntry<String>(
+          labelWidget: Text(
+            "CUSTOMER_DROPDOWN.GENDERS.${group}".tr(),
+            style: kfontH2InterBoldBlackColor(),
+          ),
+          value: group,
+          label: "CUSTOMER_DROPDOWN.GENDERS.${group}".tr(),
+        );
+      }).toList(),
+    );
+  }
+
+  DropdownMenu<String> _ageSection(double width) {
+    return DropdownMenu<String>(
+      width: width * 0.849,
+
+      inputDecorationTheme: InputDecorationTheme(
+          floatingLabelStyle: kfontH2InterBlackColor(),
+          filled: true,
+          labelStyle: kfontH3InterBlackColor(),
+          border: OutlineInputBorder(
+              borderSide: BorderSide.none,
+              borderRadius: BorderRadius.circular(20)),
+          constraints: const BoxConstraints(
+            minWidth: double.infinity,
+            maxWidth: double.infinity,
+          ),
+          outlineBorder: const BorderSide(),
+          fillColor: backgroundActiveButton),
+
+      // initialSelection: ,
+      menuStyle: const MenuStyle(
+          backgroundColor: MaterialStatePropertyAll(backgroundActiveButton)),
+      leadingIcon: const Icon(Icons.people_alt),
+      controller: searchTextMenuAges,
+
+      requestFocusOnTap: false,
+      textStyle: kfontH2InterBoldBlackColor(),
+
+      hintText: "กรุณาเลือกอายุ",
+      onSelected: (String? group) {
+        setState(() {
+          selectedAges = group!;
+        });
+      },
+      dropdownMenuEntries:
+          ages.map<DropdownMenuEntry<String>>((String group) {
+        return DropdownMenuEntry<String>(
+          labelWidget: Text(
+            "CUSTOMER_DROPDOWN.AGES.${group}".tr(),
+            style: kfontH2InterBoldBlackColor(),
+          ),
+          value: group,
+          label: "CUSTOMER_DROPDOWN.AGES.${group}".tr(),
+        );
+      }).toList(),
+    );
+  }
+
+  DropdownMenu<String> _occupationSection(double width) {
+    return DropdownMenu<String>(
+      width: width * 0.849,
+
+      inputDecorationTheme: InputDecorationTheme(
+          floatingLabelStyle: kfontH2InterBlackColor(),
+          filled: true,
+          labelStyle: kfontH3InterBlackColor(),
+          border: OutlineInputBorder(
+              borderSide: BorderSide.none,
+              borderRadius: BorderRadius.circular(20)),
+          constraints: const BoxConstraints(
+            minWidth: double.infinity,
+            maxWidth: double.infinity,
+          ),
+          outlineBorder: const BorderSide(),
+          fillColor: backgroundActiveButton),
+
+      // initialSelection: ,
+      menuStyle: const MenuStyle(
+          backgroundColor: MaterialStatePropertyAll(backgroundActiveButton)),
+      leadingIcon: const Icon(Icons.people_alt),
+      controller: searchTextMenuJobs,
+
+      requestFocusOnTap: false,
+      textStyle: kfontH2InterBoldBlackColor(),
+
+      hintText: "กรุณาเลือกอาชีพ",
+      onSelected: (String? group) {
+        setState(() {
+          selectedJobs = group!;
+        });
+      },
+      dropdownMenuEntries:
+          jobs.map<DropdownMenuEntry<String>>((String group) {
+        return DropdownMenuEntry<String>(
+          labelWidget: Text(
+            "CUSTOMER_DROPDOWN.JOB.${group}".tr(),
+            style: kfontH2InterBoldBlackColor(),
+          ),
+          value: group,
+          label: "CUSTOMER_DROPDOWN.JOB.${group}".tr(),
+        );
+      }).toList(),
     );
   }
 }

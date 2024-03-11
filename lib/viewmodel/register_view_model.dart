@@ -93,6 +93,8 @@ class RegisterVM {
 
   void signUpSecondPage(
       {required name, required age, required gender, required occupation}) {
+
+    
     customerProvider.name = name;
     customerProvider.age = age;
     customerProvider.gender = gender;

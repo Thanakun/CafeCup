@@ -94,7 +94,7 @@ class _ShopRegisterSecondViewState extends State<ShopRegisterSecondView> {
                           ]),
                       child: FittedBox(
                         clipBehavior: Clip.hardEdge,
-                        fit: BoxFit.fill,
+                        fit: BoxFit.cover,
                         child: kIsWeb
                             ? Image.memory(webImage)
                             : Image.file(File(

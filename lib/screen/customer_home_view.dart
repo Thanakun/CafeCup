@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:coffee_application/data/widget/skelton_shimmer.dart';
 import 'package:coffee_application/model/customer_recommendation.dart';
+import 'package:coffee_application/model/response/top_reach_response.dart';
 import 'package:coffee_application/model/shop.dart';
 import 'package:coffee_application/screen/customer_shop_view.dart';
 import 'package:coffee_application/screen/login.dart';
@@ -86,6 +87,73 @@ class _CustomerHomePageViewState extends State<CustomerHomePageView> {
                         FutureBuilder(
                           future: Future.wait([
                             _vm.listAllShopFuture,
+                            _vm.listReachShopFuture,
+                          ]),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return shimmerWaitingCarousel(height, width);
+                            } else if (snapshot.hasError) {
+                              Text(
+                                "ERROR_MESSAGE.ERROR_LOADING_FAIL",
+                                style: kfont32_400(),
+                              ).tr();
+                            } else if (snapshot.connectionState ==
+                                    ConnectionState.done &&
+                                !snapshot.hasError) {
+                              _vm.getShopReach(
+                                  snapshot.data![0] as List<ShopModel>,
+                                  snapshot.data![1] as List<ShopReachModel>);
+
+                              return _carouselShopItem(
+                                  height, _vm.matchedReachShops, width);
+                            }
+                            print(snapshot.connectionState);
+                            print(snapshot.hasError);
+                            print(snapshot.error);
+                            return Container();
+                          },
+                        ),
+                        Container(
+                          decoration: const BoxDecoration(
+                            color: Colors.transparent,
+                          ),
+                          child: Text(
+                            "CUSTOMER_HOME.CAFE_CATEGORY".tr(),
+                            style: kfont26Bold_400(),
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            vertical: height * 0.03,
+                          ),
+                          decoration: const BoxDecoration(
+                            color: Colors.transparent,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              _imageContainerCategory(width, height,
+                                  shopCoverImageOutSide, "นอกสถานที่"),
+                              _imageContainerCategory(width, height,
+                                  shopCoverImagePath, "ในสถานที่"),
+                              _imageContainerCategory(
+                                  width, height, shopCoverImageCombine, "ผสม"),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          decoration:
+                              const BoxDecoration(color: Colors.transparent),
+                          child: Text(
+                            "CUSTOMER_HOME.CAFE_RECOMMENDED_FOR_YOU".tr(),
+                            style: kfont26Bold_400(),
+                          ),
+                        ),
+                        sectionBufferHeight(bufferSection: 16),
+                        FutureBuilder(
+                          future: Future.wait([
+                            _vm.listAllShopFuture,
                             _vm.listRecommendationShopFuture
                           ]),
                           builder: (context, snapshot) {
@@ -114,44 +182,7 @@ class _CustomerHomePageViewState extends State<CustomerHomePageView> {
                             return Container();
                           },
                         ),
-                        Container(
-                          decoration: const BoxDecoration(
-                            color: Colors.transparent,
-                          ),
-                          child: Text(
-                            "CUSTOMER_HOME.CAFE_CATEGORY".tr(),
-                            style: kfont26Bold_400(),
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            vertical: height * 0.03,
-                          ),
-                          decoration: const BoxDecoration(
-                            color: Colors.transparent,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              _imageContainerCategory(width, height,shopCoverImageOutSide,"นอกสถานที่"),
-                              _imageContainerCategory(width, height,shopCoverImagePath,"ในสถานที่"),
-                              _imageContainerCategory(width, height,shopCoverImageCombine,"ผสม"),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          decoration:
-                              const BoxDecoration(color: Colors.transparent),
-                          child: Text(
-                            "CUSTOMER_HOME.CAFE_RECOMMENDED_FOR_YOU".tr(),
-                            style: kfont26Bold_400(),
-                          ),
-                        ),
                         sectionBufferHeight(bufferSection: 16),
-                        _futureListCarousel(
-                            height: height,
-                            width: width,
-                            future: _vm.listAllShopFuture),
                         Container(
                           decoration:
                               const BoxDecoration(color: Colors.transparent),
@@ -409,7 +440,7 @@ class _CustomerHomePageViewState extends State<CustomerHomePageView> {
               alignment: Alignment.centerLeft,
               margin: EdgeInsets.only(right: constraints.maxWidth * 0.05),
               width: constraints.maxWidth,
-              height: height * 0.2,
+              height: height * 0.25,
               decoration: const BoxDecoration(
                 color: Colors.transparent,
               ),
@@ -454,25 +485,23 @@ class _CustomerHomePageViewState extends State<CustomerHomePageView> {
                     style: kfontH1InterBoldBlackColor(),
                   ),
                 ),
+                shop.reviewNum == 0
+                    ? Container()
+                    : Container(
+                        alignment: Alignment.topRight,
+                        child: const Icon(
+                          Icons.star,
+                          size: 30,
+                          color: Colors.amber,
+                        ),
+                      ),
                 Container(
-                  alignment: Alignment.topCenter,
-                  width: constraints.maxWidth * 0.1,
-                  child: const Icon(
-                    Icons.star,
-                    size: 30,
-                    color: Colors.amber,
-                  ),
-                ),
-                Container(
-                  alignment: Alignment.topRight,
-
+                  alignment: Alignment.topLeft,
                   width: constraints.maxWidth * 0.25,
-
                   margin: EdgeInsets.only(top: constraints.maxHeight * 0.01),
-                  //TODO SHOP SCORE AND TOTAL REVIEW
                   child: FittedBox(
                       child: Text(
-                    "4.7 (5000)",
+                    "${shop.reviewScoreMean == 0 ? "" : shop.reviewScoreMean!.toStringAsFixed(1)} ${shop.reviewNum == 0 ? "" : "(${shop.reviewNum.toString()})"}",
                     style: kfontH2InterBoldBlackColor(),
                   )),
                 )
@@ -527,8 +556,7 @@ class _CustomerHomePageViewState extends State<CustomerHomePageView> {
     );
   }
 
-  Container _imageShopForNullImage(
-      double height, double width) {
+  Container _imageShopForNullImage(double height, double width) {
     return Container(
       margin: EdgeInsets.only(
         bottom: height * 0.01,
@@ -566,7 +594,7 @@ class _CustomerHomePageViewState extends State<CustomerHomePageView> {
         bottom: height * 0.01,
       ),
       width: width,
-      height: height * 0.14,
+      height: height * 0.16,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
@@ -584,11 +612,55 @@ class _CustomerHomePageViewState extends State<CustomerHomePageView> {
           )
         ],
       ),
-      child: Image.file(File(shop.coverImage!)),
+      child: FutureBuilder(
+        future: _vm.shopGetImagePathNetworkFromMinio(
+            shopId: shop.iId!, objectName: "coverImage"),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            print(snapshot.error);
+            return Text("ERROR_MESSAGE.ERROR_LOADING_FAIL").tr();
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.connectionState == ConnectionState.done &&
+              snapshot.data != null) {
+            return snapshot.data!.isNotEmpty
+                ? Image.network(
+                    snapshot.data!,
+                    fit: BoxFit.cover,
+                    loadingBuilder: (BuildContext context, Widget child,
+                        ImageChunkEvent? loadingProgress) {
+                      if (loadingProgress == null) {
+                        return child;
+                      } else {
+                        // You can display a loading indicator or progress bar here if needed.
+                        return Center(
+                          child: CircularProgressIndicator(
+                            value: loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded /
+                                    (loadingProgress.expectedTotalBytes ?? 1)
+                                : null,
+                          ),
+                        );
+                      }
+                    },
+                    errorBuilder: (BuildContext context, Object error,
+                        StackTrace? stackTrace) {
+                      // You can handle the error here and display a placeholder or custom error widget.
+                      return Image.asset(imageNotFound);
+                    },
+                  )
+                : Image.asset(imageNotFound);
+          }
+          return Container();
+        },
+      ),
     );
   }
 
-  Column _imageContainerCategory(double width, double height,String imagePath, String title) {
+  Column _imageContainerCategory(
+      double width, double height, String imagePath, String title) {
     return Column(
       // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [

@@ -135,8 +135,7 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
                     "SHOP_CATEGORY.NORMAL_NOICE");
                 addCategoryWidget(categoryWidgets, shop.noice! == "QUITE_NOICE",
                     "SHOP_CATEGORY.QUITE_NOICE");
-                _vm.shopGetImagePathNetworkFromMinio(
-                    shopId: shop.iId!, objectName: "coverImage");
+
                 return Container(
                     decoration: const BoxDecoration(
                       image: DecorationImage(
@@ -155,9 +154,11 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
                           expandedHeight: 250.0,
                           flexibleSpace: FlexibleSpaceBar(
                               background: FutureBuilder(
-                            future: _vm.shopCoverImage,
+                            future: _vm.shopGetImagePathNetworkFromMinio(
+                                shopId: shop.iId!, objectName: "coverImage"),
                             builder: (context, snapshot) {
                               if (snapshot.hasError) {
+                                print(snapshot.error);
                                 return Text("ERROR_MESSAGE.ERROR_LOADING_FAIL")
                                     .tr();
                               } else if (snapshot.connectionState ==
@@ -169,10 +170,38 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
                                       ConnectionState.done &&
                                   snapshot.data != null) {
                                 return snapshot.data!.isNotEmpty
-                                    ? FadeInImage(
-                                        image: NetworkImage(snapshot.data!),
+                                    ? Image.network(
+                                        snapshot.data!,
                                         fit: BoxFit.cover,
-                                        placeholder: AssetImage(imageNotFound))
+                                        loadingBuilder: (BuildContext context,
+                                            Widget child,
+                                            ImageChunkEvent? loadingProgress) {
+                                          if (loadingProgress == null) {
+                                            return child;
+                                          } else {
+                                            // You can display a loading indicator or progress bar here if needed.
+                                            return Center(
+                                              child: CircularProgressIndicator(
+                                                value: loadingProgress
+                                                            .expectedTotalBytes !=
+                                                        null
+                                                    ? loadingProgress
+                                                            .cumulativeBytesLoaded /
+                                                        (loadingProgress
+                                                                .expectedTotalBytes ??
+                                                            1)
+                                                    : null,
+                                              ),
+                                            );
+                                          }
+                                        },
+                                        errorBuilder: (BuildContext context,
+                                            Object error,
+                                            StackTrace? stackTrace) {
+                                          // You can handle the error here and display a placeholder or custom error widget.
+                                          return Image.asset(imageNotFound);
+                                        },
+                                      )
                                     : Image.asset(imageNotFound);
                               }
                               return Container();
@@ -208,32 +237,33 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
                                       )
                                     ],
                                   ),
-                                  onPressed: () {
-                                    uploadImage().then((value) {
+                                  onPressed: () async {
+                                    try {
+                                      XFile? value = await uploadImage();
+
                                       if (value != null) {
+                                        XFile _xfile = value;
+                                        await _vm.onUserAddCoverImageShop(
+                                          shopId: shop.iId!,
+                                          coverImage: File(_xfile.path).path,
+                                          coverImageXfile: _xfile,
+                                        );
+
+                                        // Wait for the server to update the image
+                                        await _waitForImageUpdate(shop.iId!);
+
+                                        // Now you can update the UI or do any additional tasks
                                         setState(() {
-                                          XFile _xfile = value;
-                                          _vm
-                                              .onUserAddCoverImageShop(
+                                          _vm.shopGetImagePathNetworkFromMinio(
                                             shopId: shop.iId!,
-                                            coverImage: File(_xfile.path).path,
-                                            coverImageXfile: _xfile,
-                                            // coverImageStream: _xfile
-                                          )
-                                              .then((value) {
-                                            Future.delayed(
-                                              const Duration(milliseconds: 300),
-                                            );
-                                            setState(() {
-                                              _vm.shopGetImagePathNetworkFromMinio(
-                                                  shopId: shop.iId!,
-                                                  objectName: "coverImage");
-                                            });
-                                            return value;
-                                          });
+                                            objectName: "coverImage",
+                                          );
                                         });
                                       }
-                                    });
+                                    } catch (error) {
+                                      // Handle any errors that might occur during the process
+                                      print("Error: $error");
+                                    }
                                   },
                                 ),
                               ),
@@ -292,7 +322,25 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
                               ),
                             ],
                           ),
-                          sectionBufferHeight(bufferSection: 20),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              shop.reviewNum == 0
+                                  ? Container()
+                                  : Icon(
+                                      Icons.star,
+                                      size: width * 0.05,
+                                      color: Colors.amber,
+                                    ),
+                              Text(
+                                "${shop.reviewScoreMean == 0 ? "" : shop.reviewScoreMean!.toStringAsFixed(1)} ${shop.reviewNum == 0 ? "" : "(${shop.reviewNum.toString()})"}",
+                                style: kfontH2InterBoldBlackColor(),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                softWrap: true,
+                              ),
+                            ],
+                          ),
                           _shopAddress(
                             height,
                             shop,
@@ -855,15 +903,26 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
                   ),
                 )
                     .then((value) {
-                  setState(() {
-                    _vm.onUserAddImagesShop(
-                      shopId: shop.iId!,
-                      shopImages: value["shopImages"],
-                      menuImages: value["menuImages"],
-                      foodImages: value["foodImages"],
-                      otherImages: value["otherImages"],
-                    );
-                  });
+                  _vm
+                      .onUserAddImagesShop(
+                        shopId: shop.iId!,
+                        shopImages: value["shopImages"],
+                        menuImages: value["menuImages"],
+                        foodImages: value["foodImages"],
+                        otherImages: value["otherImages"],
+                      )
+                      .then(
+                        (value) => _waitForImageUpdate(shop.iId!).then(
+                          (value) {
+                            setState(
+                              () {
+                                _vm.shopGetImageShop(
+                                    shop: shop, objectName: findObjectName());
+                              },
+                            );
+                          },
+                        ),
+                      );
                 });
               },
             ),
@@ -1677,5 +1736,25 @@ class _ShopInformationPageState extends State<ShopInformationPage> {
       }
     }
     return "";
+  }
+
+  Future<void> _waitForImageUpdate(int shopId) async {
+    const maxAttempts = 5;
+    const delayDuration = Duration(milliseconds: 2000);
+
+    for (int attempt = 1; attempt <= maxAttempts;) {
+      await Future.delayed(delayDuration);
+
+      bool
+          isImageUpdated = /* Check whether the image is updated on the server */
+          true;
+
+      if (isImageUpdated) {
+        return; // Image update is complete, exit the loop
+      }
+    }
+
+    // Handle the case when the image update takes too long
+    print("Image update took too long");
   }
 }
