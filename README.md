@@ -1,50 +1,20 @@
 # coffee_application
 
-A new Flutter project.
+# Mobile Version 0.0.1 
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-
+# to be doing Web as possible soon T_T
 
 ## How to running the application and starting the app
 
-1. you need to go to the Connection file and create the database in phpmyadmin using the xampp
+# **BACK-END**
+1. you need the backend another repo name Cafe_Cup_Services
+2. in that repo cd into the file path of each service
+3. inside there have the docker compose , you need to install docker and run the docker compose
+4. after you create images, or create the container
 
-2. on the file you need to change the URL using in this to your current ip project including the (login.dart,register.dart,etc..)
-
-3. after you changing it try to open the URL in your internet browser and checking the file location showing in your screen
-
-4. if does not working maybe you forgetting open xampp or wrong directory in the project file 
-
-note: you need to get this project to the htdocs of the xampp unless the project are going to not working still.
-
-18/2/2565 
-Done : Create login page
-Doing : Create register page and starting with firebase cloud database
-
-19/2/2565
-Done : Create Register page
-Doing : Connect with firebase database cloud
-
-23/4/2565
-Done : Connecting the backend and frontend with phpmyadmin
-
-16/5/2565
-Inprogress : FE: UserHomeViewPage Change the Project Structure from spaghetti to MVVM
-
-21/5/2565
-DONE : FE: Make the MVVM Project Structure to the current implement to connecting the database service 
-
-22/5/2565
-DONE : FE: Finish The Search Page excluding the refactoring for the performance ,
-INPROGRESSING : FE IMPLEMENTING THE SHOP PAGE
+# **FRONT-END**
+1. you need to have emulator ( sorry not deploy yet or build docker file ) and open the emulator
+2. next , before you debugging you have to ensure that the service are avaliable
+3. changes the config file it's have 3 path **Auth** , **Analysis** , **Promotion** for dio library it's have to input the IPV4 Address Of your
+4. after that , if the previous step have complete you have to debug and running the app
+5. enjoys.
