@@ -7,10 +7,7 @@
 ## How to running the application and starting the app
 
 # **BACK-END**
-1. you need the backend another repo name Cafe_Cup_Services
-2. in that repo cd into the file path of each service
-3. inside there have the docker compose , you need to install docker and run the docker compose
-4. after you create images, or create the container
+https://github.com/Nuttapong9911/Cafe_Cup_Services
 
 # **FRONT-END**
 1. you need to have emulator ( sorry not deploy yet or build docker file ) and open the emulator
